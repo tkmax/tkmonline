@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <title>ctrlr</title>
+  <script src="Crunr.js"></script>
+  <script src="ctrlr/GameService.js"></script>
+  <script src="ctrlr/Player.js"></script>
+  <script src="ctrlr/Const.js"></script>
+  <script>
+      var gs = null;
+      
+      Crunr.onLoad = function() {
+        gs = new GameService();
+        GameService.clear(gs);
+        
+        Crunr.observe('gs');
+      }
+      
+      Crunr.onMessage = function(u, m) {
+        var o, isUpdate, win, lose;
+        
+        isUpdate = false;
+        if(m[0] === 'f') {
+          Crunr.send(u, JSON.stringify(gs));
+        } else if(gs.state === GameService.Ready) {
+          switch(m[0]) {
+            case 'a':
+              o = GameService.splitOption(m);
+              
+              if(gs.players[o[0]].userid === '') {
+                gs.players[o[0]].userid = u;
+                isUpdate = true;
+              }
+            break;
+            case 'b':
+              o = GameService.splitOption(m);
+              
+              if(gs.players[o[0]].userid === u) {
+                gs.players[o[0]].userid = '';
+                isUpdate = true;
+              }
+            break;
+            case 'c':
+              if(gs.players[0].userid !== ''
+              && gs.players[1].userid !== ''
+              ) {
+                GameService.start(gs);
+                isUpdate = true;
+              }
+            break;
+          }
+        } else {
+          switch(m[0]) {
+            case 'd':
+              o = GameService.splitOption(m);
+              
+              if(gs.players[o[0]].phase === Phase.Select) {
+                gs.players[o[0]].played = gs.players[o[0]].hand[o[1]];
+                gs.players[o[0]].hand.splice(o[1], 1);
+                gs.players[o[0]].phase = Phase.Ready;
+                
+                if(gs.players[0].phase === Phase.Ready
+                && gs.players[1].phase === Phase.Ready
+                ) {
+                  gs.players[0].phase = Phase.BattleStart;
+                  gs.players[1].phase = Phase.BattleStart;
+                }
+                
+                isUpdate = true;
+              }
+            break;
+            case 'e':
+              o = GameService.splitOption(m);
+              
+              if(gs.players[o[0]].phase === Phase.BattleStart) {
+                gs.players[o[0]].phase = Phase.BattleFinish;
+                
+                if(gs.players[0].phase === Phase.BattleFinish
+                && gs.players[1].phase === Phase.BattleFinish
+                ) {
+                  win = -1;
+                  
+                  if(gs.players[0].played === Card.Queen
+                  && gs.players[1].played === Card.King
+                  ) {
+                    win = 0;
+                  } else if(gs.players[0].played === Card.King
+                  && gs.players[1].played === Card.Queen
+                  ) {
+                    win = 1;
+                  } else if(gs.players[0].played > gs.players[1].played) {
+                    win = 0;
+                  } else if(gs.players[0].played < gs.players[1].played) {
+                    win = 1;
+                  }
+                  
+                  if(win === -1) {
+                    if(gs.players[0].played === Card.King
+                    && gs.players[1].played === Card.King
+                    ) {
+                      GameService.nextRound(gs);
+                    } else {
+                      gs.players[0].played = Card.None;
+                      gs.players[1].played = Card.None;
+                    }
+                  } else {
+                    lose = (win === 0 ? 1:0);
+                    
+                    if(gs.players[lose].played === Card.King) {
+                      gs.players[win].winCount++;
+                      if(gs.players[win].winCount >= 3) {
+                        Crunr.chat('おめでとうございます。' + gs.players[win].userid + 'さんの勝利です。');
+                        gs.players[0].userid = '';
+                        gs.players[1].userid = '';
+                        gs.state = GameService.Ready;
+                      } else {
+                        GameService.nextRound(gs);
+                      }
+                    } else {
+                      if(gs.players[win].played === Card.Thunder) {
+                        gs.players[win].hand.push(gs.players[lose].played);
+                        gs.players[0].played = Card.None;
+                        gs.players[1].played = Card.None;
+                      } else {
+                        gs.players[win].hand.push(gs.players[0].played);
+                        gs.players[win].hand.push(gs.players[1].played);
+                        gs.players[0].played = Card.None;
+                        gs.players[1].played = Card.None;
+                      }
+                    }
+                  }
+                  gs.players[0].phase = Phase.Select;
+                  gs.players[1].phase = Phase.Select;
+                }
+                
+                isUpdate = true;
+              }
+            break;
+          }
+        }
+        if(isUpdate) {
+          Crunr.broadcast(JSON.stringify(gs));
+        }
+      }
+      
+      Crunr.onChat = function(u, m) {
+        switch (m) {
+          case '/help':
+            Crunr.chat('/reset ゲームをリセットする');
+          break;
+          case '/reset':
+            if(Crunr.ctrlrid === u) {
+              Crunr.chat(u + 'さんがゲームをリセットしました');
+              GameService.clear(gs);
+              Crunr.broadcast(JSON.stringify(gs));
+            } else {
+              Crunr.chat(u + 'さんがゲームをリセットしようとしましたが、コントローラーでないため失敗しました。');
+            }
+          break;
+        }
+      }
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

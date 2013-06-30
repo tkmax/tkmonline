@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>Tkm Online - 5th 雷神牌</title>
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script src="../Runr.wsUrl.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script>
+  var ctrlr, view;
+  Runr.instance = 9;
+  Runr.webSocket = null;
+  Runr.watchList = [];
+  Runr.bell = null;
+  Runr.send = function(m) {
+    Runr.webSocket.send(String.fromCharCode(Runr.instance) + m);
+  }
+  Runr.splitForSyntax1 = function(s) {
+    return s.substring(1);
+  }
+  Runr.splitForSyntax2 = function(s) {
+    var t = /^([^ ]*) ?(.*)$/.exec(s.substring(1));
+    t.shift();
+    return t;
+  }
+  Runr.splitForSyntax3 = function(s) {
+    return (s.substring(1)).split(' ');
+  }
+  Runr.sendJson = function(s) {
+    Runr.send('f' + s + ' ' + JSON.stringify(eval('ctrlr.' + s)));
+  }
+</script>
+<style>
+  body {
+    background-color: black;
+    color: white;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  audio {
+    width: 273px;
+  }
+  ul {
+    list-style: none;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    width: 830px;
+  }
+  #info {
+    display: none;
+  }
+  #info-1 {
+    width: 160px;
+  }
+  #info-2 {
+    width: 413px;
+  }
+  #bell, #bell-switch, #chat-switch {
+    width: 70px;
+  }
+  #bell-switch, #chat-switch {
+    background-color: orange;
+  }
+  #ctrlr {
+    display: none;
+  }
+  #login {
+    display: none;
+  }
+  #view {
+    display: none;
+    width: 800px;
+    height: 450px;
+  }
+  #users {
+    display: none;
+  }
+  #chatlog {
+    display: none;
+    width: 800px;
+  }
+  #chat {
+    width: 800px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<ul>
+  <li id="info">
+    <table>
+      <tr>
+        <td id="info-1">あなた：<strong id="userid"></strong></td>
+        <td id="info-2">コントローラー：<strong id="ctrlrid"></strong></td>
+        <td>
+          <input id="bell" type="button" value="ベル"></input>
+          <input id="bell-switch" type="button" value="ベル音"></input>
+          <input id="chat-switch" type="button" value="チャット音"></input>
+        </td>
+      </tr>
+    </table>
+  </li>
+  <li>
+    <iframe id="ctrlr" src="ctrlr.html"></iframe>
+  </li>
+  <li>
+    <input id="login" type="text" />
+  </li>
+  <li>
+    <iframe id="view" src="view.html"></iframe>
+  </li>
+  <li id="users"></li>
+  <li>
+      <textarea id="chatlog" rows="10" readonly></textarea>
+  </li>
+  <li>
+    <input id="chat" type="text" />
+  </li>
+  <li id="help"></li>
+</ul>
+<audio id="bell-se" preload="auto">
+  <source src="bell.mp3" type="audio/mp3">
+</audio>
+<audio id="chat-se" preload="auto">
+  <source src="chat.mp3" type="audio/mp3">
+</audio>
+<script>
+  window.onload = function() {
+    $('#bell-se')[0].volume = 0.1;
+    $('#chat-se')[0].volume = 0.1;
+    
+    ctrlr = $('#ctrlr')[0].contentWindow;
+    view = $('#view')[0].contentWindow;
+    if(typeof WebSocket != 'undefined') {
+      Runr.webSocket = new WebSocket(Runr.wsUrl);
+    }
+    if(Runr.webSocket) {
+      Runr.webSocket.onopen = function() {
+        Runr.send('a');
+      }
+      Runr.webSocket.onmessage = function(e) {
+        var tmp, option, i;
+        if(e.data[0] === 'A') {
+          option = Runr.splitForSyntax3(e.data);
+          $('#users').text('');
+          for(i in option) {
+            if($('#users').text() === '') {
+              $('#users').text(option[i]);
+            } else {
+              $('#users').append(' | ' + option[i]);
+            }
+          }
+        } else if(view.Vrunr.userid === '') {
+          switch(e.data[0]) {
+            case 'B':
+              $('#view').show();
+              view.Vrunr.onLoad();
+              $('#help').text('');
+              $('#login').hide();
+              $('#info').show();
+              $('#users').show();
+              $('#chatlog').val('');
+              $('#chatlog').show();
+              $('#chat').show();
+              view.Vrunr.userid = Runr.splitForSyntax1(e.data);
+              $('#userid').text(view.Vrunr.userid);
+              Runr.send('c');
+            break;
+            case 'C':
+              $('#help').text('命名規則に違反するか、既に使用されているユーザー名です。ユーザー名は英数字１２文字以内を使用して下さい。');
+            break;
+          }
+        } else {
+          switch(e.data[0]) {
+            case 'D':
+              option = Runr.splitForSyntax1(e.data);
+              view.Vrunr.onAddUser(option);
+              if($('#users').text() === '') {
+                $('#users').text(option);
+              } else {
+                $('#users').append(' | ' + option);
+              }
+            break;
+            case 'E':
+              option = Runr.splitForSyntax1(e.data);
+              view.Vrunr.onRemoveUser(option);
+              tmp = $('#users').text().split(' | ');
+              $('#users').text('');
+              for(i in tmp ) {
+                if(tmp[i] !== option) {
+                  if($('#users').text() === '') {
+                    $('#users').text(tmp[i]);
+                  } else {
+                    $('#users').append(' | ' + tmp[i]);
+                  }
+                }
+              }
+            break;
+            case 'F':
+              option = Runr.splitForSyntax1(e.data);
+              view.Vrunr.onBell(option);
+              if($('#chatlog').val() === '') {
+                $('#chatlog').val(option + 'さんが、ベルを鳴らしました。');
+              } else {
+                $('#chatlog').val(
+                  $('#chatlog').val() + '\n' + option + 'さんが、ベルを鳴らしました。'
+                );
+                $('#chatlog').scrollTop($('#chatlog')[0].scrollHeight);
+              }
+              if($('#bell-switch').attr('value') !== 'OFF') {
+                $('#bell-se')[0].pause();
+                $('#bell-se')[0].currentTime = 0;
+                $('#bell-se')[0].play();
+              }
+            break;
+            case 'G':
+              option = Runr.splitForSyntax2(e.data);
+              view.Vrunr.onChat(option[0], option[1]);
+              if($('#chatlog').val() === '') {
+                $('#chatlog').val((option[0] + '            ').substring(0, 12) + ' >> ' + option[1]);
+              } else {
+                $('#chatlog').val(
+                  $('#chatlog').val() + '\n' + (option[0] + '            ').substring(0, 12) + ' >> ' + option[1]
+                );
+                $('#chatlog').scrollTop($('#chatlog')[0].scrollHeight);
+              }
+              if($('#chat-switch').attr('value') !== 'OFF') {
+                $('#chat-se')[0].pause();
+                $('#chat-se')[0].currentTime = 0;
+                $('#chat-se')[0].play();
+              }
+            break;
+            case 'H':
+              option = Runr.splitForSyntax2(e.data);
+              eval('ctrlr.' + option[0] + '=JSON.parse(option[1])');
+            break;
+            case 'I':
+              Runr.send('g');
+            break;
+            case 'J':
+              option = Runr.splitForSyntax1(e.data);
+              ctrlr.Crunr.ctrlrid = option;
+              view.Vrunr.ctrlrid = option;
+              view.Vrunr.onController(option);
+              $('#ctrlrid').text(option);
+            break;
+            case 'K':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax2(e.data);
+              ctrlr.Crunr.onMessage(tmp[0], tmp[1]);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+            case 'L':
+              tmp = Runr.splitForSyntax1(e.data);
+              view.Vrunr.onMessage(tmp);
+            break;
+            case 'M':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax1(e.data);
+              ctrlr.Crunr.onController(tmp);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+            case 'N':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax1(e.data);
+              ctrlr.Crunr.onBell(tmp);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+            case 'O':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax2(e.data);
+              ctrlr.Crunr.onChat(tmp[0], tmp[1]);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+            case 'P':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax1(e.data);
+              ctrlr.Crunr.onAddUser(tmp);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+            case 'Q':
+              Runr.send('h');
+              tmp = Runr.splitForSyntax1(e.data);
+              ctrlr.Crunr.onRemoveUser(tmp);
+              for(i in Runr.watchList) {
+                Runr.sendJson(Runr.watchList[i]);
+              }
+              Runr.send('i');
+            break;
+          }
+        }
+      }
+      $('#login').keypress(function(e) {
+        if(e.keyCode === 13) {
+          Runr.send('b' + $(this).val());
+        }
+      });
+      $('#bell').click(function() {
+        Runr.send('d');
+      });
+      $('#bell-switch').click(function() {
+        if($(this).attr('value') !== 'OFF') {
+          $(this).attr('value','OFF').css('background-color','gray');
+        } else {
+          $(this).attr('value','ベル音').css('background-color','orange');
+        }
+      });
+      $('#chat-switch').click(function() {
+        if($(this).attr('value') !== 'OFF') {
+          $(this).attr('value','OFF').css('background-color','gray');
+        } else {
+          $(this).attr('value','チャット音').css('background-color','orange');
+        }
+      });
+      $('#chat').keypress(function(e) {
+        if(e.keyCode === 13 && $(this).val() !== '') {
+          Runr.send('e' + $(this).val());
+          $(this).val('');
+        }
+      });
+      $('#help').text('テキストボックスに英数字１２文字以内でユーザー名を入れてから、エンターキーを押して下さい。');
+      $('#login').show();
+      $('#users').show();
+    } else {
+      $('#help').text('WebSocketがサポートされていないブラウザです。');
+    }
+  }
+</script>
+</body>
+</html>

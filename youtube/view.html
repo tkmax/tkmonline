@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<title>view</title>
+<script src="Vrunr.js"></script>
+<script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<style>
+  #menu ul {
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+  }
+  #menu ul li {
+    float: left;
+    margin: 0px;
+    padding: 0px;
+    widows: 140px;
+    height: 40px;
+  }
+  #menu a {
+    display: block;
+    margin: 5px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-decoration: none;
+    background-color: #404080;
+    color: #ffffff;
+    text-align: center;
+  }
+  #menu a:hover {
+    background-color: #8080ff;
+  }
+  #video_list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  #video_list li {
+    margin: 1px;
+    float: left;
+    widows: 130px;
+    height: 97px;
+  }
+  #video-container {
+    position: relative;
+    overflow: none;
+  }
+  #video-container iframe,
+  #video-container object,
+  #video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+<script>
+  var list = [], currentVideo = null, currentVideoStart = null, timeoutId = null;
+  
+  var search = function(keyword) {
+    var query, jsonpURL, script, head;
+    
+    $('#search_result').html('loading...');
+    query = encodeURIComponent(keyword);
+    jsonpURL = "http://gdata.youtube.com/feeds/videos?vq=" + query + "&max-results=20&alt=json-in-script&callback=listVideos";
+    
+    script = document.createElement('script');
+    script.src = jsonpURL;
+    head = document.getElementsByTagName('head')[0];
+    head.appendChild(script);
+  }
+  
+  var listVideos = function(data) {
+    var entries, i;
+    
+    $('#search_result').empty();
+    
+    if(data.feed.openSearch$totalResults.$t > 0) {
+      entries = data.feed.entry;
+      for(i in entries) {
+        (function(entry) {
+          var videoid, title, duration, str;
+          
+          if(entry['yt$noembed']) {
+            return;
+          }
+          
+          videoid = entry.id.$t.split('/').pop();
+          title = entry.title.$t;
+          duration = entry['media$group']['yt$duration'].seconds;
+          
+          str = '';
+          str += '<div style="display: block; float: left; background-color: #000000; margin: 5px; width: 130px; height: 140px;">';
+          str += '<div id="result_video_' + i + '" style="width: 130px; height: 100px; background-color: #000000;">';
+          str += '<img src="http://i.ytimg.com/vi/' + videoid + '/1.jpg">';
+          str += '</div>';
+          str += '<div style="font-size: 10px; background-color: #000000; color: #ffffff;">' + title + '</div>';
+          str += '<div style="font-size: 10px; background-color: #000000; color: #ffffff;">' + duration + '</div>';
+          str += '</div>';
+          
+          $('#search_result').append(str);
+          
+          $('#result_video_' + i).click(
+            function() {
+              var data = {};
+              data.videoid = videoid;
+              data.title = title;
+              data.duration = parseInt(duration);
+              Vrunr.send('add ' + JSON.stringify(data));
+            }
+          );
+        })(entries[i]);
+      }
+    } else {
+      $('#search_result').append('<p>not found</p>');
+    }
+  }
+  
+  var playNext = function() {
+    Vrunr.send('next');
+  }
+  
+  Vrunr.onLoad = function() {
+    $('#menu a[href=#tab1]').click(function(event) {
+      $('#video-container').animate({
+        width: '640px',
+        height: '390px'
+      }, 100);
+      $('#panels div[id^=panel]').hide();
+      $('#panel1').fadeIn();
+      event.preventDefault();
+    });
+    $('#menu a[href=#tab2]').click(function(event){
+      $('#video-container').animate({
+        width: '200px',
+        height: '150px'
+      }, 100);
+      $('#panels div[id^=panel]').hide();
+      $('#panel2').fadeIn();
+      event.preventDefault();
+    });
+    $('#menu a[href=#tab3]').click(function(event){
+      $('#video-container').animate({
+        width: '200px',
+        height: '150px'
+      }, 100);
+      $('#panels div[id^=panel]').hide();
+      $('#panel3').fadeIn();
+      event.preventDefault();
+    });
+    $('#search_text').keypress(function(e) {
+      var code = (e.keyCode ? e.keyCode : e.which), line;
+      if(code === 13) {
+        line = $('#search_text').val();
+        $('#search_text').val('');
+        search(line);
+      }
+    });
+    
+    $('#video-container').animate({
+      width: '640px',
+      height: '390px'
+    }, 100);
+    $('#panels div[id^=panel]').hide();
+    $('#panel1').fadeIn();
+    
+    Vrunr.send('enter');
+  }
+  
+  Vrunr.onMessage = function(m) {
+    var array = m.split(' '), i, video, str, playerHtml;
+    
+    if(array[0] === 'list') {
+      list = eval('(' + m.substring(5) + ')');
+      $('#video_list').empty();
+      for(i in list) {
+        video = list[i];
+        
+        str = '';
+        str += '<li id="aid' + video.id + '" style="display: block; float: left; background-color: #f8f8f8; margin: 5px; width: 130px; height: 140px;">';
+        str += '<div id="tid' + i + '" style="width: 130px; height: 100px; background-color: #000000;">';
+        str += '<img src="http://i.ytimg.com/vi/' + video.videoid + '/1.jpg">';
+        str += '</div>';
+        str += '<div style="font-size: 10px; background-color: #f8f8f8; color: #808080;">' + video.title + '</div>';
+        str += '<div style="font-size: 10px; background-color: #f8f8f8; color: #808080;">' + video.duration + '</div>';
+        str += '<div id="delete_video_' + i + '" style="float: right; font-size: 14px; background-color: #f8f8f8; color: #808080;">×</div>';
+        str += '</li>';
+        $('#video_list').append(str);
+        
+        $('#tid' + i).data('id', video.id);
+        $('#tid' + i).data('videoid', video.videoid);
+        $('#tid' + i).click(function() {
+          Vrunr.send('play ' + $(this).data('id'));
+        });
+        
+        $('#delete_video_' + i).data('id', video.id);
+        $('#delete_video_' + i).click(function(){
+          Vrunr.send('remove ' + $(this).data('id'));
+        });
+        
+        $('#video_list').sortable({
+          cursor: 'pointer',
+          start: function(event, ui) {
+            $('#video_list').data('org', $('#video_list').sortable('toArray'));
+          },
+          stop: function() {
+            var ary, ary2, i, id;
+            ary = $('#video_list').sortable('toArray');
+            ary2 = [];
+            for(i in ary) {
+              id = parseInt(ary[i].substring(3));
+              ary2[i] = id;
+            }
+            if($('#video_list').data('org').join('') !== ary.join('')) {
+              Vrunr.send('list ' + ary2.join(','));
+            }
+          }
+        });
+      }
+    } else if(array[0] === 'play') {
+      var id = parseInt(array[1]), offset = array[2], video = null;
+      for(i in list) {
+        if(list[i].id === id) {
+          video = list[i];
+        }
+      }
+      if(video === null) {
+        return;
+      }
+      if(timeoutId !== null) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      currentVideo = video;
+      currentVideoStart = parseInt(array[3]);
+      
+      playerHtml = '<object width="640" height="390"><param name="movie" value="http://www.youtube.com/v/' + video.videoid + '?version=3&amp;hl=ja_JP&amp;autoplay=1&start=' + offset + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="wmode" value="opaque"></param><embed src="http://www.youtube.com/v/' + video.videoid + '?version=3&amp;hl=ja_JP&amp;autoplay=1&start=' + offset + '" type="application/x-shockwave-flash" width="640" height="390" allowscriptaccess="always" allowfullscreen="true" wmode="opaque"></embed></object>';
+      $('#video-container').html(playerHtml);
+      
+      if(Vrunr.userid === Vrunr.ctrlrid) {
+        timeoutId = setTimeout(playNext, (video.duration - offset + 2) * 1000);
+      }
+    }
+  }
+  
+  Vrunr.onController = function(u) {
+    var now, offset;
+    if(Vrunr.userid === Vrunr.ctrlrid
+    && currentVideo !== null
+    ) {
+      if(timeoutId !== null) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
+      }
+      now = new Date().getTime();
+      offset = Math.floor((now - currentVideoStart) / 1000);
+      timeoutId = setTimeout(playNext, (currentVideo.duration - offset + 2) * 1000);
+    }
+  }
+</script>
+</head>
+<body bgcolor="#f8f8f8">
+
+<div id="video-container"></div>
+
+<div id="menu">
+  <ul>
+    <li><a href="#tab1">動画プレイヤー</a></li>
+    <li><a href="#tab2">再生リスト</a></li>
+    <li><a href="#tab3">検索</a></li>
+  </ul>
+</div>
+
+<div style="clear: both;"></div>
+
+<div id="panels">
+  <div id="panel1" style="display: block;">
+    <div id="theater" style="display: block;"></div>
+  </div>
+  <div id="panel2" style="display: block;">
+    <div id="video_list" style="display: block;"></div>
+  </div>
+  <div id="panel3" style="display: none;">
+    <div id="search" style="display: block;">
+      <div>キーワード&nbsp;:&nbsp;<input id="search_text" type="text"></div>
+      <div id="search_result"></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
