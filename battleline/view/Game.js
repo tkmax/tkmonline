@@ -217,8 +217,11 @@ Game.addHand = function(o, n, y) {
             }());
           }
         } else if(o.players[n].count <= o.players[m].count) {
-          if(o.players[n].hand[i] === Tactics.Alexander
-          || o.players[n].hand[i] === Tactics.Darius
+          if((
+              (o.players[n].hand[i] === Tactics.Alexander
+              || o.players[n].hand[i] === Tactics.Darius
+              ) && o.players[n].leader === 0
+            )
           || o.players[n].hand[i] === Tactics.Companion
           || o.players[n].hand[i] === Tactics.Shield
           ) {

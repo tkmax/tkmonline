@@ -118,6 +118,10 @@
                   gs.stock[
                     ((gs.players[gs.active].hand[gs.play] & 0xff00) >> 8) * 10 + (gs.players[gs.active].hand[gs.play] & 0x00ff)
                   ] = -1;
+                } else if(gs.players[gs.active].hand[gs.play] === Tactics.Alexander
+                || gs.players[gs.active].hand[gs.play] === Tactics.Darius
+                ) {
+                  gs.players[gs.active].leader++;
                 }
                 gs.players[gs.active].hand.splice(gs.play, 1);
                 gs.play = -1;
