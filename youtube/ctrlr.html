@@ -90,7 +90,10 @@
         foo = array[1].split(',');
         bar = [];
         for(i in foo) {
-          bar.push(getVideoobj(parseInt(foo[i])));
+          data = getVideoobj(parseInt(foo[i]));
+          if(data !== null) {
+            bar.push(data);
+          }
         }
         service.list = bar;
         Crunr.broadcast('list ' + JSON.stringify(service.list));
