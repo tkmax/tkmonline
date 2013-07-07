@@ -95,7 +95,9 @@
             bar.push(data);
           }
         }
-        service.list = bar;
+        if(bar.length > 0) {
+          service.list = bar;
+        }
         Crunr.broadcast('list ' + JSON.stringify(service.list));
       break;
     }
