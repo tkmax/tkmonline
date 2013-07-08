@@ -14,7 +14,8 @@ GameService.clear = function(g) {
   g.state = GameService.Ready;
   g.phase = '';
   g.active = -1;
-  g.hunter= -1;
+  g.hunter = -1;
+  g.before = -1;
   g.players = [new Player(), new Player()];
   Player.clear(g.players[0]);
   Player.clear(g.players[1]);
@@ -35,6 +36,7 @@ GameService.start = function(g) {
   g.phase = Phase.Setup;
   g.active = 0;
   g.hunter= -1;
+  g.before = -1;
   Player.start(g.players[0]);
   Player.start(g.players[1]);
   for(i = 0; i < 30; i++) {

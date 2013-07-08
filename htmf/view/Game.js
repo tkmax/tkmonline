@@ -210,10 +210,16 @@ Game.addPenguinMap = function(o) {
   size = 7;
   while(i <= 84) {
     for(j = 0; j < size; j++, i++) {
-      if(o.hunter === i) {
+      if(o.hunter === i
+      || o.before === i
+      ) {
         s = new Sprite(65, 65);
         s.image = Game.core.assets['view/tile.png'];
-        s.frame = 5;
+        if(o.hunter === i) {
+          s.frame = 5;
+        } else {
+          s.frame = 6;
+        }
         s.opacity = 0.7;
         if(size === 7) {
           s.x = j * 66 + 43;

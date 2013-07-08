@@ -87,6 +87,7 @@
                 gs.fishMap[gs.hunter] = 0;
                 gs.penguinMap[o[0]] = gs.penguinMap[gs.hunter];
                 gs.penguinMap[gs.hunter] = -1;
+                gs.before = parseInt(o[0]);
                 gs.hunter = -1;
                 
                 if(gs.active === 0) {
