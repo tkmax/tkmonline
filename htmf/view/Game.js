@@ -109,17 +109,12 @@ Game.addPlayer = function(o, n, y) {
   s = new Label('ペンギン:' + o.players[n].penguin);
   s.font = '11px sens-serif';
   s.x = 655;
-  s.y = y + 20;
+  s.y = y + 23;
   Game.core.rootScene.addChild(s);
-  if(o.state === GameService.Ready
-  || o.players[n].userid === Vrunr.userid) {
-    s = new Label('枚数:' + o.players[n].count);
-  } else {
-    s = new Label('枚数:?');
-  }
+  s = new Label('枚数:' + o.players[n].count);
   s.font = '11px sens-serif';
   s.x = 655;
-  s.y = y + 32;
+  s.y = y + 35;
   Game.core.rootScene.addChild(s);
   if(o.state === GameService.Ready
   || o.players[n].userid === Vrunr.userid) {
@@ -129,7 +124,7 @@ Game.addPlayer = function(o, n, y) {
   }
   s.font = '11px sens-serif';
   s.x = 700;
-  s.y = y + 32;
+  s.y = y + 35;
   Game.core.rootScene.addChild(s);
   s = new Label(o.players[n].userid);
   s.x = 670;
