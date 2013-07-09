@@ -71,6 +71,7 @@
         Crunr.broadcast('play ' + service.currentVideo.id + ' ' + 0 + ' ' + service.currentVideoStart);
       break;
       case 'next':
+        idx = null;
         for(i = 0; i < service.list.length; i++) {
           if(service.list[i].id === service.currentVideo.id) {
             idx = i;
