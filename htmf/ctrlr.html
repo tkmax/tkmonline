@@ -103,6 +103,12 @@
                     gs.active = 0;
                   }
                   if(!GameService.canMovePlayer(gs)) {
+                    for(i in gs.penguinMap) {
+                      if(gs.penguinMap[i] !== -1) {
+                        gs.players[gs.penguinMap[i]].score += gs.fishMap[i];
+                      }
+                    }
+                    
                     if (gs.players[0].score > gs.players[1].score) {
                       Crunr.chat("おめでとうございます。" + gs.players[0].userid + "さん(青)の勝利です。");
                     } else if (gs.players[0].score < gs.players[1].score) {

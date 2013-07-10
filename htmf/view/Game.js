@@ -27,7 +27,7 @@ Game.onLoad = function() {
   Game.core.start();
 }
 
-Game.onMessage = function(o) {
+Game.onMessage = function(g) {
   var s, i, j, k;
   
   Game.isSent = false;
@@ -38,7 +38,7 @@ Game.onMessage = function(o) {
   s.image = Game.core.assets['view/bg.png'];
   Game.core.rootScene.addChild(s);
   
-  if(o.state === GameService.Ready) {
+  if(g.state === GameService.Ready) {
     s = new Label('募集中');
   } else {
     s = new Label('対戦中');
@@ -48,15 +48,15 @@ Game.onMessage = function(o) {
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
   
-  Game.addPlayer(o, 0, 45);
-  Game.addPlayer(o, 1, 105);
+  Game.addPlayer(g, 0);
+  Game.addPlayer(g, 1);
   
-  if(o.state === GameService.Ready
-  && o.players[0].userid !== ''
-  && o.players[1].userid !== ''
+  if(g.state === GameService.Ready
+  && g.players[0].userid !== ''
+  && g.players[1].userid !== ''
   && (
-      o.players[0].userid === Vrunr.userid
-      || o.players[1].userid === Vrunr.userid
+      g.players[0].userid === Vrunr.userid
+      || g.players[1].userid === Vrunr.userid
     )
   ) {
     s = new Sprite(80, 25);
@@ -70,77 +70,95 @@ Game.onMessage = function(o) {
     Game.core.rootScene.addChild(s);
   }
   
-  Game.addFishMap(o);
-  
-  Game.addPenguinMap(o);
+  Game.addFishMap(g);
+  Game.addPenguinMap(g);
 }
 
-Game.addPlayer = function(o, n, y) {
+Game.addPlayer = function(g, idx) {
   var s;
-  if (o.state === GameService.Ready) {
-    if(o.players[n].userid === '') {
+  if (g.state === GameService.Ready) {
+    if(g.players[idx].userid === '') {
       s = new Sprite(80, 25);
       s.image = Game.core.assets['view/btn.png'];
       s.frame = 0;
       s.x = 555;
-      s.y = y + 21;
+      if(idx === 0) {
+        s.y = 66;
+      } else {
+        s.y = 126;
+      }
       s.addEventListener('touchstart', function() {
-        Game.send('a' + n);
+        Game.send('a' + idx);
       });
       Game.core.rootScene.addChild(s);
-    } else if(o.players[n].userid === Vrunr.userid) {
+    } else if(g.players[idx].userid === Vrunr.userid) {
       s = new Sprite(80, 25);
       s.image = Game.core.assets['view/btn.png'];
       s.frame = 1;
       s.x = 555;
-      s.y = y + 21;
+      if(idx === 0) {
+        s.y = 66;
+      } else {
+        s.y = 126;
+      }
       s.addEventListener('touchstart', function() {
-        Game.send('b' + n);
+        Game.send('b' + idx);
       });
       Game.core.rootScene.addChild(s);
     }
-  } else if(o.active === n) {
+  } else if(g.active === idx) {
       s = new Sprite(107, 21);
       s.image = Game.core.assets['view/actv.png'];
       s.x = 666;
-      s.y = y - 3;
+      if(idx === 0) {
+        s.y = 42;
+      } else {
+        s.y = 102;
+      }
       Game.core.rootScene.addChild(s);
   }
-  s = new Label('ペンギン:' + o.players[n].penguin);
-  s.font = '11px sens-serif';
+  s = new Label('枚数:' + g.players[idx].count);
+  s.font = '13px sens-serif';
   s.x = 655;
-  s.y = y + 23;
+  if(idx === 0) {
+    s.y = 70;
+  } else {
+    s.y = 130;
+  }
   Game.core.rootScene.addChild(s);
-  s = new Label('枚数:' + o.players[n].count);
-  s.font = '11px sens-serif';
-  s.x = 655;
-  s.y = y + 35;
-  Game.core.rootScene.addChild(s);
-  if(o.state === GameService.Ready
-  || o.players[n].userid === Vrunr.userid) {
-    s = new Label('得点:' + o.players[n].score);
+  if(g.state === GameService.Ready
+  || g.players[idx].userid === Vrunr.userid) {
+    s = new Label('得点:' + g.players[idx].score);
   } else {
     s = new Label('得点:?');
   }
-  s.font = '11px sens-serif';
-  s.x = 700;
-  s.y = y + 35;
+  s.font = '13px sens-serif';
+  s.x = 705;
+  if(idx === 0) {
+    s.y = 70;
+  } else {
+    s.y = 130;
+  }
   Game.core.rootScene.addChild(s);
-  s = new Label(o.players[n].userid);
+  s = new Label(g.players[idx].userid);
   s.x = 670;
-  s.y = y;
+  if(idx === 0) {
+    s.y = 45;
+  } else {
+    s.y = 105;
+  }
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
 }
 
-Game.addFishMap = function(o) {
+Game.addFishMap = function(g) {
   var s, i, j, k, size;
   k = 0;
   i = 11;
   size = 7;
   while(i <= 84) {
     for(j = 0; j < size; j++, i++) {
-      if(o.fishMap[i] !== 0) {
+      if(g.fishMap[i] !== 0) {
         s = new Sprite(65, 65);
         s.image = Game.core.assets['view/tile.png'];
         if (size === 7) {
@@ -150,12 +168,12 @@ Game.addFishMap = function(o) {
           s.x = j * 66 + 10;
           s.y = k * 50 + 7;
         }
-        switch(o.fishMap[i]) {
+        switch(g.fishMap[i]) {
           case 1:
             s.frame = 0;
-            if(o.state === GameService.Playing
-            && o.phase === Phase.Setup
-            && o.players[o.active].userid === Vrunr.userid
+            if(g.state === GameService.Playing
+            && g.phase === Phase.Setup
+            && g.players[g.active].userid === Vrunr.userid
             ) {
               s.addEventListener('touchstart', function() {
                 var _i = i;
@@ -172,11 +190,11 @@ Game.addFishMap = function(o) {
             s.frame = 2;
           break;
         }
-        if(o.state === GameService.Playing
-        && o.phase === Phase.Hunting
-        && o.hunter !== -1
-        && o.players[o.active].userid === Vrunr.userid
-        && Game.canHuntFish(o, i)
+        if(g.state === GameService.Playing
+        && g.phase === Phase.Hunting
+        && g.hunter !== -1
+        && g.players[g.active].userid === Vrunr.userid
+        && Game.canHuntFish(g, i)
         ) {
           s.addEventListener('touchstart', function() {
             var _i = i;
@@ -198,19 +216,22 @@ Game.addFishMap = function(o) {
   }
 }
 
-Game.addPenguinMap = function(o) {
+Game.addPenguinMap = function(g) {
   var s, i, j, k, size;
   k = 0;
   i = 11;
   size = 7;
   while(i <= 84) {
     for(j = 0; j < size; j++, i++) {
-      if(o.hunter === i
-      || o.before === i
+      if(
+        g.state === GameService.Playing
+        && (g.hunter === i
+        || g.before === i
+        )
       ) {
         s = new Sprite(65, 65);
         s.image = Game.core.assets['view/tile.png'];
-        if(o.hunter === i) {
+        if(g.hunter === i) {
           s.frame = 5;
         } else {
           s.frame = 6;
@@ -225,7 +246,7 @@ Game.addPenguinMap = function(o) {
         }
         Game.core.rootScene.addChild(s);
       }
-      if(o.penguinMap[i] !== -1) {
+      if(g.penguinMap[i] !== -1) {
         s = new Sprite(65, 65);
         s.image = Game.core.assets['view/tile.png'];
         if(size === 7) {
@@ -235,16 +256,16 @@ Game.addPenguinMap = function(o) {
           s.x = j * 66 + 10;
           s.y = k * 50 + 7;
         }
-        if(o.penguinMap[i] === 0) {
+        if(g.penguinMap[i] === 0) {
           s.frame = 3;
         } else {
           s.frame = 4;
         }
-        if (o.state === GameService.Playing) {
-          if(o.phase === Phase.Hunting
-          && o.active === o.penguinMap[i]
-          && Game.canMovePenguin(o, i)
-          && o.players[o.active].userid === Vrunr.userid
+        if (g.state === GameService.Playing) {
+          if(g.phase === Phase.Hunting
+          && g.active === g.penguinMap[i]
+          && Game.canMovePenguin(g, i)
+          && g.players[g.active].userid === Vrunr.userid
           ) {
             s.addEventListener('touchstart', function() {
               var _i = i;
@@ -267,52 +288,52 @@ Game.addPenguinMap = function(o) {
   }
 }
 
-Game.canMovePenguin = function(o, h) {
+Game.canMovePenguin = function(g, h) {
   var canMove = false;
   
-  if(o.fishMap[h - 1] !== 0 && o.penguinMap[h - 1] === -1) {
+  if(g.fishMap[h - 1] !== 0 && g.penguinMap[h - 1] === -1) {
     canMove = true;
-  } else if(o.fishMap[h - 10] !== 0 && o.penguinMap[h - 10] === -1) {
+  } else if(g.fishMap[h - 10] !== 0 && g.penguinMap[h - 10] === -1) {
     canMove = true;
-  } else if(o.fishMap[h - 9] !== 0 && o.penguinMap[h - 9] === -1) {
+  } else if(g.fishMap[h - 9] !== 0 && g.penguinMap[h - 9] === -1) {
     canMove = true;
-  } else if(o.fishMap[h + 1] !== 0 && o.penguinMap[h + 1] === -1) {
+  } else if(g.fishMap[h + 1] !== 0 && g.penguinMap[h + 1] === -1) {
     canMove = true;
-  } else if(o.fishMap[h + 10] !== 0 && o.penguinMap[h + 10] === -1) {
+  } else if(g.fishMap[h + 10] !== 0 && g.penguinMap[h + 10] === -1) {
     canMove = true;
-  } else if(o.fishMap[h + 9] !== 0 && o.penguinMap[h + 9] === -1) {
+  } else if(g.fishMap[h + 9] !== 0 && g.penguinMap[h + 9] === -1) {
     canMove = true;
   }
   
   return canMove;
 }
 
-Game.canHuntFish = function(o, t) {
+Game.canHuntFish = function(g, t) {
   var canHunt = false;
   
-  if(Game.testHuntFish(o, t, -1)) {
+  if(Game.testHuntFish(g, t, -1)) {
     canHunt = true;
-  } else if(Game.testHuntFish(o, t, -10)) {
+  } else if(Game.testHuntFish(g, t, -10)) {
     canHunt = true;
-  } else if(Game.testHuntFish(o, t, -9)) {
+  } else if(Game.testHuntFish(g, t, -9)) {
     canHunt = true;
-  } else if(Game.testHuntFish(o, t, 1)) {
+  } else if(Game.testHuntFish(g, t, 1)) {
     canHunt = true;
-  } else if(Game.testHuntFish(o, t, 10)) {
+  } else if(Game.testHuntFish(g, t, 10)) {
     canHunt = true;
-  } else if(Game.testHuntFish(o, t, 9)) {
+  } else if(Game.testHuntFish(g, t, 9)) {
     canHunt = true;
   }
   
   return canHunt;
 }
 
-Game.testHuntFish = function(o, t, m) {
-  if(o.hunter === t + m) {
+Game.testHuntFish = function(g, t, m) {
+  if(g.hunter === t + m) {
     return true;
-  } else if(o.fishMap[t + m] === 0 || o.penguinMap[t + m] !== -1) {
+  } else if(g.fishMap[t + m] === 0 || g.penguinMap[t + m] !== -1) {
     return false;
   }
   
-  return Game.testHuntFish(o, t + m, m);
+  return Game.testHuntFish(g, t + m, m);
 }
