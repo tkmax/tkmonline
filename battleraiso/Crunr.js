@@ -6,7 +6,7 @@ Crunr.observe = function(t) {
   window.parent.Runr.watchList.push(t);
 }
 
-Crunr.send = function(u, m) {
+Crunr.unicast = function(u, m) {
   window.parent.Runr.send('k' + u + ' ' + m);
 }
 

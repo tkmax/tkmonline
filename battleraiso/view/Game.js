@@ -4,7 +4,6 @@ var Game = function() {}
 
 Game.isOpen = false;
 Game.isSent = false;
-Game.isMute = false;
 
 Game.send = function(m) {
   if(!Game.isSent) {
@@ -14,11 +13,12 @@ Game.send = function(m) {
 }
 
 Game.onLoad = function() {
-  Game.core = new Core(780, 430);
+  Game.core = new Core(840, 520);
   Game.core.fps = 5;
   Game.core.preload(
     'view/bg.png', 'view/card.png', 'view/flag.png',
-    'view/touch.png', 'view/btn.png', 'view/actv.png'
+    'view/touch.png', 'view/btn.png', 'view/actv.png',
+    'view/before.png'
   );
   Game.core.onload = function() {
     Game.isOpen = true;
@@ -33,31 +33,28 @@ Game.onMessage = function(g) {
   while(Game.core.rootScene.childNodes.length > 0) {
     Game.core.rootScene.removeChild(Game.core.rootScene.childNodes[0]);
   }
-  s = new Sprite(780, 430);
+  s = new Sprite(840, 520);
   s.image = Game.core.assets['view/bg.png'];
   Game.core.rootScene.addChild(s);
   
-  if(g.state === GameService.Ready) {
+  if(g.state === State.Ready) {
     s = new Label('募集中');
   } else {
     s = new Label('対戦中');
   }
-  s.x = 650;
-  s.y = 13;
+  s.x = 710;
+  s.y = 10;
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
-  
-  Game.addPlayer(g, 0, 45);
-  Game.addPlayer(g, 1, 105);
-  
-  Game.addWeather(g);
-  Game.addFlags(g);
   
   Game.addField(g, 0);
   Game.addField(g, 1);
   
-  Game.addHand(g, 0, 0);
-  Game.addHand(g, 1, 370);
+  Game.addWeather(g);
+  Game.addFlags(g);
+  
+  Game.addHand(g, 0);
+  Game.addHand(g, 1);
   
   Game.addTalon(g, 0);
   Game.addTalon(g, 1);
@@ -69,7 +66,10 @@ Game.onMessage = function(g) {
   
   Game.addMessage(g);
   
-  if(g.state === GameService.Ready
+  Game.addPlayer(g, 0);
+  Game.addPlayer(g, 1);
+  
+  if(g.state === State.Ready
   && g.players[0].userid !== ''
   && g.players[1].userid !== ''
   && (
@@ -80,8 +80,8 @@ Game.onMessage = function(g) {
     s = new Sprite(80, 25);
     s.image = Game.core.assets['view/btn.png'];
     s.frame = 2;
-    s.x = 555;
-    s.y = 7;
+    s.x = 615;
+    s.y = 5;
     s.addEventListener('touchstart', function() {
       Game.send('c');
     });
@@ -89,91 +89,111 @@ Game.onMessage = function(g) {
   }
 }
 
-Game.addPlayer = function(o, n, y) {
+Game.addPlayer = function(g, idx) {
   var s;
-  if(o.state === GameService.Ready) {
-    if(o.players[n].userid === '') {
+  if(g.state === State.Ready) {
+    if(g.players[idx].userid === '') {
       s = new Sprite(80, 25);
       s.image = Game.core.assets['view/btn.png'];
       s.frame = 0;
-      s.x = 555;
-      s.y = y + 21;
+      s.x = 615;
+      if(idx === 0) {
+        s.y = 64;
+      } else {
+        s.y = 124;
+      }
       s.addEventListener('touchstart', function() {
-        Game.send('a' + n);
+        Game.send('a' + idx);
       });
       Game.core.rootScene.addChild(s);
-    } else if(o.players[n].userid === Vrunr.userid) {
+    } else if(g.players[idx].userid === Vrunr.userid) {
       s = new Sprite(80, 25);
       s.image = Game.core.assets['view/btn.png'];
       s.frame = 1;
-      s.x = 555;
-      s.y = y + 21;
+      s.x = 615;
+      if(idx === 0) {
+        s.y = 64;
+      } else {
+        s.y = 124;
+      }
       s.addEventListener('touchstart', function() {
-        Game.send('b' + n);
+        Game.send('b' + idx);
       });
       Game.core.rootScene.addChild(s);
     }
-  } else if(o.active === n) {
-      s = new Sprite(107, 21);
-      s.image = Game.core.assets['view/actv.png'];
-      s.x = 666;
-      s.y = y - 3;
-      Game.core.rootScene.addChild(s);
+  } else if(g.active === idx) {
+    s = new Sprite(107, 21);
+    s.image = Game.core.assets['view/actv.png'];
+    s.x = 726;
+    if(idx === 0) {
+      s.y = 40;
+    } else {
+      s.y = 100;
+    }
+    Game.core.rootScene.addChild(s);
   }
-  s = new Label(o.players[n].userid);
-  s.x = 670;
-  s.y = y;
+  s = new Label(g.players[idx].userid);
+  s.x = 730;
+  if(idx === 0) {
+    s.y = 44;
+  } else {
+    s.y = 104;
+  }
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
-  s = new Label('戦術カード: ' + o.players[n].count + '枚');
-  s.x = 650;
-  s.y = y + 26;
+  s = new Label('戦術カード: ' + g.players[idx].count + '枚');
+  s.x = 710;
+  if(idx === 0) {
+    s.y = 69;
+  } else {
+    s.y = 129;
+  }
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
 }
 
-Game.addHand = function(o, n, y) {
-  var s, i, j, m, canPlayUnit = false, canPlayWeather = false,
+Game.addHand = function(g, idx) {
+  var s, i, j, unIdx, canPlayUnit = false, canPlayWeather = false,
   canPlayRedeploy = false, canPlayDeserter = false, canPlayTraitor = false;
   
-  if(n === 0) {
-    m = 1;
+  if(idx === 0) {
+    unIdx = 1;
   } else {
-    m = 0;
+    unIdx = 0;
   }
-  for(i = 0; !canPlayUnit && i < o.flags.length; i++) {
-    if(o.flags[i] === -1
-    && o.players[n].field[i].length < o.size[i]
+  for(i = 0; !canPlayUnit && i < g.flags.length; i++) {
+    if(g.flags[i] === -1
+    && g.players[idx].field[i].length < g.size[i]
     ) {
       canPlayUnit = true;
     }
   }
-  for (i = 0; !canPlayWeather && i < o.flags.length; i++) {
-    if(o.flags[i] === -1) {
+  for (i = 0; !canPlayWeather && i < g.flags.length; i++) {
+    if(g.flags[i] === -1) {
       canPlayWeather = true;
     }
   }
-  for(i in o.flags) {
-    if(o.flags[i] === -1
-    && o.players[n].field[i].length > 0
+  for(i in g.flags) {
+    if(g.flags[i] === -1
+    && g.players[idx].field[i].length > 0
     ) {
       canPlayRedeploy = true;
       break;
     }
   }
-  for(i in o.flags) {
-    if(o.flags[i] === -1
-    && o.players[m].field[i].length > 0
+  for(i in g.flags) {
+    if(g.flags[i] === -1
+    && g.players[unIdx].field[i].length > 0
     ) {
       canPlayDeserter = true;
       break;
     }
   }
   if(canPlayUnit) {
-    for(i = 0; !canPlayTraitor && i < o.flags.length; i++) {
-      if(o.flags[i] === -1) {
-        for(j in o.players[m].field[i]) {
-          if((o.players[m].field[i][j] & 0xff00) !== 0x0600) {
+    for(i = 0; !canPlayTraitor && i < g.flags.length; i++) {
+      if(g.flags[i] === -1) {
+        for(j in g.players[unIdx].field[i]) {
+          if((g.players[unIdx].field[i][j] & 0xff00) !== 0x0600) {
             canPlayTraitor = true;
             break;
           }
@@ -181,123 +201,130 @@ Game.addHand = function(o, n, y) {
       }
     }
   }
-  for(i = 0; i < o.players[n].hand.length; i++) {
-    s = new Sprite(60, 60);
+  for(i = 0; i < g.players[idx].hand.length; i++) {
+    s = new Sprite(65, 65);
     s.image = Game.core.assets['view/card.png'];
-    if(o.state === GameService.Ready
-    || o.players[n].userid === Vrunr.userid
+    if(g.state === State.Ready
+    || g.players[idx].userid === Vrunr.userid
     || (
-        o.active === n
-        && o.play === i
+        g.active === idx
+        && g.play === i
       )
     ) {
-      s.frame = ((0xff00 & o.players[n].hand[i]) >> 8) * 10 + (0x00ff & o.players[n].hand[i]);
+      s.frame = ((0xff00 & g.players[idx].hand[i]) >> 8) * 10 + (0x00ff & g.players[idx].hand[i]);
     } else {
-      if ((0xff00 & o.players[n].hand[i]) !== 0x0600) {
+      if ((0xff00 & g.players[idx].hand[i]) !== 0x0600) {
         s.frame = 70;
       } else {
         s.frame = 71;
       }
-      
     }
-    if(o.state === GameService.Playing
-    && o.active === n
-    && o.players[n].userid === Vrunr.userid
+    if(g.state === State.Play
+    && g.active === idx
+    && g.players[idx].userid === Vrunr.userid
     ) {
-      if(o.phase === Phase.Main
-      && o.play === -1
+      if(g.phase === Phase.Main
+      || g.phase === Phase.Unit
+      || g.phase === Phase.Fog
+      || g.phase === Phase.Mud
+      || g.phase === Phase.Scout1
+      || g.phase === Phase.Redeploy1
+      || g.phase === Phase.Deserter
+      || g.phase === Phase.Traitor1
       ) {
-        if((o.players[n].hand[i] & 0xff00) !== 0x0600) {
+        if((g.players[idx].hand[i] & 0xff00) !== 0x0600) {
           if(canPlayUnit) {
             s.addEventListener('touchstart', function() {
-              var j = i;
+              var _i = i;
               return function() {
-                Game.send('e' + j);
+                Game.send('e' + _i);
               };
             }());
           }
-        } else if(o.players[n].count <= o.players[m].count) {
+        } else if(g.players[idx].count <= g.players[unIdx].count) {
           if((
-              (o.players[n].hand[i] === Tactics.Alexander
-              || o.players[n].hand[i] === Tactics.Darius
-              ) && o.players[n].leader === 0
+              (g.players[idx].hand[i] === Tactics.Alexander
+              || g.players[idx].hand[i] === Tactics.Darius
+              ) && g.players[idx].leader === 0
             )
-          || o.players[n].hand[i] === Tactics.Companion
-          || o.players[n].hand[i] === Tactics.Shield
+          || g.players[idx].hand[i] === Tactics.Companion
+          || g.players[idx].hand[i] === Tactics.Shield
           ) {
             if(canPlayUnit) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
-          } else if(o.players[n].hand[i] === Tactics.Scout) {
-            if(o.unitDeck.length + o.tacticsDeck.length > 3) {
+          } else if(g.players[idx].hand[i] === Tactics.Scout) {
+            if(g.unitDeck.length + g.tacticsDeck.length > 1) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
-          } else if(o.players[n].hand[i] === Tactics.Fog
-          || o.players[n].hand[i] === Tactics.Mud
+          } else if(g.players[idx].hand[i] === Tactics.Fog
+          || g.players[idx].hand[i] === Tactics.Mud
           ) {
             if(canPlayWeather) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
-          } else if(o.players[n].hand[i] === Tactics.Redeploy) {
+          } else if(g.players[idx].hand[i] === Tactics.Redeploy) {
             if(canPlayRedeploy) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
-          } else if(o.players[n].hand[i] === Tactics.Deserter) {
+          } else if(g.players[idx].hand[i] === Tactics.Deserter) {
             if(canPlayDeserter) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
-          } else if(o.players[n].hand[i] === Tactics.Traitor) {
+          } else if(g.players[idx].hand[i] === Tactics.Traitor) {
             if(canPlayTraitor) {
               s.addEventListener('touchstart', function() {
-                var j = i;
+                var _i = i;
                 return function() {
-                  Game.send('e' + j);
+                  Game.send('e' + _i);
                 };
               }());
             }
           }
         }
-      } else if(o.phase === Phase.Scout2) {
-        if(o.unitDeck.length + o.tacticsDeck.length > 3) {
-          s.addEventListener('touchstart', function() {
-            var j = i;
-            return function() {
-              Game.send('k' + j);
-            };
-          }());
-        }
+      } else if(g.phase === Phase.Scout3) {
+        s.addEventListener('touchstart', function() {
+          var _i = i;
+          return function() {
+            Game.send('k' + _i);
+          };
+        }());
       }
     }
     s.x = i * 45 + 5;
-    s.y = y;
-    if(o.active === n
-    && o.play === i) {
-      if(n === 0) {
+    if(idx === 0) {
+      s.y = 2;
+    } else {
+      s.y = 453;
+    }
+    if(g.active === idx
+    && g.play === i) {
+      if(idx === 0) {
         s.y += 10;
       } else {
         s.y -= 10;
@@ -307,28 +334,53 @@ Game.addHand = function(o, n, y) {
   }
 }
 
-Game.addFlags = function(o) {
+Game.addWeather = function(g) {
+  var i, s;
+  for(i = 0; i < g.weather.length; i++) {
+    if(g.weather[i] === 3
+    || g.weather[i] === 1
+    ) {
+      s = new Sprite(65, 20);
+      s.image = Game.core.assets['view/flag.png'];
+      s.x = i * 75 + 5;
+      s.y = 250;
+      s.frame = 1;
+      Game.core.rootScene.addChild(s);
+    }
+    if(g.weather[i] === 3
+    || g.weather[i] === 2) {
+      s = new Sprite(65, 20);
+      s.image = Game.core.assets['view/flag.png'];
+      s.x = i * 75 + 5;
+      s.y = 250;
+      s.frame = 2;
+      Game.core.rootScene.addChild(s);
+    }
+  }
+}
+
+Game.addFlags = function(g) {
   var unActive, i, activeScore, unActiveScore;
-  if(o.active === 0) {
+  if(g.active === 0) {
     unActive = 1;
   } else {
     unActive = 0;
   }
-  for(i = 0; i < o.flags.length; i++) {
-    s = new Sprite(60, 20);
+  for(i = 0; i < g.flags.length; i++) {
+    s = new Sprite(65, 20);
     s.image = Game.core.assets['view/flag.png'];
     s.frame = 0;
-    s.x = i * 65 + 5;
-    if(o.state === GameService.Playing
-    && o.players[o.active].userid === Vrunr.userid
-    && o.phase === Phase.Main
-    && o.players[o.active].field[i].length === o.size[i]
+    s.x = i * 75 + 5;
+    if(g.state === State.Play
+    && g.players[g.active].userid === Vrunr.userid
+    && g.phase === Phase.Main
+    && g.players[g.active].field[i].length === g.size[i]
     ) {
-      activeScore = Game.score(o.weather[i], o.players[o.active].field[i]);
-      if(o.players[unActive].field[i].length > 0) {
-        unActiveScore = Game.maxScore(-1, o.stock, o.weather[i], o.size[i], o.players[unActive].field[i]);
+      activeScore = Game.score(g.weather[i], g.players[g.active].field[i]);
+      if(g.players[unActive].field[i].length > 0) {
+        unActiveScore = Game.maxScore(-1, g.stock, g.weather[i], g.size[i], g.players[unActive].field[i]);
       } else {
-        unActiveScore = Game.maxScoreForNothing(o, o.weather[i], o.size[i]);
+        unActiveScore = Game.maxScoreForNothing(g, g.weather[i], g.size[i]);
       }
       if(activeScore >= unActiveScore) {
         s.addEventListener('touchstart', function() {
@@ -339,33 +391,33 @@ Game.addFlags = function(o) {
         }());
       }
     }
-    if (o.flags[i] === 0) {
-      s.y = 62;
-    } else if (o.flags[i] === 1) {
-      s.y = 348;
+    if (g.flags[i] === 0) {
+      s.y = 69;
+    } else if (g.flags[i] === 1) {
+      s.y = 431;
     } else {
-      s.y = 205;
+      s.y = 250;
     }
     Game.core.rootScene.addChild(s);
-    if(o.flags[i] === -1) {
-      s = new Sprite(60, 20);
+    if(g.flags[i] === -1) {
+      s = new Sprite(65, 20);
       s.image = Game.core.assets['view/flag.png'];
       s.frame = 12;
-      s.x = i * 65 + 5;
-      s.y = 205;
-      if(o.phase === Phase.Fog) {
+      s.x = i * 75 + 5;
+      s.y = 250;
+      if(g.phase === Phase.Fog) {
         s.addEventListener('touchstart', function() {
-          var j = i;
+          var _i = i;
           return function() {
-            Game.send('g' + j);
+            Game.send('g' + _i);
           };
         }());
         Game.core.rootScene.addChild(s);
-      } else if(o.phase === Phase.Mud) {
+      } else if(g.phase === Phase.Mud) {
         s.addEventListener('touchstart', function() {
-          var j = i;
+          var _i = i;
           return function() {
-            Game.send('h' + j);
+            Game.send('h' + _i);
           };
         }());
         Game.core.rootScene.addChild(s);
@@ -374,64 +426,64 @@ Game.addFlags = function(o) {
   }
 }
 
-Game.addTouch = function(o) {
+Game.addTouch = function(g) {
   var i;
-  if(o.state === GameService.Playing
-  && o.players[o.active].userid === Vrunr.userid
+  if(g.state === State.Play
+  && g.players[g.active].userid === Vrunr.userid
   ) {
-    if(o.phase === Phase.Unit
-    || o.phase === Phase.Traitor2) {
-      for(i = 0; i < o.flags.length; i++) {
-        if(o.flags[i] === -1
-        && o.players[o.active].field[i].length < o.size[i]
+    if(g.phase === Phase.Unit
+    || g.phase === Phase.Traitor2) {
+      for(i = 0; i < g.flags.length; i++) {
+        if(g.flags[i] === -1
+        && g.players[g.active].field[i].length < g.size[i]
         ) {
-          s = new Sprite(60, 120);
+          s = new Sprite(65, 160);
           s.image = Game.core.assets['view/touch.png'];
-          s.x = i * 65 + 5;
-          if (o.phase === Phase.Unit) {
+          s.x = i * 75 + 5;
+          if (g.phase === Phase.Unit) {
             s.addEventListener('touchstart', function() {
-              var j = i;
+              var _i = i;
               return function() {
-                Game.send('f' + j);
+                Game.send('f' + _i);
               };
             }());
-            if(o.active === 0) {
-              s.y = 85;
+            if(g.active === 0) {
+              s.y = 89;
             } else {
-              s.y = 225;
+              s.y = 271;
             }
           } else {
             s.addEventListener('touchstart', function() {
-              var j = i;
+              var _i = i;
               return function() {
-                Game.send('p' + j);
+                Game.send('p' + _i);
               };
             }());
-            if(o.active === 0) {
-              s.y = 85;
+            if(g.active === 0) {
+              s.y = 89;
             } else {
-              s.y = 225;
+              s.y = 271;
             }
           }
           Game.core.rootScene.addChild(s);
         }
       }
-    } else if(o.phase === Phase.Redeploy2) {
-      for(i = 0; i < o.flags.length; i++) {
-        if(o.flags[i] === -1) {
-          s = new Sprite(60, 120);
+    } else if(g.phase === Phase.Redeploy2) {
+      for(i = 0; i < g.flags.length; i++) {
+        if(g.flags[i] === -1) {
+          s = new Sprite(65, 160);
           s.image = Game.core.assets['view/touch.png'];
-          s.x = i * 65 + 5;
+          s.x = i * 75 + 5;
           s.addEventListener('touchstart', function() {
-            var j = i;
+            var _i = i;
             return function() {
-              Game.send('m' + j);
+              Game.send('m' + _i);
             };
           }());
-          if(o.active === 0) {
-            s.y = 85;
+          if(g.active === 0) {
+            s.y = 89;
           } else {
-            s.y = 225;
+            s.y = 271;
           }
           Game.core.rootScene.addChild(s);
         }
@@ -440,77 +492,91 @@ Game.addTouch = function(o) {
   }
 }
 
-Game.addField = function(o, n) {
+Game.addField = function(g, idx) {
   var i, j, s;
-  for(i = 0; i < o.players[n].field.length; i++) {
-    for(j = 0; j < o.players[n].field[i].length; j++) {
-      s = new Sprite(60, 60);
-      s.image = Game.core.assets['view/card.png'];
-      s.frame = ((0xff00 & o.players[n].field[i][j]) >> 8) * 10 + (0x00ff & o.players[n].field[i][j]);
-      s.x = i * 65 + 5;
-      if(n === 0) {
-        s.y = 143 - j * 20;
-      } else {
-        s.y = j * 20 + 227;
-      }
-      if(o.state === GameService.Playing
-      && o.players[o.active].userid === Vrunr.userid
-      && o.flags[i] === -1
+  for(i = 0; i < g.players[idx].field.length; i++) {
+    for(j = 0; j < g.players[idx].field[i].length; j++) {
+      if(g.before.idx === idx
+      && g.before.y === i
+      && g.before.x === j
       ) {
-        if(o.active === n
-        && o.phase === Phase.Redeploy1
+        s = new Sprite(71, 71);
+        s.image = Game.core.assets['view/before.png'];
+        s.x = i * 75 + 2;
+        if(idx === 0) {
+          s.y = 181 - j * 31;
+        } else {
+          s.y = j * 31 + 268;
+        }
+        Game.core.rootScene.addChild(s);
+      }
+      s = new Sprite(65, 65);
+      s.image = Game.core.assets['view/card.png'];
+      s.frame = ((0xff00 & g.players[idx].field[i][j]) >> 8) * 10 + (0x00ff & g.players[idx].field[i][j]);
+      s.x = i * 75 + 5;
+      if(idx === 0) {
+        s.y = 184 - j * 31;
+      } else {
+        s.y = j * 31 + 271;
+      }
+      if(g.state === State.Play
+      && g.players[g.active].userid === Vrunr.userid
+      && g.flags[i] === -1
+      ) {
+        if(g.active === idx
+        && g.phase === Phase.Redeploy1
         ) {
           s.addEventListener('touchstart', function() {
-            var k = i, l = j;
+            var _i = i, _j = j;
             return function() {
-              Game.send('l' + k + ' ' + l);
+              Game.send('l' + _i + ' ' + _j);
             };
           }());
-        } else if(o.active !== n) {
-          if(o.phase === Phase.Deserter) {
+        } else if(g.active !== idx) {
+          if(g.phase === Phase.Deserter) {
             s.addEventListener('touchstart', function() {
-              var k = i, l = j;
+              var _i = i, _j = j;
               return function() {
-                Game.send('n' + k + ' ' + l);
+                Game.send('n' + _i + ' ' + _j);
               };
             }());
-          } else if(o.phase === Phase.Traitor1
-          && (o.players[n].field[i][j] & 0xff00) !== 0x0600
+          } else if(g.phase === Phase.Traitor1
+          && (g.players[idx].field[i][j] & 0xff00) !== 0x0600
           ) {
             s.addEventListener('touchstart', function() {
-              var k = i, l = j;
+              var _i = i, _j = j;
               return function() {
-                Game.send('o' + k + ' ' + l);
+                Game.send('o' + _i + ' ' + _j);
               };
             }());
           }
         }
       }
       Game.core.rootScene.addChild(s);
-      if(o.state === GameService.Playing
-      && o.target.y === i
-      && o.target.x === j
+      if(g.state === State.Play
+      && g.target.y === i
+      && g.target.x === j
       ) {
-        s = new Sprite(60, 60);
+        s = new Sprite(65, 65);
         s.image = Game.core.assets['view/card.png'];
         s.frame = 72;
         s.opacity = 0.7;
-        s.x = i * 65 + 5;
-        if(o.active === n) {
-          if(o.phase === Phase.Redeploy2) {
-            if(n === 0) {
-              s.y = 143 - j * 20;
+        s.x = i * 75 + 5;
+        if(g.active === idx) {
+          if(g.phase === Phase.Redeploy2) {
+            if(idx === 0) {
+              s.y = 184 - j * 31;
             } else {
-              s.y = j * 20 + 227;
+              s.y = j * 31 + 271;
             }
             Game.core.rootScene.addChild(s);
           }
         } else {
-          if(o.phase === Phase.Traitor2) {
-            if(n === 0) {
-              s.y = 143 - j * 20;
+          if(g.phase === Phase.Traitor2) {
+            if(idx === 0) {
+              s.y = 184 - j * 31;
             } else {
-              s.y = j * 20 + 227;
+              s.y = j * 31 + 271;
             }
             Game.core.rootScene.addChild(s);
           }
@@ -520,124 +586,105 @@ Game.addField = function(o, n) {
   }
 }
 
-Game.addUnitDeck = function(o) {
-  var s = new Sprite(60, 60);
+Game.addUnitDeck = function(g) {
+  var s = new Sprite(65, 65);
   s.image = Game.core.assets['view/card.png'];
   s.frame = 70;
-  s.x = 645;
-  s.y = 350;
-  if(o.state === GameService.Playing
-  && o.players[o.active].userid === Vrunr.userid
-  && o.unitDeck.length > 0
+  s.x = 700;
+  s.y = 390;
+  if(g.state === State.Play
+  && g.players[g.active].userid === Vrunr.userid
+  && g.unitDeck.length > 0
   ) {
-    if(o.phase === Phase.Draw) {
+    if(g.phase === Phase.Draw) {
       s.addEventListener('touchstart', function() {
         Game.send('q');
       });
-    } else if(o.phase === Phase.Scout1) {
+    } else if(
+         g.phase === Phase.Scout1
+      || g.phase === Phase.Scout2
+    ) {
       s.addEventListener('touchstart', function() {
         Game.send('i');
       });
     }
   }
   Game.core.rootScene.addChild(s);
-  s = new Label(o.unitDeck.length + '枚');
-  s.x = 650;
-  s.y = 355;
+  s = new Label(g.unitDeck.length + '枚');
+  s.x = 705;
+  s.y = 395;
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
 }
 
-Game.addTacticsDeck = function(o) {
-  var s = new Sprite(60, 60);
+Game.addTacticsDeck = function(g) {
+  var s = new Sprite(65, 65);
   s.image = Game.core.assets['view/card.png'];
   s.frame = 71;
-  s.x = 710;
-  s.y = 350;
-  if(o.state === GameService.Playing
-  && o.players[o.active].userid === Vrunr.userid
-  && o.tacticsDeck.length > 0
+  s.x = 770;
+  s.y = 390;
+  if(g.state === State.Play
+  && g.players[g.active].userid === Vrunr.userid
+  && g.tacticsDeck.length > 0
   ) {
-    if(o.phase === Phase.Draw) {
+    if(g.phase === Phase.Draw) {
       s.addEventListener('touchstart', function() {
         Game.send('r');
       });
-    } else if(o.phase === Phase.Scout1) {
+    } else if(
+         g.phase === Phase.Scout1
+      || g.phase === Phase.Scout2
+    ) {
       s.addEventListener('touchstart', function() {
         Game.send('j');
       });
     }
   }
   Game.core.rootScene.addChild(s);
-  s = new Label(o.tacticsDeck.length + '枚');
-  s.x = 715;
-  s.y = 355;
+  s = new Label(g.tacticsDeck.length + '枚');
+  s.x = 775;
+  s.y = 395;
   s.font = '13px sens-serif';
   Game.core.rootScene.addChild(s);
 }
 
-Game.addTalon = function(o, n) {
+Game.addTalon = function(g, idx) {
   var i, s;
-  for(i = 0; i < o.players[n].talon.length; i++) {
-    s = new Sprite(60, 60);
+  for(i = 0; i < g.players[idx].talon.length; i++) {
+    s = new Sprite(65, 65);
     s.image = Game.core.assets['view/card.png'];
-    s.frame = ((0xff00 & o.players[n].talon[i]) >> 8) * 10 + (0x00ff & o.players[n].talon[i]);
-    s.x = i * 30 + 440;
-    if(n === 0) {
-      s.y = 0;
+    s.frame = ((0xff00 & g.players[idx].talon[i]) >> 8) * 10 + (0x00ff & g.players[idx].talon[i]);
+    s.x = i * 45 + 445;
+    if(idx === 0) {
+      s.y = 2;
     } else {
-      s.y = 370;
+      s.y = 453;
     }
     Game.core.rootScene.addChild(s);
   }
 }
 
-Game.addWeather = function(o) {
-  var i, s;
-  for(i = 0; i < o.weather.length; i++) {
-    if(o.weather[i] === 3
-    || o.weather[i] === 1
-    ) {
-      s = new Sprite(60, 20);
-      s.image = Game.core.assets['view/flag.png'];
-      s.x = i * 65 + 5;
-      s.y = 205;
-      s.frame = 1;
-      Game.core.rootScene.addChild(s);
-    }
-    if(o.weather[i] === 3
-    || o.weather[i] === 2) {
-      s = new Sprite(60, 20);
-      s.image = Game.core.assets['view/flag.png'];
-      s.x = i * 65 + 5;
-      s.y = 205;
-      s.frame = 2;
-      Game.core.rootScene.addChild(s);
-    }
-  }
-}
-
-Game.addMessage = function(o) {
+Game.addMessage = function(g) {
   var s, unActive, canPlayUnit = false, haveUnit = false;
-  if(o.state === GameService.Playing) {
+  if(g.state === State.Play) {
     s = new Label('');
-    s.x = 645;
+    s.x = 705;
     s.y = 170;
     s.font = '13px sens-serif';
-    if(o.phase === Phase.Main) {
+    if(g.phase === Phase.Main) {
       s.text = '旗の獲得か、カードを<br />プレイできます。';
       Game.core.rootScene.addChild(s);
-      if(o.players[o.active].userid === Vrunr.userid) {
-        for(i in o.flags) {
-          if(o.flags[i] === -1
-          && o.players[o.active].field[i].length < o.size[i]
+      if(g.players[g.active].userid === Vrunr.userid) {
+        for(i in g.flags) {
+          if(g.flags[i] === -1
+          && g.players[g.active].field[i].length < g.size[i]
           ) {
             canPlayUnit = true;
             break;
           }
         }
-        for(i in o.players[o.active].hand) {
-          if((o.players[o.active].hand[i] & 0xff00) !== 0x0600) {
+        for(i in g.players[g.active].hand) {
+          if((g.players[g.active].hand[i] & 0xff00) !== 0x0600) {
             haveUnit = true;
             break;
           }
@@ -646,7 +693,7 @@ Game.addMessage = function(o) {
           s = new Sprite(80, 25);
           s.image = Game.core.assets['view/btn.png'];
           s.frame = 3;
-          s.x = 645;
+          s.x = 705;
           s.y = 300;
           s.addEventListener('touchstart', function() {
             Game.send('s');
@@ -654,33 +701,33 @@ Game.addMessage = function(o) {
           Game.core.rootScene.addChild(s);
         }
       }
-    } else if(o.phase === Phase.Unit) {
+    } else if(g.phase === Phase.Unit) {
       s.text = '戦場へカードを出せま<br />す。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Fog) {
+    } else if(g.phase === Phase.Fog) {
       s.text = '戦場を霧にできます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Mud) {
+    } else if(g.phase === Phase.Mud) {
       s.text = '戦場を沼にできます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Scout1) {
+    } else if(g.phase === Phase.Scout1) {
       s.text = '偵察により山札からカ<br />ードを引けます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Scout2) {
+    } else if(g.phase === Phase.Scout2) {
       s.text = '山札の上にカードを戻<br />せます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Redeploy1) {
+    } else if(g.phase === Phase.Redeploy1) {
       s.text = '再配置するカードを選<br />べます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Redeploy2) {
-      if(o.players[o.active].userid === Vrunr.userid) {
+    } else if(g.phase === Phase.Redeploy2) {
+      if(g.players[g.active].userid === Vrunr.userid) {
         s.text = 'カードを移動か、除外<br />できます。';
         Game.core.rootScene.addChild(s);
-        if(o.players[o.active].userid === Vrunr.userid) {
+        if(g.players[g.active].userid === Vrunr.userid) {
           s = new Sprite(80, 25);
           s.image = Game.core.assets['view/btn.png'];
           s.frame = 4;
-          s.x = 645;
+          s.x = 705;
           s.y = 300;
           s.addEventListener('touchstart', function() {
             Game.send('m-1');
@@ -688,16 +735,16 @@ Game.addMessage = function(o) {
           Game.core.rootScene.addChild(s);
         }
       }
-    } else if(o.phase === Phase.Deserter) {
+    } else if(g.phase === Phase.Deserter) {
       s.text = 'カードを除外できます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Traitor1) {
+    } else if(g.phase === Phase.Traitor1) {
       s.text = '裏切らせる部隊カード<br />を選べます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Traitor2) {
+    } else if(g.phase === Phase.Traitor2) {
       s.text = '部隊カードを移動でき<br />ます。';
       Game.core.rootScene.addChild(s);
-    } else if(o.phase === Phase.Draw) {
+    } else if(g.phase === Phase.Draw) {
       s.text = '山札からカードを引け<br />ます。';
       Game.core.rootScene.addChild(s);
     }

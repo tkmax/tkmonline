@@ -1,3 +1,7 @@
+var State = function() {}
+State.Ready = 'ready';
+State.Play = 'play';
+
 var Phase = function() {}
 Phase.Main = 'main';
 Phase.Unit = 'unit';
@@ -5,11 +9,12 @@ Phase.Fog = 'fog';
 Phase.Mud = 'mud';
 Phase.Scout1 = 'scout1';
 Phase.Scout2 = 'scout2';
+Phase.Scout3 = 'scout3';
 Phase.Redeploy1 = 'redeploy1';
 Phase.Redeploy2 = 'redeploy2';
 Phase.Deserter = 'deserter';
 Phase.Traitor1 = 'traitor1';
-Phase.Traitor1 = 'traitor2';
+Phase.Traitor2 = 'traitor2';
 Phase.Draw = 'draw';
 
 var Tactics = function() {}

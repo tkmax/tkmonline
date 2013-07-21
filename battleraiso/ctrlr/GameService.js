@@ -1,14 +1,11 @@
 var GameService = function() {}
 
-GameService.Ready = 'ready';
-GameService.Playing = 'playing';
-
 GameService.splitOption = function(m) {
   return (m.substring(1)).split(' ');
 }
 
 GameService.clear = function(g) {
-  g.state = GameService.Ready;
+  g.state = State.Ready;
   g.phase = '';
   g.active = -1;
   g.play = -1;
@@ -21,6 +18,9 @@ GameService.clear = function(g) {
   g.size = [];
   g.weather = [];
   g.stock = [];
+  g.before = {
+    idx: -1, x: -1, y: -1
+  };
   g.players = [new Player(), new Player()];
   Player.clear(g.players[0]);
   Player.clear(g.players[1]);
@@ -28,12 +28,12 @@ GameService.clear = function(g) {
 
 GameService.start = function(g) {
   var i, j, t;
-  g.state = GameService.Playing;
+  g.state = State.Play;
   g.phase = Phase.Main;
   g.active = 0;
   g.play = -1;
-  g.target.x = -1;
-  g.target.y = -1;
+  g.target.x = g.target.y = -1;
+  g.before.idx = g.before.x = g.before.y = -1;
   g.flags.length = 0;
   g.size.length = 0;
   g.weather.length = 0;
@@ -92,6 +92,7 @@ GameService.nextTurn = function(g) {
     g.active = 0;
   }
   g.phase = Phase.Main;
+  Crunr.bell();
 }
 
 GameService.isWin = function(g) {
