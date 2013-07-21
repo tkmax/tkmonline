@@ -28,7 +28,3 @@ Tactics.Scout = 0x0606;
 Tactics.Redeploy = 0x0607;
 Tactics.Deserter = 0x0608;
 Tactics.Traitor = 0x0609;
-
-var GameService = function() {}
-GameService.Ready = 'ready';
-State.Play = 'playing';
