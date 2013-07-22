@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<title>[1st] バトルライソ</title>
+<title>[2nd] バトルライソ</title>
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -44,7 +44,7 @@
   body {
     background-color: peachpuff;
     color: black;
-    font-family:Arial,Verdana,"ＭＳ Ｐゴシック","ヒラギノ角ゴ Pro W3", sans-serif;
+    font-family: monospace;
     font-size: 14px;
   }
   ul {
@@ -58,11 +58,22 @@
   
   <iframe id="ctrlr" src="ctrlr.html" style="display: none;"></iframe>
   
-  <ul id="login-panel">
-    <li><a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="100" /></a></li>
-    <li><input id="login" type="text" /></li>
-    <li id="help"></li>
-  </ul>
+  <table id="login-panel">
+    <tr>
+      <td rowspan=4>
+        <a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="100" /></a>
+      </td>
+    </tr>
+    <tr>
+      <td><input id="login" type="text" /></td>
+    </tr>
+    <tr>
+      <td id="help"></td>
+    </tr>
+    <tr>
+      <td id="user-list"></td>
+    </tr>
+  </table>
   
   <table id="play-panel" calign="center" style="display: none;">
     <tr>
@@ -139,7 +150,14 @@
           switch(e.data[0]) {
             case 'A':
               option = Runr.splitForSyntax3(e.data);
-              Runr.userList = option;
+              tmp = '';
+              for(i in option) {
+                if(tmp !== '') {
+                  tmp += '&nbsp;|&nbsp;';
+                }
+                tmp += option[i];
+              }
+              $('#login-panel #user-list').text('ログインユーザー&nbsp;:&nbsp;' + tmp);
             break;
             case 'B':
               $('#login-panel').hide();
@@ -150,7 +168,7 @@
               Runr.send('c');
             break;
             case 'C':
-              $('#help').text('命名規則に違反するか、既に使用されているユーザー名です。ユーザー名は英数字１２文字以内を使用して下さい。');
+              $('#help').text('命名規則に違反するか、既に使用されているユーザー名です。ユーザー名はアルファベットと数字の１２文字以内を使用して下さい。');
             break;
           }
         } else {
@@ -163,12 +181,12 @@
               option = Runr.splitForSyntax1(e.data);
               view.Vrunr.onAddUser(option);
               Runr.userList.push(option);
-              $('#user-list').text('');
-              $('#user-list').append('<ul>');
+              $('#play-panel #user-list').text('');
+              $('#play-panel #user-list').append('<ul>');
               for(i in Runr.userList) {
-                $('#user-list').append('<li>' + Runr.userList[i] + '</li>');
+                $('#play-panel #user-list').append('<li>' + Runr.userList[i] + '</li>');
               }
-              $('#user-list').append('</ul>');
+              $('#play-panel #user-list').append('</ul>');
             break;
             case 'E':
               option = Runr.splitForSyntax1(e.data);
@@ -181,11 +199,12 @@
                   i++;
                 }
               }
-              $('#user-list').append('<ul>');
+              $('#play-panel #user-list').text('');
+              $('#play-panel #user-list').append('<ul>');
               for(i in Runr.userList) {
-                $('#user-list').append('<li>' + Runr.userList[i] + '</li>');
+                $('#play-panel #user-list').append('<li>' + Runr.userList[i] + '</li>');
               }
-              $('#user-list').append('</ul>');
+              $('#play-panel #user-list').append('</ul>');
             break;
             case 'F':
               option = Runr.splitForSyntax1(e.data);
