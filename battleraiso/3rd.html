@@ -153,11 +153,11 @@
               tmp = '';
               for(i in option) {
                 if(tmp !== '') {
-                  tmp += '&nbsp;|&nbsp;';
+                  tmp += ' | ';
                 }
                 tmp += option[i];
               }
-              $('#login-panel #user-list').text('ログインユーザー&nbsp;:&nbsp;' + tmp);
+              $('#login-panel #user-list').text('ログインユーザー : ' + tmp);
             break;
             case 'B':
               $('#login-panel').hide();
