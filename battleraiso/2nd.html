@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<title>[2nd] バトルライソ</title>
+<title>[1st] バトルライソ</title>
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -10,7 +10,7 @@
 <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
 <script>
   var ctrlr, view;
-  Runr.instance = 16;
+  Runr.instance = 6;
   Runr.webSocket = null;
   Runr.watchList = [];
   Runr.userList = [];
@@ -42,8 +42,8 @@
     padding: 0;
   }
   body {
-    background-color: black;
-    color: white;
+    background-color: peachpuff;
+    color: black;
     font-family:Arial,Verdana,"ＭＳ Ｐゴシック","ヒラギノ角ゴ Pro W3", sans-serif;
     font-size: 14px;
   }
@@ -59,7 +59,7 @@
   <iframe id="ctrlr" src="ctrlr.html" style="display: none;"></iframe>
   
   <ul id="login-panel">
-    <li><a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="60" /></a></li>
+    <li><a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="100" /></a></li>
     <li><input id="login" type="text" /></li>
     <li id="help"></li>
   </ul>
@@ -69,7 +69,7 @@
       <td align=left valign=top>
         <ul>
           <li>
-            <a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="60" /></a>
+            <a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.png" width="140" height="100" /></a>
           </li>
           <li>あなた：</li>
           <li id="userid"></li>
@@ -93,7 +93,7 @@
             </table>
           </li>
           <li>
-            <div id="user-list" style="background-color: lavender; color: black; overflow: scroll; width: 140px; height: 540px;">
+            <div id="user-list" style="background-color: lavender; color: black; overflow: scroll; width: 140px; height: 495px;">
             </div>
           </li>
         </ul>

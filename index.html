@@ -5,131 +5,77 @@
 <title>Tkm Online</title>
 <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
 <style>
+  body, div, p, ul, table, tr, td {
+    margin: 0px;
+    padding: 0px;
+  }
+  li {
+    margin-bottom: 10px;
+  }
+  img {
+   vertical-align:bottom
+  }
   body {
-    background-color: black;
-    color: white;
-    margin: 0;
-    padding: 0;
-    text-align: center;
+    background-color: peachpuff;
+    color: black;
     font-family:Arial,Verdana,"ＭＳ Ｐゴシック","ヒラギノ角ゴ Pro W3", sans-serif;
-    font-size: 15px;
+    font-size: 32px;
   }
-  p {
-    margin: 0;
-    padding: 0;
-  }
-  .manual:link, .manual:visited {
-    color: white;
-  }
-  #header {
-    padding: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    width: 550px;
+  ul {
+    list-style: none;
   }
   .app {
-    background-color: black;
-    padding: 5px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: left;
-    width: 320px;
+    background-color: gray;
   }
-  #fotter {
-    padding: 15px;
+  .app .count {
+    background-color: white;
+    text-align: center;
   }
 </style>
 </head>
 <body>
-  <div id="header">
-    <table>
-      <tr>
-        <td><img src="title.png" /></td>
-      </tr>
-    </table>
-  </div>
-  <div class="app">
-    <p>//&nbsp;&nbsp;YouTube&nbsp;チャット&nbsp;&nbsp;<a class="manual" href="youtube.pdf" target="_blank">(PDF説明書)</a></p>
-    <table>
-      <tr>
-        <td><a href="./youtube/1st.html" target="_blank"><img src="youtube.png" onmouseover="this.src='hover.png'" onmouseout="this.src='youtube.png'"/></a></td>
-        <td><a href="./youtube/2nd.html" target="_blank"><img src="youtube.png" onmouseover="this.src='hover.png'" onmouseout="this.src='youtube.png'"/></a></td>
-        <td><a href="./youtube/3rd.html" target="_blank"><img src="youtube.png" onmouseover="this.src='hover.png'" onmouseout="this.src='youtube.png'"/></a></td>
-        <td><a href="./youtube/4th.html" target="_blank"><img src="youtube.png" onmouseover="this.src='hover.png'" onmouseout="this.src='youtube.png'"/></a></td>
-        <td><a href="./youtube/5th.html" target="_blank"><img src="youtube.png" onmouseover="this.src='hover.png'" onmouseout="this.src='youtube.png'"/></a></td>
-      </tr>
-      <tr>
-        <td id='youtube1'>0人</td>
-        <td id='youtube2'>0人</td>
-        <td id='youtube3'>0人</td>
-        <td id='youtube4'>0人</td>
-        <td id='youtube5'>0人</td>
-      </tr>
-    </table>
-  </div>
-  <div class="app">
-    <p>//&nbsp;&nbsp;雷神牌&nbsp;&nbsp;<a class="manual" href="raijinhai.pdf" target="_blank">(PDF説明書)</a></p>
-    <table>
-      <tr>
-        <td><a href="./raijinhai/1st.html" target="_blank"><img src="raijinhai.png" onmouseover="this.src='hover.png'" onmouseout="this.src='raijinhai.png'"/></a></td>
-        <td><a href="./raijinhai/2nd.html" target="_blank"><img src="raijinhai.png" onmouseover="this.src='hover.png'" onmouseout="this.src='raijinhai.png'"/></a></td>
-        <td><a href="./raijinhai/3rd.html" target="_blank"><img src="raijinhai.png" onmouseover="this.src='hover.png'" onmouseout="this.src='raijinhai.png'"/></a></td>
-        <td><a href="./raijinhai/4th.html" target="_blank"><img src="raijinhai.png" onmouseover="this.src='hover.png'" onmouseout="this.src='raijinhai.png'"/></a></td>
-        <td><a href="./raijinhai/5th.html" target="_blank"><img src="raijinhai.png" onmouseover="this.src='hover.png'" onmouseout="this.src='raijinhai.png'"/></a></td>
-      </tr>
-      <tr>
-        <td id='raijinhai1'>0人</td>
-        <td id='raijinhai2'>0人</td>
-        <td id='raijinhai3'>0人</td>
-        <td id='raijinhai4'>0人</td>
-        <td id='raijinhai5'>0人</td>
-      </tr>
-    </table>
-  </div>
-  <div class="app">
-    <p>//&nbsp;&nbsp;おい！それは俺の魚だぜ！&nbsp;&nbsp;<a class="manual" href="htmf.pdf" target="_blank">(PDF説明書)</a></p>
-    <table>
-      <tr>
-        <td><a href="./htmf/1st.html" target="_blank"><img src="htmf.png" onmouseover="this.src='hover.png'" onmouseout="this.src='htmf.png'"/></a></td>
-        <td><a href="./htmf/2nd.html" target="_blank"><img src="htmf.png" onmouseover="this.src='hover.png'" onmouseout="this.src='htmf.png'"/></a></td>
-        <td><a href="./htmf/3rd.html" target="_blank"><img src="htmf.png" onmouseover="this.src='hover.png'" onmouseout="this.src='htmf.png'"/></a></td>
-        <td><a href="./htmf/4th.html" target="_blank"><img src="htmf.png" onmouseover="this.src='hover.png'" onmouseout="this.src='htmf.png'"/></a></td>
-        <td><a href="./htmf/5th.html" target="_blank"><img src="htmf.png" onmouseover="this.src='hover.png'" onmouseout="this.src='htmf.png'"/></a></td>
-      </tr>
-      <tr>
-        <td id='htmf1'>0人</td>
-        <td id='htmf2'>0人</td>
-        <td id='htmf3'>0人</td>
-        <td id='htmf4'>0人</td>
-        <td id='htmf5'>0人</td>
-      </tr>
-    </table>
-  </div>
-  <div class="app">
-    <p>//&nbsp;&nbsp;バトルライソ&nbsp;&nbsp;<a class="manual" href="battleline.pdf" target="_blank">(PDF説明書)</a></p>
-    <table>
-      <tr>
-        <td><a href="./battleraiso/1st.html" target="_blank"><img src="battleline.png" onmouseover="this.src='hover.png'" onmouseout="this.src='battleline.png'"/></a></td>
-        <td><a href="./battleraiso/2nd.html" target="_blank"><img src="battleline.png" onmouseover="this.src='hover.png'" onmouseout="this.src='battleline.png'"/></a></td>
-        <td><a href="./battleraiso/3rd.html" target="_blank"><img src="battleline.png" onmouseover="this.src='hover.png'" onmouseout="this.src='battleline.png'"/></a></td>
-        <td><a href="./battleraiso/4th.html" target="_blank"><img src="battleline.png" onmouseover="this.src='hover.png'" onmouseout="this.src='battleline.png'"/></a></td>
-        <td><a href="./battleraiso/5th.html" target="_blank"><img src="battleline.png" onmouseover="this.src='hover.png'" onmouseout="this.src='battleline.png'"/></a></td>
-      </tr>
-      <tr>
-        <td id='battleline1'>0人</td>
-        <td id='battleline2'>0人</td>
-        <td id='battleline3'>0人</td>
-        <td id='battleline4'>0人</td>
-        <td id='battleline5'>0人</td>
-      </tr>
-    </table>
-  </div>
-  <div id="fotter">
-    <p>推奨ブラウザ</p>
-    <p>Internet&nbsp;Explorer&nbsp;10以上,&nbsp;Mozilla&nbsp;Firefox&nbsp;11以上</p>
-    <p>Google&nbspChrome&nbsp16以上,&nbsp;Safari&nbsp;6以上,&nbspOpera&nbsp;12.10以上</p>
-  </div>
+  <ul style="width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
+    <li style="width: 980px; margin-left: auto; margin-right: auto; text-align: left;"><img src="title.png" /></li>
+    <li style="width: 890px; margin-left: auto; margin-right: auto; text-align: left;"><img src="readme.png" /></li>
+    <li>
+        <table class="app">
+          <tr>
+            <td rowspan=2><img src="youtube.png" /></td>
+            <td><a href="./youtube/1st.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./youtube/2nd.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./youtube/3rd.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./youtube/4th.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./youtube/5th.html" target="_blank"><img src="sheep.png" /></a></td>
+          </tr>
+          <tr>
+            <td id="youtube1" class="count">0</td>
+            <td id="youtube2" class="count">0</td>
+            <td id="youtube3" class="count">0</td>
+            <td id="youtube4" class="count">0</td>
+            <td id="youtube5" class="count">0</td>
+          </tr>
+        </table>
+    </li>
+    <li>
+      <table class="app">
+          <tr>
+            <td rowspan=2><img src="battleraiso.png" /></td>
+            <td><a href="./battleraiso/1st.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./battleraiso/2nd.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./battleraiso/3rd.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./battleraiso/4th.html" target="_blank"><img src="sheep.png" /></a></td>
+            <td><a href="./battleraiso/5th.html" target="_blank"><img src="sheep.png" /></a></td>
+          </tr>
+          <tr>
+            <td id="battleraiso1" class="count">0</td>
+            <td id="battleraiso2" class="count">0</td>
+            <td id="battleraiso3" class="count">0</td>
+            <td id="battleraiso4" class="count">0</td>
+            <td id="battleraiso5" class="count">0</td>
+          </tr>
+        </table>
+    </li>
+  </ul>
   <script>
     var instanceList, ws, instanceIndex;
     var splitForSyntax3 = function(s) {
@@ -137,30 +83,33 @@
     }
     instanceList = [
       '#youtube1', '#youtube2', '#youtube3', '#youtube4', '#youtube5',
-      '#raijinhai1', '#raijinhai2', '#raijinhai3', '#raijinhai4', '#raijinhai5',
-      '#htmf1', '#htmf2', '#htmf3', '#htmf4', '#htmf5',
-      '#battleline1', '#battleline2', '#battleline3', '#battleline4', '#battleline5'
+      '#battleraiso1', '#battleraiso2', '#battleraiso3', '#battleraiso4', '#battleraiso5'
     ];
-    
-    instanceIndex = 0;
     
     ws = new WebSocket('ws://210.152.156.23:443');
     
-    ws.onopen = function() {
+    repeet = function() {
+      instanceIndex = 0;
       ws.send(String.fromCharCode(instanceIndex) + 'a');
+    }
+    
+    ws.onopen = function() {
+      repeet();
     }
     
     ws.onmessage = function(e) {
       var o;
       o = splitForSyntax3(e.data);
       if(o[0] !== '') {
-        $(instanceList[instanceIndex]).text(o.length + '人');
+        $(instanceList[instanceIndex]).text(o.length);
+      } else {
+        $(instanceList[instanceIndex]).text(0);
       }
       instanceIndex++;
       if(instanceIndex < instanceList.length) {
         ws.send(String.fromCharCode(instanceIndex) + 'a');
       } else {
-        ws.close();
+        setTimeout(repeet, 5000);
       }
     }
   </script>
