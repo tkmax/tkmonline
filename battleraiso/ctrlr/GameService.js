@@ -50,22 +50,32 @@ GameService.start = function(g) {
   }
   Player.start(g.players[0]);
   Player.start(g.players[1]);
-  t = [];
+  g.unitDeck.length = 0;
   for(i = 0x0000; i < 0x0600; i += 0x0100) {
     for(j = 0x0009; j >= 0x0000; j -= 0x0001) {
-      t.push(i | j);
+      g.unitDeck.push(i | j);
     }
   }
-  g.unitDeck.length = 0;
+  t = [];
+  while(g.unitDeck.length > 0) {
+    i = Math.floor(Math.random() * g.unitDeck.length);
+    t.push(g.unitDeck[i]);
+    g.unitDeck.splice(i, 1);
+  }
   while(t.length > 0) {
     i = Math.floor(Math.random() * t.length);
     g.unitDeck.push(t[i]);
     t.splice(i, 1);
   }
-  for(i = 0x0000; i < 0x000A; i += 0x0001) {
-    t.push(0x0600 | i);
-  }
   g.tacticsDeck.length = 0;
+  for(i = 0x0000; i < 0x000A; i += 0x0001) {
+    g.tacticsDeck.push(0x0600 | i);
+  }
+  while(g.tacticsDeck.length > 0) {
+    i = Math.floor(Math.random() * g.tacticsDeck.length);
+    t.push(g.tacticsDeck[i]);
+    g.tacticsDeck.splice(i, 1);
+  }
   while(t.length > 0) {
     i = Math.floor(Math.random() * t.length);
     g.tacticsDeck.push(t[i]);
@@ -73,6 +83,8 @@ GameService.start = function(g) {
   }
   for(i = 0; i < 7; i++) {
     g.players[0].hand.push(g.unitDeck.shift());
+  }
+  for(i = 0; i < 7; i++) {
     g.players[1].hand.push(g.unitDeck.shift());
   }
 }
