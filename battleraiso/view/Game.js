@@ -32,7 +32,17 @@ Game.onMessage = function (game) {
     var s, i, j, k;
 
     if (!Game.isMute && game.se !== '') {
-        sound(game.se);
+        switch (game.se) {
+            case 'play':
+                sound('./view/play.mp3');
+                break;
+            case 'get':
+                sound('./view/get.mp3');
+                break;
+            case 'end':
+                sound('./view/end.mp3');
+                break;
+        }
     }
 
     Game.isSent = false;

@@ -1,19 +1,5 @@
 window.onload = function () {
-    var que, man;
-
-    que = new createjs.LoadQueue(true);
-    que.installPlugin(createjs.Sound);
-
-    que.loadManifest(Tkm.man, true);
-
-    que.addEventListener('fileload', function (evnt) {
-        var tmp;
-        if (createjs.LoadQueue.SOUND === evnt.item.type) {
-            tmp = createjs.Sound.createInstance(evnt.item.id);
-            tmp.setVolume(0.5);
-            Tkm.sound[evnt.item.id] = tmp;
-        }
-    });
+    createjs.Sound.registerSound(Tkm.man.join("|"));
 
     view = $('#view')[0].contentWindow;
 
@@ -134,7 +120,7 @@ window.onload = function () {
                     }
                     break;
                 case 'G':
-                    if ($('#bell-silent-btn').val() !== 'OFF') Tkm.sound['bell'].play();
+                    if ($('#bell-silent-btn').val() !== 'OFF') Tkm.sound('../bell.mp3');
                     optn = Tkm.splitForSyntax1(evnt.data);
                     $('#log').append(
                         '<i class="icon-volume-up"></i>:<span class="label label-inverse">' + optn + '</span>' + '<span style="color: blue;">がベルを鳴らしました。</span></br>'
@@ -142,7 +128,7 @@ window.onload = function () {
                     $('#log').scrollTop($('#log')[0].scrollHeight);
                     break;
                 case 'H':
-                    if ($('#chat-silent-btn').val() !== 'OFF') Tkm.sound['chat'].play();
+                    if ($('#chat-silent-btn').val() !== 'OFF') Tkm.sound('../chat.mp3');
                     optn = Tkm.splitForSyntax2(evnt.data);
                     if (optn[0] === '?') {
                         $('#log').append(

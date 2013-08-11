@@ -4,8 +4,8 @@ send = function (msg) {
     window.parent.Tkm.send('f' + msg);
 }
 
-sound = function (id) {
-    window.parent.Tkm.sound[id].play();
+sound = function (src) {
+    window.parent.Tkm.sound(src);
 }
 
 onLoad = function() {}

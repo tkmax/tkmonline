@@ -87,9 +87,11 @@
         <script src="../tkmonline-1st.js"></script>
         <script>
             Tkm.instanceIdx = 5;
-            Tkm.man.push({'src': './view/play.mp3', 'id': 'play'});
-            Tkm.man.push({'src': './view/get.mp3', 'id': 'get'});
-            Tkm.man.push({'src': './view/end.mp3', 'id': 'end'});
+            Tkm.man.concat([
+                './view/play.mp3'
+                ,'./view/get.mp3'
+                ,'./view/end.mp3'
+            ]);
         </script>
         <script src="../tkmonline-2nd.js"></script>
     </body>

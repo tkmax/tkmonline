@@ -9,7 +9,6 @@
         <meta http-equiv="Expires" content="0">
         <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
         <script src="http://code.createjs.com/soundjs-0.4.1.min.js"></script>
-        <script src="http://code.createjs.com/preloadjs-0.3.1.min.js"></script>
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <style>
             body {
@@ -87,9 +86,11 @@
         <script src="../tkmonline-1st.js"></script>
         <script>
             Tkm.instanceIdx = 4;
-            Tkm.man.push({'src': './view/play.mp3', 'id': 'play'});
-            Tkm.man.push({'src': './view/get.mp3', 'id': 'get'});
-            Tkm.man.push({'src': './view/end.mp3', 'id': 'end'});
+            Tkm.man.concat([
+                './view/play.mp3'
+                ,'./view/get.mp3'
+                ,'./view/end.mp3'
+            ]);
         </script>
         <script src="../tkmonline-2nd.js"></script>
     </body>
