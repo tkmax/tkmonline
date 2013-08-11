@@ -1,341 +1,93 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="utf-8" />
-<title>[4th] Youtubeチャット</title>
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Cache-Control" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<script src="../Runr.wsUrl.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-<script>
-  var ctrlr, view;
-  Runr.instance = 3;
-  Runr.webSocket = null;
-  Runr.watchList = [];
-  Runr.userList = [];
-  Runr.send = function(m) {
-    Runr.webSocket.send(String.fromCharCode(Runr.instance) + m);
-  }
-  Runr.splitForSyntax1 = function(s) {
-    return s.substring(1);
-  }
-  Runr.splitForSyntax2 = function(s) {
-    var t = /^([^ ]*) ?(.*)$/.exec(s.substring(1));
-    t.shift();
-    return t;
-  }
-  Runr.splitForSyntax3 = function(s) {
-    return (s.substring(1)).split(' ');
-  }
-  Runr.sendJson = function(s) {
-    Runr.send('f' + s + ' ' + JSON.stringify(eval('ctrlr.' + s)));
-  }
-  Runr.repeet = function() {
-    setTimeout(Runr.repeet, 5000)
-  }
-  Runr.repeet();
-</script>
-<style>
-  body, div, p, ul, li, table, tr, td {
-    margin: 0;
-    padding: 0;
-  }
-  body {
-    background-color: peachpuff;
-    color: black;
-    font-family: monospace;
-    font-size: 14px;
-  }
-  ul {
-    list-style: none;
-  }
-</style>
-</head>
-
-<body>
-<div id="entry" style="width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
-  
-  <iframe id="ctrlr" src="ctrlr.html" style="display: none;"></iframe>
-  
-  <table id="login-panel">
-    <tr>
-      <td rowspan=4>
-        <a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.jpg" width="140" height="100" /></a>
-      </td>
-    </tr>
-    <tr>
-      <td><input id="login" type="text" /></td>
-    </tr>
-    <tr>
-      <td id="help"></td>
-    </tr>
-    <tr>
-      <td id="user-list"></td>
-    </tr>
-  </table>
-  
-  <table id="play-panel" calign="center" style="display: none;">
-    <tr>
-      <td align=left valign=top>
-        <ul>
-          <li>
-            <a href="http://tkmax.github.io/tkmonline/" target="_blank"><img id="mintitle" src="../title.jpg" width="140" height="100" /></a>
-          </li>
-          <li>あなた：</li>
-          <li id="userid"></li>
-          <li>コントローラー:</li>
-          <li id="ctrlrid"></li>
-          <li>
-            <table>
-              <tr>
-                <td>
-                  <input id="bell" type="button" value="ベル" style="width: 70px;"></input>
-                </td>
-              <tr>
-              <tr>
-                <td>
-                  <input id="bell-switch" type="button" value="ベル音" style="width: 70px; background-color: orange;"></input>
-                </td>
-                <td>
-                  <input id="chat-switch" type="button" value="チャット音" style="width: 70px; background-color: orange;"></input>
-                </td>
-              </tr>
-            </table>
-          </li>
-          <li>
-            <div id="user-list" style="background-color: lavender; color: black; overflow: scroll; width: 140px; height: 495px;">
+    <head>
+        <meta charset="utf-8" />
+        <title>Youtube4</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <script src="http://code.createjs.com/soundjs-0.4.1.min.js"></script>
+        <script src="http://code.createjs.com/preloadjs-0.3.1.min.js"></script>
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <style>
+            body {
+                padding-top: 60px;
+            }
+            #login, #play {
+                font-family: monospace;
+                font-size: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+				    <a class="brand" href="../index.html" target="_blank"><strong>Tkm Online</strong></a>
+                    <ul class="nav">
+                        <li class="active"><a href="#">Youtube4</a></li>
+                        <li><a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">したらば掲示板</a></li>
+                        <li><a href="http://www57.atwiki.jp/tkmonline/" target="_blank">＠ウィキ</a></li>
+                    </ul>
+                </div>
+		    </div>
+	    </div>
+        <div id="login">
+            <div class="row">
+                <div class="span4">
+                </div>
+                <div class="span4">
+                    <p><i class="icon-info-sign"></i>アルファベットと数字の組み合わせで12文字以内のuid(名前)を入力して下さい。(但し、既に使用されているuidは使えません。)</p>
+                    <p><i class="icon-info-sign"></i>uidの後に#から始まる任意の文字列でトリップを付けることもできます。(例:tkm#isnice)</p>
+                    <p id="err-msg" style="color: red; display: none;"><i class="icon-info-sign"></i>使用できないuidか、既にログインユーザーに使用されています。</p>
+                    <span class="label">uid</span>
+                    <input id="login-uid" style="border: 1px black solid; width: 230px;" type="text" />
+                    <input id="login-btn" class="btn btn-primary" type="button" value="ログイン" style="width: 70px;" />
+                    <p><i class="icon-user"></i><span class="label">ログインユーザー一覧</span></p>
+                    <ul id="login-users">
+                    </ul>
+                </div>
+                <div class="span4">
+                </div>
             </div>
-          </li>
-        </ul>
-      </td>
-      <td >
-        <ul>
-          <li><iframe id="view" src="view.html" style="width: 860px; height: 540px;"></iframe></li>
-          <li>
-            <div id="chat-log" style="background-color: lavender; color: black; overflow: scroll; width: 865px; height: 150px;">
+        </div>
+        <div id="play" style="display: none;">
+	        <div class="container">
+                <div class="row">
+                    <div class="span3">
+                        <p><i class="icon-user"></i><span class="label">あなた</span>：<span id="uid"></span></p>
+                        <p><i class="icon-user"></i><span class="label">管理者</span>：<span id="cid"></span></p>
+                        <div style="overflow-y: scroll; border: 1px black solid; width: 290px; height: 118px;">
+                            <p><i class="icon-user"></i><span class="label">ログインユーザー一覧</span></p>
+                            <ul id="user-list">
+                            </ul>
+                        </div>
+                        <div id="log" style="overflow-y: scroll; border: 1px black solid; width: 290px; height: 360px;"></div>
+                    </div>
+                    <div class="span9">
+                        <iframe id="view" src="view.html" style="border: 1px black solid; width: 860px; height: 540px;"></iframe>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="span9">
+                        <i class="icon-pencil"></i>
+                        <input id="chat-text" style="border: 1px black solid; width: 830px;" type="text" />
+                    </div>
+                    <div class="span3">
+                        <i class="icon-music"></i>
+                        <input id="bell-btn" class="btn btn-primary" type="button" value="ベル" style="width: 75px;" />
+                        <input id="chat-silent-btn" class="btn btn-warning" type="button" value="チャット音" style="width: 75px;" />
+                        <input id="bell-silent-btn" class="btn btn-warning" type="button" value="ベル音" style="width: 75px;" />
+                    </div>
+                </div>
             </div>
-          </li>
-          <li><input id="chat" type="text" style="width: 860px;" /><li>
-        </ul>
-      </td>
-    </tr>
-  </table>  
-</div>
-
-<audio id="bell-se" preload="auto">
-  <source src="bell.mp3" type="audio/mp3">
-</audio>
-<audio id="chat-se" preload="auto">
-  <source src="chat.mp3" type="audio/mp3">
-</audio>
-
-<script>
-  window.onload = function() {
-    $('#bell-se')[0].volume = 0.2;
-    $('#chat-se')[0].volume = 0.1;
-    
-    ctrlr = $('#ctrlr')[0].contentWindow;
-    view = $('#view')[0].contentWindow;
-    if(typeof WebSocket != 'undefined') {
-      Runr.webSocket = new WebSocket(Runr.wsUrl);
-    }
-    if(Runr.webSocket) {
-      Runr.webSocket.onopen = function() {
-        Runr.send('a');
-      }
-      Runr.webSocket.onmessage = function(e) {
-        var tmp, option, i;
-        if(view.Vrunr.userid === '') {
-          switch(e.data[0]) {
-            case 'A':
-              option = Runr.splitForSyntax3(e.data);
-              tmp = '';
-              for(i in option) {
-                if(tmp !== '') {
-                  tmp += ' | ';
-                }
-                tmp += option[i];
-              }
-              $('#login-panel #user-list').text('ログインユーザー : ' + tmp);
-            break;
-            case 'B':
-              $('#login-panel').hide();
-              $('#play-panel').show();
-              view.Vrunr.onLoad();
-              view.Vrunr.userid = Runr.splitForSyntax1(e.data);
-              $('#userid').text(view.Vrunr.userid);
-              Runr.send('c');
-            break;
-            case 'C':
-              $('#help').text('命名規則に違反するか、既に使用されているユーザー名です。ユーザー名はアルファベットと数字の１２文字以内を使用して下さい。');
-            break;
-          }
-        } else {
-          switch(e.data[0]) {
-            case 'A':
-              option = Runr.splitForSyntax3(e.data);
-              Runr.userList = option;
-            break;
-            case 'D':
-              option = Runr.splitForSyntax1(e.data);
-              view.Vrunr.onAddUser(option);
-              Runr.userList.push(option);
-              $('#play-panel #user-list').text('');
-              $('#play-panel #user-list').append('<ul>');
-              for(i in Runr.userList) {
-                $('#play-panel #user-list').append('<li>' + Runr.userList[i] + '</li>');
-              }
-              $('#play-panel #user-list').append('</ul>');
-            break;
-            case 'E':
-              option = Runr.splitForSyntax1(e.data);
-              view.Vrunr.onRemoveUser(option);
-              i = 0;
-              while(i < Runr.userList.length) {
-                if(Runr.userList[i] === option) {
-                  Runr.userList.splice(i, 1);
-                } else {
-                  i++;
-                }
-              }
-              $('#play-panel #user-list').text('');
-              $('#play-panel #user-list').append('<ul>');
-              for(i in Runr.userList) {
-                $('#play-panel #user-list').append('<li>' + Runr.userList[i] + '</li>');
-              }
-              $('#play-panel #user-list').append('</ul>');
-            break;
-            case 'F':
-              option = Runr.splitForSyntax1(e.data);
-              view.Vrunr.onBell(option);
-              $('#chat-log').append('<p style="color: darkgreen;">' + option + 'さんが、ベルを鳴らしました。</p>');
-              $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
-              if($('#bell-switch').attr('value') !== 'OFF') {
-                $('#bell-se')[0].play();
-              }
-            break;
-            case 'G':
-              option = Runr.splitForSyntax2(e.data);
-              view.Vrunr.onChat(option[0], option[1]);
-              if(option[0] === '@') {
-                $('#chat-log').append('<p style="color: deeppink;">' + option[0] + (new Array((13 - option[0].length)).join('&nbsp;')) + '&nbsp;>>&nbsp;' + option[1] + '</p>');
-              } else {
-                $('#chat-log').append('<p>' + option[0] + (new Array((13 - option[0].length)).join('&nbsp;')) + '&nbsp;>>&nbsp;' + option[1] + '</p>');
-              }
-              $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
-              if($('#chat-switch').attr('value') !== 'OFF') {
-                $('#chat-se')[0].play();
-              }
-            break;
-            case 'H':
-              option = Runr.splitForSyntax2(e.data);
-              eval('ctrlr.' + option[0] + '=JSON.parse(option[1])');
-            break;
-            case 'I':
-              Runr.send('g');
-            break;
-            case 'J':
-              option = Runr.splitForSyntax1(e.data);
-              ctrlr.Crunr.ctrlrid = option;
-              view.Vrunr.ctrlrid = option;
-              view.Vrunr.onController(option);
-              $('#ctrlrid').text(option);
-            break;
-            case 'K':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax2(e.data);
-              ctrlr.Crunr.onMessage(tmp[0], tmp[1]);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-            case 'L':
-              tmp = Runr.splitForSyntax1(e.data);
-              view.Vrunr.onMessage(tmp);
-            break;
-            case 'M':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax1(e.data);
-              ctrlr.Crunr.onController(tmp);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-            case 'N':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax1(e.data);
-              ctrlr.Crunr.onBell(tmp);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-            case 'O':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax2(e.data);
-              ctrlr.Crunr.onChat(tmp[0], tmp[1]);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-            case 'P':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax1(e.data);
-              ctrlr.Crunr.onAddUser(tmp);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-            case 'Q':
-              Runr.send('h');
-              tmp = Runr.splitForSyntax1(e.data);
-              ctrlr.Crunr.onRemoveUser(tmp);
-              for(i in Runr.watchList) {
-                Runr.sendJson(Runr.watchList[i]);
-              }
-              Runr.send('i');
-            break;
-          }
-        }
-      }
-      $('#login').keypress(function(e) {
-        if(e.keyCode === 13) {
-          Runr.send('b' + $(this).val());
-        }
-      });
-      $('#bell').click(function() {
-        Runr.send('d');
-      });
-      $('#bell-switch').click(function() {
-        if($(this).attr('value') !== 'OFF') {
-          $(this).attr('value','OFF').css('background-color','gray');
-        } else {
-          $(this).attr('value','ベル音').css('background-color','orange');
-        }
-      });
-      $('#chat-switch').click(function() {
-        if($(this).attr('value') !== 'OFF') {
-          $(this).attr('value','OFF').css('background-color','gray');
-        } else {
-          $(this).attr('value','チャット音').css('background-color','orange');
-        }
-      });
-      $('#chat').keypress(function(e) {
-        if(e.keyCode === 13 && $(this).val() !== '') {
-          Runr.send('e' + $(this).val());
-          $(this).val('');
-        }
-      });
-      $('#help').text('テキストボックスにアルファベットと数字の１２文字以内でユーザー名を入れてから、エンターキーを押して下さい。');
-    } else {
-      $('#help').text('WebSocketがサポートされていないブラウザです。');
-    }
-  }
-</script>
-</body>
+        </div>
+        <script src="../tkmonline-1st.js"></script>
+        <script>
+            Tkm.instanceIdx = 3;
+        </script>
+        <script src="../tkmonline-2nd.js"></script>
+    </body>
 </html>

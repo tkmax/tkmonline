@@ -1,117 +1,108 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="utf-8" />
-<title>Tkm Online</title>
-<script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-<style>
-  body, div, p, ul, table, tr, td {
-    margin: 0px;
-    padding: 0px;
-  }
-  li {
-    margin-bottom: 10px;
-  }
-  img {
-   vertical-align:bottom
-  }
-  body {
-    background-color: peachpuff;
-    color: black;
-    font-family:Arial,Verdana,"ＭＳ Ｐゴシック","ヒラギノ角ゴ Pro W3", sans-serif;
-    font-size: 32px;
-  }
-  ul {
-    list-style: none;
-  }
-  .app {
-    background-color: gray;
-  }
-  .app .count {
-    background-color: white;
-    text-align: center;
-  }
-</style>
-</head>
-<body>
-  <ul style="width: 1000px; margin-left: auto; margin-right: auto; text-align: left;">
-    <li style="width: 980px; margin-left: auto; margin-right: auto; text-align: left;"><img src="title.jpg" /></li>
-    <li style="width: 890px; margin-left: auto; margin-right: auto; text-align: left;"><img src="readme.png" /></li>
-    <li>
-        <table class="app">
-          <tr>
-            <td rowspan=2><img src="youtube.png" /></td>
-            <td><a href="./youtube/1st.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./youtube/2nd.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./youtube/3rd.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./youtube/4th.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./youtube/5th.html" target="_blank"><img src="sheep.png" /></a></td>
-          </tr>
-          <tr>
-            <td id="youtube1" class="count">0</td>
-            <td id="youtube2" class="count">0</td>
-            <td id="youtube3" class="count">0</td>
-            <td id="youtube4" class="count">0</td>
-            <td id="youtube5" class="count">0</td>
-          </tr>
-        </table>
-    </li>
-    <li>
-      <table class="app">
-          <tr>
-            <td rowspan=2><img src="battleraiso.png" /></td>
-            <td><a href="./battleraiso/1st.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./battleraiso/2nd.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./battleraiso/3rd.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./battleraiso/4th.html" target="_blank"><img src="sheep.png" /></a></td>
-            <td><a href="./battleraiso/5th.html" target="_blank"><img src="sheep.png" /></a></td>
-          </tr>
-          <tr>
-            <td id="battleraiso1" class="count">0</td>
-            <td id="battleraiso2" class="count">0</td>
-            <td id="battleraiso3" class="count">0</td>
-            <td id="battleraiso4" class="count">0</td>
-            <td id="battleraiso5" class="count">0</td>
-          </tr>
-        </table>
-    </li>
-  </ul>
-  <script>
-    var instanceList, ws, instanceIndex;
-    var splitForSyntax3 = function(s) {
-      return (s.substring(1)).split(' ');
-    }
-    instanceList = [
-      '#youtube1', '#youtube2', '#youtube3', '#youtube4', '#youtube5',
-      '#battleraiso1', '#battleraiso2', '#battleraiso3', '#battleraiso4', '#battleraiso5'
-    ];
-    
-    ws = new WebSocket('ws://210.152.156.23:443');
-    
-    repeet = function() {
-      instanceIndex = 0;
-      ws.send(String.fromCharCode(instanceIndex) + 'a');
-    }
-    
-    ws.onopen = function() {
-      repeet();
-    }
-    
-    ws.onmessage = function(e) {
-      var o;
-      o = splitForSyntax3(e.data);
-      if(o[0] !== '') {
-        $(instanceList[instanceIndex]).text(o.length);
-      } else {
-        $(instanceList[instanceIndex]).text(0);
-      }
-      instanceIndex++;
-      if(instanceIndex < instanceList.length) {
-        ws.send(String.fromCharCode(instanceIndex) + 'a');
-      } else {
-        setTimeout(repeet, 5000);
-      }
-    }
-  </script>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <title>Tkm Online</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Cache-Control" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+        <style>
+            body {
+                padding-top: 60px;
+            }
+            ul {
+                list-style: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+				    <a class="brand" href="#" target="_blank"><strong>Tkm Online</strong></a>
+                    <ul class="nav">
+                        <li class="active"><a href="#">新着情報</a></li>
+                        <li><a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">したらば掲示板</a></li>
+                        <li><a href="http://www57.atwiki.jp/tkmonline/" target="_blank">＠ウィキ</a></li>
+                    </ul>
+                </div>
+		    </div>
+	    </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="span1"></div>
+                <div class="span11">
+                    <p><i class="icon-info-sign"></i>対応ブラウザ : Google Chrome 16 以降, Firefox 11 以降, Safari 6 以降, IE 10 以降</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span1"></div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title0" class="label" style="width: 108px;">ようこそ!</span><span id="count0" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./youtube/1st.html" target="_blank"><img src="./icon/youtube.png" alt="youtube"></img></a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title1" class="label" style="width: 108px;">ようこそ!</span><span id="count1" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./youtube/2nd.html" target="_blank"><img src="./icon/youtube.png" alt="youtube"></img></a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title2" class="label" style="width: 108px;">ようこそ!</span><span id="count2" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./youtube/3rd.html" target="_blank"><img src="./icon/youtube.png" alt="youtube"></img></a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title3" class="label" style="width: 108px;">ようこそ!</span><span id="count3" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./youtube/4th.html" target="_blank"><img src="./icon/youtube.png" alt="youtube"></img></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span1"></div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title4" class="label" style="width: 108px;">ようこそ!</span><span id="count4" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./battleraiso/1st.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
+                    </ul>
+                </div>
+                <div class="span2">
+                    <ul>
+                        <li><span id="title5" class="label" style="width: 108px;">ようこそ!</span><span id="count5" class="label label-info" style="width: 20px;">0</span></li>
+                        <li><a href="./battleraiso/2nd.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var instanceList, ws, instanceIndex;
+
+            ws = new WebSocket('ws://210.152.156.23:7911');
+
+            ws.onopen = function () {
+                ws.send(String.fromCharCode(0) + 'a');
+                setInterval(function () {
+                    ws.send(String.fromCharCode(0) + 'a');
+                }, 5000);
+            }
+
+            ws.onmessage = function (e) {
+                var info, i;
+                info = JSON.parse(e.data.substring(1));
+                for (i in info) {
+                    $('#title' + info[i].index).text(info[i].title);
+                    $('#count' + info[i].index).text(info[i].count);
+                }
+            }
+        </script>
+    </body>
 </html>

@@ -1,10 +1,10 @@
-var State = function() {}
+var State = function () { }
 State.Ready = 'ready';
 State.Play = 'play';
 
-var Phase = function() {}
+var Phase = function () { }
 Phase.Main = 'main';
-Phase.Unit = 'unit';
+Phase.Common = 'common';
 Phase.Fog = 'fog';
 Phase.Mud = 'mud';
 Phase.Scout1 = 'scout1';
@@ -17,7 +17,7 @@ Phase.Traitor1 = 'traitor1';
 Phase.Traitor2 = 'traitor2';
 Phase.Draw = 'draw';
 
-var Tactics = function() {}
+var Tactics = function () { }
 Tactics.Alexander = 0x0600;
 Tactics.Darius = 0x0601;
 Tactics.Companion = 0x0602;
