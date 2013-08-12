@@ -4,13 +4,13 @@ Tkm.wsurl = 'ws://210.152.156.23:7911';
 Tkm.ws = null;
 Tkm.instanceIdx = null;
 Tkm.userList = [];
-Tkm.man = [
-    '../bell.mp3'
-    ,'../chat.mp3'
+Tkm.manifest = [
+    {src:'../bell.mp3', id:'bell'}
+    ,{src:'../chat.mp3', id:'chat'}
 ];
 
-Tkm.sound = function (src) {
-    createjs.Sound.play(src, createjs.Sound.INTERRUPT_ANY);
+Tkm.sound = function (id) {
+    createjs.Sound.play(id);
 }
 
 Tkm.send = function (msg) {

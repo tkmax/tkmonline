@@ -1,5 +1,7 @@
 window.onload = function () {
-    createjs.Sound.registerSound(Tkm.man.join("|"));
+    var queue = new createjs.LoadQueue(true);
+    queue.installPlugin(createjs.Sound);
+    queue.loadManifest(Tkm.manifest, true);
 
     view = $('#view')[0].contentWindow;
 
@@ -120,7 +122,7 @@ window.onload = function () {
                     }
                     break;
                 case 'G':
-                    if ($('#bell-silent-btn').val() !== 'OFF') Tkm.sound('../bell.mp3');
+                    if ($('#bell-silent-btn').val() !== 'OFF') Tkm.sound('bell');
                     optn = Tkm.splitForSyntax1(evnt.data);
                     $('#log').append(
                         '<i class="icon-volume-up"></i>:<span class="label label-inverse">' + optn + '</span>' + '<span style="color: blue;">がベルを鳴らしました。</span></br>'
@@ -128,7 +130,7 @@ window.onload = function () {
                     $('#log').scrollTop($('#log')[0].scrollHeight);
                     break;
                 case 'H':
-                    if ($('#chat-silent-btn').val() !== 'OFF') Tkm.sound('../chat.mp3');
+                    if ($('#chat-silent-btn').val() !== 'OFF') Tkm.sound('chat');
                     optn = Tkm.splitForSyntax2(evnt.data);
                     if (optn[0] === '?') {
                         $('#log').append(
