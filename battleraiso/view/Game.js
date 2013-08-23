@@ -5,6 +5,7 @@ var Game = function () { }
 Game.isOpen = false;
 Game.isSent = false;
 Game.isMute = false;
+Game.core = null;
 
 Game.send = function (msg) {
     if (!Game.isSent) {
