@@ -208,10 +208,6 @@ Game.addCommand = function (game) {
                 });
                 Game.addCardCommand(game);
                 break;
-            case Phase.Burst:
-                Game.addSprite('view/skin.png', 0, 525, 338, 313, 180);
-                for (i = 0; i < 4; i++) Game.addBurstCommand(game, i);
-                break;
             case Phase.Robber1:
             case Phase.Soldier1:
                 Game.addLabel('盗賊を移動させて下さい。', 595, 410);
@@ -321,8 +317,15 @@ Game.addCommand = function (game) {
                 break;
         }
     }
-
-    if (game.phase === Phase.InternationalTrade2) Game.addInternationalTrade2Command(game);
+    switch (game.phase) {
+        case Phase.Burst:
+            Game.addSprite('view/skin.png', 0, 525, 338, 313, 180);
+            for (i = 0; i < 4; i++) Game.addBurstCommand(game, i);
+            break;
+        case Phase.InternationalTrade2:
+            Game.addInternationalTrade2Command(game);
+            break;
+    }
 }
 
 Game.addBurstCommand = function (game, playerIdx) {
