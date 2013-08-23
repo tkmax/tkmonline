@@ -1262,7 +1262,7 @@ Game.addSound = function (game) {
     } else {
         frame = 22;
     }
-    Game.addSprite('view/btn.png', frame, 760, 495, 80, 25, function () {
+    Game.addSprite('view/btn.png', frame, 445, 495, 80, 25, function () {
         Game.isMute = !Game.isMute;
         if (Game.isMute) {
             this.frame = 23;
