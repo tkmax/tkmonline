@@ -206,6 +206,13 @@ Game.addCommand = function (game) {
                 Game.addSprite('view/btn.png', 3, 550, 345, 80, 25, function () {
                     Game.send('i');
                 });
+                Game.addSprite('view/btn.png', 10, 640, 345, 80, 25, function () {
+                    if (game.playerList[game.active].score + game.playerList[game.active].bonus >= 10) {
+                        return function () {
+                            Game.send('B');
+                        };
+                    }
+                } ());
                 Game.addCardCommand(game);
                 break;
             case Phase.Robber1:
