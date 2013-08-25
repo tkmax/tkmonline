@@ -136,14 +136,14 @@ Game.addHeadLine = function (game) {
             case Phase.BuildCity:
                 text = '対戦中 - 街';
                 break;
-            case Phase.DomesticTrade:
-                text = '対戦中 - 国内貿易';
-                break;
-            case Phase.InternationalTrade1:
+            case Phase.InternationalTrade:
                 text = '対戦中 - 海外貿易';
                 break;
-            case Phase.InternationalTrade2:
-                text = '対戦中 - 海外貿易(確認中)';
+            case Phase.DomesticTrade1:
+                text = '対戦中 - 国内貿易';
+                break;
+            case Phase.DomesticTrade2:
+                text = '対戦中 - 国内貿易(確認中)';
                 break;
             case Phase.Soldier1:
                 text = '対戦中 - 盗賊の移動(騎士)';
@@ -281,10 +281,10 @@ Game.addCommand = function (game) {
                     }
                 } ());
                 Game.addSprite('view/btn.png', 8, 640, 375, 80, 25, function () {
-                    Game.send('t');
+                    Game.send('w');
                 });
                 Game.addSprite('view/btn.png', 9, 730, 375, 80, 25, function () {
-                    Game.send('w');
+                    Game.send('t');
                 });
                 Game.addSprite('view/btn.png', 10, 550, 405, 80, 25, function () {
                     if (game.playerList[game.active].score + game.playerList[game.active].bonus >= 10) {
@@ -309,11 +309,11 @@ Game.addCommand = function (game) {
             case Phase.BuildCity:
                 Game.addLabel('街を建設して下さい。', 595, 410);
                 break;
-            case Phase.DomesticTrade:
-                Game.addDomesticTradeCommand(game);
+            case Phase.InternationalTrade:
+                Game.addInternationalTradeCommand(game);
                 break;
-            case Phase.InternationalTrade1:
-                Game.addInternationalTrade1Command(game);
+            case Phase.DomesticTrade1:
+                Game.addDomesticTrade1Command(game);
                 break;
             case Phase.YearOfPlenty1:
             case Phase.YearOfPlenty2:
@@ -329,8 +329,8 @@ Game.addCommand = function (game) {
             Game.addSprite('view/skin.png', 0, 525, 338, 313, 180);
             for (i = 0; i < 4; i++) Game.addBurstCommand(game, i);
             break;
-        case Phase.InternationalTrade2:
-            Game.addInternationalTrade2Command(game);
+        case Phase.DomesticTrade2:
+            if(game.playerList[game.trade.playerIdx].uid === uid) Game.addDomesticTrade2Command(game);
             break;
     }
 }
@@ -360,11 +360,11 @@ Game.addBurstCommand = function (game, playerIdx) {
     }
 }
 
-Game.addDomesticTradeCommand = function (game) {
+Game.addInternationalTradeCommand = function (game) {
     var i, cost, req, pool;
 
     Game.addSprite('view/skin.png', 2, 525, 338, 313, 180);
-    Game.addLabel('国内貿易ができます。', 535, 345);
+    Game.addLabel('海外貿易ができます。', 535, 345);
     Game.addLabel('残り:', 750, 456);
     pool = Game.addLabel('' + Game.trade.pool, 795, 456);
     for (i = 0; i < 5; i++) {
@@ -440,11 +440,11 @@ Game.addDomesticTradeCommand = function (game) {
     });
 }
 
-Game.addInternationalTrade1Command = function (game) {
+Game.addDomesticTrade1Command = function (game) {
     var i, req;
 
     Game.addSprite('view/skin.png', 2, 525, 338, 313, 180);
-    Game.addLabel('海外貿易ができます。', 535, 345);
+    Game.addLabel('国内貿易ができます。', 535, 345);
     for (i = 0; i < 5; i++) {
         req = Game.addLabel('' + Game.trade.destroy[i], i * 53 + 572, 390);
         Game.addSprite('view/resource.png', 6, i * 53 + 593, 383, 15, 15, function () {
@@ -518,14 +518,14 @@ Game.addInternationalTrade1Command = function (game) {
     });
 }
 
-Game.addInternationalTrade2Command = function (game) {
+Game.addDomesticTrade2Command = function (game) {
     var i;
 
     Game.addSprite('view/skin.png', 2, 525, 338, 313, 180);
     Game.addLabel('海外貿易(提案)が' + game.playerList[game.active].uid + '(' + Game.color(game.active) + ')から着ています。', 535, 345);
     for (i = 0; i < 5; i++) {
-        Game.addLabel('' + Game.trade.destroy[i], i * 53 + 572, 390);
-        Game.addLabel('' + Game.trade.create[i], i * 53 + 572, 421);
+        Game.addLabel(' ' + game.trade.destroy[i], i * 53 + 572, 390);
+        Game.addLabel(' ' + game.trade.create[i], i * 53 + 572, 421);
     }
     Game.addSprite('view/btn.png', 12, 550, 452, 80, 25, function () {
         Game.send('A');
