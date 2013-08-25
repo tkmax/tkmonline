@@ -32,7 +32,7 @@ Game.addLabel = function (text, x, y, font) {
     return label;
 }
 
-Game.addSprite = function (image, frame, x, y, width, height, onTouch) {
+Game.addSprite = function (image, frame, x, y, width, height, onTouch, opacity) {
     var sprite;
 
     sprite = new Sprite(width, height);
@@ -40,6 +40,7 @@ Game.addSprite = function (image, frame, x, y, width, height, onTouch) {
     sprite.frame = frame;
     sprite.x = x;
     sprite.y = y;
+    sprite.opacity = opacity;
     if (onTouch) sprite.addEventListener('touchstart', onTouch);
     Game.core.rootScene.addChild(sprite);
 
@@ -818,20 +819,20 @@ Game.addNumList = function (game) {
     for (i = 0; i < game.numList.length; i++) {
         if (game.numList[i] !== -1) {
             if (i >= 0 && i < 3) {
-                x = i * 72 + 175;
-                y = 143;
+                x = i * 72 + 176;
+                y = 145;
             } else if (i >= 3 && i < 7) {
-                x = (i - 3) * 72 + 139;
-                y = 206;
+                x = (i - 3) * 72 + 140;
+                y = 208;
             } else if (i >= 7 && i < 12) {
-                x = (i - 7) * 72 + 103;
-                y = 269;
+                x = (i - 7) * 72 + 104;
+                y = 271;
             } else if (i >= 12 && i < 16) {
-                x = (i - 12) * 72 + 139;
-                y = 332;
+                x = (i - 12) * 72 + 140;
+                y = 334;
             } else if (i >= 16 && i < 19) {
-                x = (i - 16) * 72 + 175;
-                y = 395;
+                x = (i - 16) * 72 + 176;
+                y = 397;
             }
             if (game.numList[i] < 7) {
                 Game.addSprite('view/chip.png', game.numList[i] - 2, x, y, 30, 30);
@@ -1208,7 +1209,7 @@ Game.addRobber = function (game) {
             x = (game.robber - 16) * 72 + 166;
             y = 387;
         }
-        Game.addSprite('view/robber.png', 0, x, y, 50, 50);
+        Game.addSprite('view/robber.png', 0, x, y, 50, 50, null, 0.8);
         if (
             (game.phase === Phase.Robber1 || game.phase === Phase.Soldier1)
             && game.playerList[game.active].uid === uid
