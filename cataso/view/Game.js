@@ -1020,7 +1020,7 @@ Game.addSettlementList = function (game) {
                                 }
                                 break;
                             case Phase.BuildSettlement:
-                                if (Game.canSetupSettlement(game, _i)) {
+                                if (Game.canBuildSettlement(game, _i)) {
                                     return function () {
                                         Game.send('p' + _i);
                                     };
@@ -1282,8 +1282,8 @@ Game.addSound = function (game) {
 Game.canSetupSettlement = function (game, pt) {
     var i, j, result = true;
 
-    for (i in SettlementLink[pt]) {
-        for (j in RoadLink[SettlementLink[pt][i]]) {
+    for (i = 0; i < SettlementLink[pt].length; i++) {
+        for (j = 0; j < RoadLink[SettlementLink[pt][i]].length; j++) {
             if ((game.settlementList[RoadLink[SettlementLink[pt][i]][j]] & 0xff00) !== SettlementRank.None) {
                 result = false;
                 break;
@@ -1297,14 +1297,11 @@ Game.canSetupSettlement = function (game, pt) {
 Game.canBuildSettlement = function (game, pt) {
     var i, j, result = false;
 
-    for (i in SettlementLink[pt]) {
+    for (i = 0; i < SettlementLink[pt].length; i++) {
         if (game.roadList[SettlementLink[pt][i]] === game.active) {
             result = true;
-            for (j in RoadLink[SettlementLink[pt][i]]) {
-                if ((game.settlementList[RoadLink[SettlementLink[pt][i]][j]] & 0xff00) !== SettlementRank.None) {
-                    result = false;
-                    break;
-                }
+            for (j = 0; j < RoadLink[SettlementLink[pt][i]].length; j++) {
+                if ((game.settlementList[RoadLink[SettlementLink[pt][i]][j]] & 0xff00) !== SettlementRank.None) return false;
             }
         }
     }
@@ -1314,7 +1311,7 @@ Game.canBuildSettlement = function (game, pt) {
 Game.canBuildSettlements = function (game) {
     var i, result = false;
 
-    for (i in game.settlementList) {
+    for (i = 0; i < game.settlementList.length; i++) {
         result = Game.canBuildSettlement(game, i);
         if (result) break;
     }
