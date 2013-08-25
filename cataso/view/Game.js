@@ -53,8 +53,8 @@ Game.onLoad = function () {
         'view/bg.png', 'view/btn.png', 'view/actv.png'
         , 'view/tile.png', 'view/chip.png', 'view/settlement.png'
         , 'view/road.png', 'view/resource.png', 'view/robber.png'
-        , 'view/skin.png', 'view/lresource.png', 'view/card.png'
-        , 'view/dice.png', 'view/prize.png'
+        , 'view/skin.png', 'view/rsrcbtn.png', 'view/card.png'
+        , 'view/dice.png', 'view/prize.png', 'view/updown.png'
     );
     Game.core.onload = function () {
         Game.isOpen = true;
@@ -342,7 +342,7 @@ Game.addBurstCommand = function (game, playerIdx) {
         if (game.playerList[playerIdx].uid === uid) {
             Game.addLabel('バースト中<br/>あと' + game.playerList[playerIdx].burst + '枚破棄', 530, 45 * playerIdx + 345);
             for (i = 0; i < 5; i++) {
-                Game.addSprite('view/lresource.png', i + 5, i * 45 + 615, 45 * playerIdx + 346, 30, 30, function () {
+                Game.addSprite('view/rsrcbtn.png', i + 5, i * 45 + 615, 45 * playerIdx + 346, 30, 30, function () {
                     var _playerIdx = playerIdx, _i = i;
 
                     if (game.playerList[_playerIdx].resource[_i] > 0) {
@@ -377,7 +377,7 @@ Game.addInternationalTradeCommand = function (game) {
         }
         Game.addLabel(cost, i * 53 + 580, 365);
         req = Game.addLabel('' + Game.trade.destroy[i], i * 53 + 572, 390);
-        Game.addSprite('view/resource.png', 6, i * 53 + 593, 383, 15, 15, function () {
+        Game.addSprite('view/updown.png', 0, i * 53 + 593, 383, 15, 15, function () {
             var _i = i, _cost = cost, _pool = pool, _req = req;
 
             return function () {
@@ -389,7 +389,7 @@ Game.addInternationalTradeCommand = function (game) {
                 }
             };
         } ());
-        Game.addSprite('view/resource.png', 7, i * 53 + 593, 397, 15, 15, function () {
+        Game.addSprite('view/updown.png', 1, i * 53 + 593, 397, 15, 15, function () {
             var _i = i, _cost = cost, _pool = pool, _req = req;
 
             return function () {
@@ -402,7 +402,7 @@ Game.addInternationalTradeCommand = function (game) {
             };
         } ());
         req = Game.addLabel('' + Game.trade.create[i], i * 53 + 572, 421);
-        Game.addSprite('view/resource.png', 6, i * 53 + 593, 414, 15, 15, function () {
+        Game.addSprite('view/updown.png', 0, i * 53 + 593, 414, 15, 15, function () {
             var _i = i, _pool = pool, _req = req;
 
             return function () {
@@ -414,7 +414,7 @@ Game.addInternationalTradeCommand = function (game) {
                 }
             };
         } ());
-        Game.addSprite('view/resource.png', 7, i * 53 + 593, 428, 15, 15, function () {
+        Game.addSprite('view/updown.png', 1, i * 53 + 593, 428, 15, 15, function () {
             var _i = i, _pool = pool, _req = req;
 
             return function () {
@@ -447,7 +447,7 @@ Game.addDomesticTrade1Command = function (game) {
     Game.addLabel('国内貿易ができます。', 535, 345);
     for (i = 0; i < 5; i++) {
         req = Game.addLabel('' + Game.trade.destroy[i], i * 53 + 572, 390);
-        Game.addSprite('view/resource.png', 6, i * 53 + 593, 383, 15, 15, function () {
+        Game.addSprite('view/updown.png', 0, i * 53 + 593, 383, 15, 15, function () {
             var _i = i, _req = req;
             return function () {
                 if (Game.trade.destroy[_i] + 1 <= game.playerList[game.active].resource[_i]) {
@@ -456,7 +456,7 @@ Game.addDomesticTrade1Command = function (game) {
                 }
             };
         } ());
-        Game.addSprite('view/resource.png', 7, i * 53 + 593, 397, 15, 15, function () {
+        Game.addSprite('view/updown.png', 1, i * 53 + 593, 397, 15, 15, function () {
             var _i = i, _req = req;
             return function () {
                 if (Game.trade.destroy[_i] > 0) {
@@ -466,7 +466,7 @@ Game.addDomesticTrade1Command = function (game) {
             };
         } ());
         req = Game.addLabel('' + Game.trade.create[i], i * 53 + 572, 421);
-        Game.addSprite('view/resource.png', 6, i * 53 + 593, 414, 15, 15, function () {
+        Game.addSprite('view/updown.png', 0, i * 53 + 593, 414, 15, 15, function () {
             var _i = i, _req = req;
             return function () {
                 if (Game.trade.create[_i] < 19) {
@@ -475,7 +475,7 @@ Game.addDomesticTrade1Command = function (game) {
                 }
             };
         } ());
-        Game.addSprite('view/resource.png', 7, i * 53 + 593, 428, 15, 15, function () {
+        Game.addSprite('view/updown.png', 1, i * 53 + 593, 428, 15, 15, function () {
             var _i = i, _req = req;
             return function () {
                 if (Game.trade.create[_i] > 0) {
@@ -586,7 +586,7 @@ Game.addYearOfPlentyCommand = function (game) {
     Game.addLabel('資源を１枚生産して下さい。', 535, 345);
 
     for (i = 0; i < 5; i++) {
-        Game.addSprite('view/lresource.png', i + 10, i * 45 + 575, 410, 30, 30, function () {
+        Game.addSprite('view/rsrcbtn.png', i + 10, i * 45 + 575, 410, 30, 30, function () {
             var _i = i;
 
             if (game.resource[_i] > 0) {
@@ -611,7 +611,7 @@ Game.addMonopolyCommand = function (game) {
     Game.addLabel('資源を独占して下さい。', 535, 345);
 
     for (i = 0; i < 5; i++) {
-        Game.addSprite('view/lresource.png', i, i * 45 + 575, 410, 30, 30, function () {
+        Game.addSprite('view/rsrcbtn.png', i, i * 45 + 575, 410, 30, 30, function () {
             var _i = i;
 
             return function () {
