@@ -1299,11 +1299,9 @@ Game.canBuildSettlement = function (game, pt) {
     var i, j, result = false;
 
     for (i = 0; i < SettlementLink[pt].length; i++) {
-        if (game.roadList[SettlementLink[pt][i]] === game.active) {
-            result = true;
-            for (j = 0; j < RoadLink[SettlementLink[pt][i]].length; j++) {
-                if ((game.settlementList[RoadLink[SettlementLink[pt][i]][j]] & 0xff00) !== SettlementRank.None) return false;
-            }
+        if (game.roadList[SettlementLink[pt][i]] === game.active) result = true;
+        for (j = 0; j < RoadLink[SettlementLink[pt][i]].length; j++) {
+            if ((game.settlementList[RoadLink[SettlementLink[pt][i]][j]] & 0xff00) !== SettlementRank.None) return false;
         }
     }
     return result;
