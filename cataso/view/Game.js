@@ -1047,7 +1047,7 @@ Game.addSettlementList = function (game) {
                         && (game.settlementList[_i] & 0x00ff) !== game.active
                         && Game.playerSumResource(game.playerList[(game.settlementList[_i] & 0x00ff)]) > 0
                     ) {
-                        for (j in TileLink[game.robber]) {
+                        for (j = 0; j < TileLink[game.robber].length; j++) {
                             if (TileLink[game.robber][j] === _i) {
                                 _playerIdx = (game.settlementList[_i] & 0x00ff);
                                 if (game.phase === Phase.Robber2) {
@@ -1162,7 +1162,7 @@ Game.addBuildRoad = function (game) {
                                 Game.send('f' + _i);
                             };
                         case Phase.SetupRoad2:
-                            for (j in SettlementLink[game.playerList[game.active].secondSettlement]) {
+                            for (j = 0; j < SettlementLink[game.playerList[game.active].secondSettlement].length; j++) {
                                 if (SettlementLink[game.playerList[game.active].secondSettlement][j] === _i) {
                                     return function () {
                                         Game.send('h' + _i);
@@ -1324,7 +1324,7 @@ Game.canBuildCity = function (game, pt) {
 
 Game.canBuildCitys = function (game) {
     var i, result = false;
-    for (i in game.settlementList) {
+    for (i = 0; i < game.settlementList.length; i++) {
         if (Game.canBuildCity(game, i)) {
             result = true;
             break;
@@ -1337,12 +1337,12 @@ Game.canBuildRoad = function (game, pt) {
     var i, j, result = false;
 
     if (game.roadList[pt] === -1) {
-        for (i in RoadLink[pt]) {
+        for (i = 0; i < RoadLink[pt].length; i++) {
             if ((game.settlementList[RoadLink[pt][i]] & 0x00ff) === game.active) {
                 result = true;
                 break;
             }
-            for (j in SettlementLink[RoadLink[pt][i]]) {
+            for (j = 0; j < SettlementLink[RoadLink[pt][i]].length; j++) {
                 if (game.roadList[SettlementLink[RoadLink[pt][i]][j]] === game.active) {
                     result = true;
                     break;
@@ -1357,7 +1357,7 @@ Game.canBuildRoad = function (game, pt) {
 Game.canBuildRoads = function (game) {
     var i, result = false;
 
-    for (i in game.roadList) {
+    for (i = 0; i < game.roadList.length; i++) {
         result = Game.canBuildRoad(game, i);
         if (result) break;
     }
@@ -1367,14 +1367,14 @@ Game.canBuildRoads = function (game) {
 Game.playerSumResource = function (player) {
     var i, sum = 0;
 
-    for (i in player.resource) sum += player.resource[i];
+    for (i = 0; i < player.resource.length; i++) sum += player.resource[i];
     return sum;
 }
 
 Game.sumResource = function(game) {
     var i, sum = 0;
 
-    for (i in game.resource) sum += game.resource[i];
+    for (i = 0; i < game.resource.length; i++) sum += game.resource[i];
     return sum;
 }
 
