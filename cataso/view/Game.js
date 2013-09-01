@@ -394,7 +394,7 @@ Game.addInternationalTradeCommand = function (game) {
             var _i = i, _cost = cost, _pool = pool, _req = req;
 
             return function () {
-                if (Game.trade.destroy[_i] - _cost <= game.playerList[game.active].resource[_i]) {
+                if (Game.trade.destroy[_i] - _cost > 0) {
                     Game.trade.destroy[_i] -= _cost;
                     Game.trade.pool--;
                     _req.text = '' + Game.trade.destroy[_i];
