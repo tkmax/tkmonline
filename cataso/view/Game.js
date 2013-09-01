@@ -1334,24 +1334,20 @@ Game.canBuildCitys = function (game) {
 }
 
 Game.canBuildRoad = function (game, pt) {
-    var i, j, result = false;
+    var i, j;
 
     if (game.roadList[pt] === -1) {
         for (i = 0; i < RoadLink[pt].length; i++) {
             if ((game.settlementList[RoadLink[pt][i]] & 0x00ff) === game.active) {
-                result = true;
-                break;
-            }
-            for (j = 0; j < SettlementLink[RoadLink[pt][i]].length; j++) {
-                if (game.roadList[SettlementLink[RoadLink[pt][i]][j]] === game.active) {
-                    result = true;
-                    break;
+                return true;
+            } else if ((game.settlementList[RoadLink[pt][i]] & 0xff00) === SettlementRank.None) {
+                for (j = 0; j < SettlementLink[RoadLink[pt][i]].length; j++) {
+                    if (game.roadList[SettlementLink[RoadLink[pt][i]][j]] === game.active) return true;
                 }
             }
-            if (result) break;
         }
     }
-    return result;
+    return false;
 }
 
 Game.canBuildRoads = function (game) {
