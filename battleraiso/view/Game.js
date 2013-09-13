@@ -14,6 +14,34 @@ Game.send = function (msg) {
     }
 }
 
+Game.addLabel = function (text, x, y, font) {
+    var label;
+
+    if (!font) font = '14px monospace';
+    label = new Label(text);
+    label.x = x;
+    label.y = y;
+    label.font = font;
+    Game.core.rootScene.addChild(label);
+
+    return label;
+}
+
+Game.addSprite = function (image, frame, x, y, width, height, onTouch, opacity) {
+    var sprite;
+
+    sprite = new Sprite(width, height);
+    sprite.image = Game.core.assets[image];
+    sprite.frame = frame;
+    sprite.x = x;
+    sprite.y = y;
+    sprite.opacity = opacity;
+    if (onTouch) sprite.addEventListener('touchstart', onTouch);
+    Game.core.rootScene.addChild(sprite);
+
+    return sprite;
+}
+
 Game.onLoad = function () {
     Game.core = new Core(840, 520);
     Game.core.fps = 5;
@@ -30,17 +58,8 @@ Game.onLoad = function () {
 }
 
 Game.onMessage = function (game) {
-    var s, i, j, k;
-
-    if (!Game.isMute && game.sound !== '') {
-        sound(game.sound);
-    }
-
-    Game.isSent = false;
-    while (Game.core.rootScene.childNodes.length > 0) {
-        Game.core.rootScene.removeChild(Game.core.rootScene.childNodes[0]);
-    }
-
+    if (!Game.isMute && game.sound !== '') sound(game.sound);
+    Game.removeAll();
     Game.addBackGround();
     Game.addHeadline(game);
     Game.addField(game, 0);
@@ -60,104 +79,95 @@ Game.onMessage = function (game) {
     Game.addSound();
 }
 
+Game.removeAll = function () { 
+    Game.isSent = false;
+    while (Game.core.rootScene.childNodes.length > 0) Game.core.rootScene.removeChild(Game.core.rootScene.childNodes[0]);
+}
+
 Game.addBackGround = function () {
-    var sprite = new Sprite(840, 520);
-    sprite.image = Game.core.assets['view/bg.png'];
-    Game.core.rootScene.addChild(sprite);
+    Game.addSprite('view/bg.png', 0, 0, 0, 840, 520);
 }
 
 Game.addSound = function () {
-    var sprite = new Sprite(80, 25);
-    sprite.image = Game.core.assets['view/btn.png'];
-    sprite.x = 760;
-    sprite.y = 495;
+    var frame;
+
     if (Game.isMute) {
-        sprite.frame = 6;
+        frame = 6;
     } else {
-        sprite.frame = 5;
+        frame = 5;
     }
-    sprite.addEventListener('touchstart', function () {
+    Game.addSprite('view/btn.png', frame, 760, 495, 80, 25, function () {
         Game.isMute = !Game.isMute;
         if (Game.isMute) {
-            sprite.frame = 6;
+            this.frame = 6;
         } else {
-            sprite.frame = 5;
+            this.frame = 5;
         }
     });
-    Game.core.rootScene.addChild(sprite);
 }
 
 Game.addHeadline = function (game) {
-    var sprite;
+    var text;
+
     if (game.state === State.Ready) {
-        sprite = new Label('募集中');
+        text = '募集中';
     } else {
-        sprite = new Label('対戦中');
+        text = '対戦中';
     }
-    sprite.x = 690;
-    sprite.y = 5;
-    sprite.font = '14px monospace';
-    Game.core.rootScene.addChild(sprite);
+    Game.addLabel(text, 690, 5);
 }
 
-Game.addPlayer = function (game, idx) {
-    var sprite;
-    if (game.state === State.Play && game.active === idx) {
-        sprite = new Sprite(107, 21);
-        sprite.image = Game.core.assets['view/actv.png'];
-        sprite.x = 707;
-        if (idx === 0) {
-            sprite.y = 26;
-        } else {
-            sprite.y = 104;
-        }
-        Game.core.rootScene.addChild(sprite);
+Game.addPlayer = function (game, playerIdx) {
+    var y;
+
+    if (game.state === State.Play && game.active === playerIdx) {
+        y = 78 * playerIdx + 26;
+        Game.addSprite('view/actv.png', 0, 707, y, 107, 21);
     }
-    sprite = new Label(game.playerList[idx].uid);
-    sprite.x = 711;
-    if (idx === 0) {
-        sprite.y = 29;
-    } else {
-        sprite.y = 107;
-    }
-    sprite.font = '14px monospace';
-    Game.core.rootScene.addChild(sprite);
-    sprite = new Label('戦術カード: ' + game.playerList[idx].count + '枚');
-    sprite.x = 691;
-    if (idx === 0) {
-        sprite.y = 55;
-    } else {
-        sprite.y = 133;
-    }
-    sprite.font = '14px monospace';
-    Game.core.rootScene.addChild(sprite);
+    y = 78 * playerIdx + 29;
+    Game.addLabel(game.playerList[playerIdx].uid, 711, y);
+    y = 78 * playerIdx + 55;
+    Game.addLabel('戦術カード: ' + game.playerList[playerIdx].count + '枚', 691, y);
 }
 
-Game.addHand = function (game, idx) {
-    var sprite, i, j, unIdx, canPlayTroop = false, canPlayWeather = false,
+Game.addHand = function (game, playerIdx) {
+    var x, y, frame, i, j, unIdx, canPlayTroop = false, canPlayWeather = false,
     canPlayRedeploy = false, canPlayDeserter = false, canPlayTraitor = false;
 
-    if (idx === 0) {
+    if (playerIdx === 0) {
         unIdx = 1;
     } else {
         unIdx = 0;
     }
     for (i = 0; !canPlayTroop && i < game.flagList.length; i++) {
-        if (game.flagList[i] === -1 && game.playerList[idx].field[i].length < game.size[i]) canPlayTroop = true;
+        if (
+            game.flagList[i] === -1
+            && game.playerList[playerIdx].field[i].length < game.size[i]
+        ) {
+            canPlayTroop = true;
+            break;
+        }
     }
     for (i = 0; !canPlayWeather && i < game.flagList.length; i++) {
         if (game.flagList[i] === -1) {
             canPlayWeather = true;
+            break;
         }
     }
-    for (i in game.flagList) {
-        if (game.flagList[i] === -1 && game.playerList[idx].field[i].length > 0) {
+    for (i = 0; i < game.flagList.length; i++) {
+        if (
+            game.flagList[i] === -1
+            && game.playerList[playerIdx].field[i].length > 0
+        ) {
             canPlayRedeploy = true;
             break;
         }
     }
-    for (i in game.flagList) {
-        if (game.flagList[i] === -1 && game.playerList[unIdx].field[i].length > 0) {
+    for (i = 0; i < game.flagList.length; i++) {
+        if (
+            game.flagList[i] === -1
+            && game.playerList[unIdx].field[i].length > 0
+        ) {
             canPlayDeserter = true;
             break;
         }
@@ -174,358 +184,314 @@ Game.addHand = function (game, idx) {
             }
         }
     }
-    for (i = 0; i < game.playerList[idx].hand.length; i++) {
-        sprite = new Sprite(65, 65);
-        sprite.image = Game.core.assets['view/card.png'];
-        if (game.state === State.Ready
-        || game.playerList[idx].uid === uid
-        || (game.active === idx && game.play === i
-            && (game.phase === Phase.Redeploy2 || game.phase === Phase.Traitor2)
-        )) {
-            sprite.frame = ((0xff00 & game.playerList[idx].hand[i]) >> 8) * 10 + (0x00ff & game.playerList[idx].hand[i]);
-        } else {
-            if ((0xff00 & game.playerList[idx].hand[i]) !== 0x0600) {
-                sprite.frame = 70;
+    for (i = 0; i < game.playerList[playerIdx].hand.length; i++) {
+        x = i * 45 + 5;
+        y = 451 * playerIdx + 2;
+        if (game.active === playerIdx && game.play === i) {
+            if (playerIdx === 0) {
+                y += 10;
             } else {
-                sprite.frame = 71;
+                y -= 10;
             }
         }
-        if (game.state === State.Play
-        && game.active === idx
-        && game.playerList[idx].uid === uid
+        if (
+            game.state === State.Ready
+            || game.playerList[playerIdx].uid === uid
+            || (
+                game.active === playerIdx && game.play === i
+                && (game.phase === Phase.Redeploy2 || game.phase === Phase.Traitor2)
+            )
         ) {
-            if (game.phase === Phase.Main
-            || game.phase === Phase.Common
-            || game.phase === Phase.Fog
-            || game.phase === Phase.Mud
-            || game.phase === Phase.Scout1
-            || game.phase === Phase.Redeploy1
-            || game.phase === Phase.Deserter
-            || game.phase === Phase.Traitor1
+            frame = ((0xff00 & game.playerList[playerIdx].hand[i]) >> 8) * 10 + (0x00ff & game.playerList[playerIdx].hand[i]);
+        } else {
+            if ((0xff00 & game.playerList[playerIdx].hand[i]) !== 0x0600) {
+                frame = 70;
+            } else {
+                frame = 71;
+            }
+        }
+        Game.addSprite('view/card.png', frame, x, y, 65, 65, function () {
+            var _i = i;
+
+            if (
+                game.state === State.Play
+                && game.active === playerIdx
+                && game.playerList[playerIdx].uid === uid
             ) {
-                if ((game.playerList[idx].hand[i] & 0xff00) !== 0x0600) {
-                    if (canPlayTroop) {
-                        sprite.addEventListener('touchstart', function () {
-                            var _i = i;
+                if (
+                    game.phase === Phase.Main
+                    || game.phase === Phase.Common
+                    || game.phase === Phase.Fog
+                    || game.phase === Phase.Mud
+                    || game.phase === Phase.Scout1
+                    || game.phase === Phase.Redeploy1
+                    || game.phase === Phase.Deserter
+                    || game.phase === Phase.Traitor1
+                ) {
+                    if ((game.playerList[playerIdx].hand[i] & 0xff00) !== 0x0600) {
+                        if (canPlayTroop) {
                             return function () {
                                 Game.send('e' + _i);
                             };
-                        } ());
-                    }
-                } else if (game.playerList[idx].count <= game.playerList[unIdx].count) {
-                    if (
-                    (
-                        (game.playerList[idx].hand[i] === Tactics.Alexander || game.playerList[idx].hand[i] === Tactics.Darius)
-                    ) && game.playerList[idx].leader === 0
-                    || game.playerList[idx].hand[i] === Tactics.Companion
-                    || game.playerList[idx].hand[i] === Tactics.Shield
-                    ) {
-                        if (canPlayTroop) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
-                                return function () {
-                                    Game.send('e' + _i);
-                                };
-                            } ());
                         }
-                    } else if (game.playerList[idx].hand[i] === Tactics.Scout) {
-                        if (game.troopDeck.length + game.tacticsDeck.length > 1) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
+                    } else if (game.playerList[playerIdx].count <= game.playerList[unIdx].count) {
+                        if (
+                            (
+                                game.playerList[playerIdx].hand[i] === Tactics.Alexander
+                                || game.playerList[playerIdx].hand[i] === Tactics.Darius
+                            )
+                            && game.playerList[playerIdx].leader === 0
+                            || game.playerList[playerIdx].hand[i] === Tactics.Companion
+                            || game.playerList[playerIdx].hand[i] === Tactics.Shield
+                        ) {
+                            if (canPlayTroop) {
                                 return function () {
                                     Game.send('e' + _i);
                                 };
-                            } ());
-                        }
-                    } else if (game.playerList[idx].hand[i] === Tactics.Fog || game.playerList[idx].hand[i] === Tactics.Mud) {
-                        if (canPlayWeather) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
+                            }
+                        } else if (game.playerList[playerIdx].hand[i] === Tactics.Scout) {
+                            if (game.troopDeck.length + game.tacticsDeck.length > 1) {
                                 return function () {
                                     Game.send('e' + _i);
                                 };
-                            } ());
-                        }
-                    } else if (game.playerList[idx].hand[i] === Tactics.Redeploy) {
-                        if (canPlayRedeploy) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
+                            }
+                        } else if (
+                            game.playerList[playerIdx].hand[i] === Tactics.Fog
+                            || game.playerList[playerIdx].hand[i] === Tactics.Mud
+                        ) {
+                            if (canPlayWeather) {
                                 return function () {
                                     Game.send('e' + _i);
                                 };
-                            } ());
-                        }
-                    } else if (game.playerList[idx].hand[i] === Tactics.Deserter) {
-                        if (canPlayDeserter) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
+                            }
+                        } else if (game.playerList[playerIdx].hand[i] === Tactics.Redeploy) {
+                            if (canPlayRedeploy) {
                                 return function () {
                                     Game.send('e' + _i);
                                 };
-                            } ());
-                        }
-                    } else if (game.playerList[idx].hand[i] === Tactics.Traitor) {
-                        if (canPlayTraitor) {
-                            sprite.addEventListener('touchstart', function () {
-                                var _i = i;
+                            }
+                        } else if (game.playerList[playerIdx].hand[i] === Tactics.Deserter) {
+                            if (canPlayDeserter) {
                                 return function () {
                                     Game.send('e' + _i);
                                 };
-                            } ());
+                            }
+                        } else if (game.playerList[playerIdx].hand[i] === Tactics.Traitor) {
+                            if (canPlayTraitor) {
+                                return function () {
+                                    Game.send('e' + _i);
+                                };
+                            }
                         }
                     }
-                }
-            } else if (game.phase === Phase.Scout3) {
-                sprite.addEventListener('touchstart', function () {
-                    var _i = i;
+                } else if (game.phase === Phase.Scout3) {
                     return function () {
                         Game.send('k' + _i);
                     };
-                } ());
+                }
             }
-        }
-        sprite.x = i * 45 + 5;
-        if (idx === 0) {
-            sprite.y = 2;
-        } else {
-            sprite.y = 453;
-        }
-        if (game.active === idx && game.play === i) {
-            if (idx === 0) {
-                sprite.y += 10;
-            } else {
-                sprite.y -= 10;
-            }
-        }
-        Game.core.rootScene.addChild(sprite);
+        } ());
     }
 }
 
 Game.addWeather = function (game) {
-    var i, sprite;
+    var i, x;
+
     for (i = 0; i < game.weather.length; i++) {
+        x = i * 75 + 5;
         if (game.weather[i] === 3 || game.weather[i] === 1) {
-            sprite = new Sprite(65, 20);
-            sprite.image = Game.core.assets['view/flag.png'];
-            sprite.x = i * 75 + 5;
-            sprite.y = 250;
-            sprite.frame = 1;
-            Game.core.rootScene.addChild(sprite);
+            Game.addSprite('view/flag.png', 1, x, 250, 65, 20);
         }
         if (game.weather[i] === 3 || game.weather[i] === 2) {
-            sprite = new Sprite(65, 20);
-            sprite.image = Game.core.assets['view/flag.png'];
-            sprite.x = i * 75 + 5;
-            sprite.y = 250;
-            sprite.frame = 2;
-            Game.core.rootScene.addChild(sprite);
+            Game.addSprite('view/flag.png', 2, x, 250, 65, 20);
         }
     }
 }
 
 Game.addflagList = function (game) {
-    var i, sprite, unActive, activeScore, unActiveScore;
+    var i, x, y, unActive, activeScore, unActiveScore;
+
     if (game.active === 0) {
         unActive = 1;
     } else {
         unActive = 0;
     }
     for (i = 0; i < game.flagList.length; i++) {
-        sprite = new Sprite(65, 20);
-        sprite.image = Game.core.assets['view/flag.png'];
-        sprite.frame = 0;
-        sprite.x = i * 75 + 5;
-        if (game.state === State.Play
-        && game.playerList[game.active].uid === uid
-        && game.phase === Phase.Main
-        && game.playerList[game.active].field[i].length === game.size[i]
-        ) {
-            activeScore = Game.score(game.weather[i], game.playerList[game.active].field[i]);
-            if (game.playerList[unActive].field[i].length > 0) {
-                unActiveScore = Game.maxScore(-1, game.stock, game.weather[i], game.size[i], game.playerList[unActive].field[i]);
-            } else {
-                unActiveScore = Game.maxScoreForNothing(game, game.weather[i], game.size[i]);
-            }
-            if (activeScore >= unActiveScore) {
-                sprite.addEventListener('touchstart', function () {
-                    var j = i;
-                    return function () {
-                        Game.send('d' + j);
-                    };
-                } ());
-            }
-        }
+        x = i * 75 + 5;
         if (game.flagList[i] === 0) {
-            sprite.y = 69;
+            y = 69;
         } else if (game.flagList[i] === 1) {
-            sprite.y = 431;
+            y = 431;
         } else {
-            sprite.y = 250;
+            y = 250;
         }
-        Game.core.rootScene.addChild(sprite);
-        if (game.flagList[i] === -1) {
-            sprite = new Sprite(65, 20);
-            sprite.image = Game.core.assets['view/flag.png'];
-            sprite.frame = 12;
-            sprite.x = i * 75 + 5;
-            sprite.y = 250;
-            if (game.phase === Phase.Fog) {
-                sprite.addEventListener('touchstart', function () {
-                    var _i = i;
-                    return function () {
-                        Game.send('g' + _i);
-                    };
-                } ());
-                Game.core.rootScene.addChild(sprite);
-            } else if (game.phase === Phase.Mud) {
-                sprite.addEventListener('touchstart', function () {
-                    var _i = i;
-                    return function () {
-                        Game.send('h' + _i);
-                    };
-                } ());
-                Game.core.rootScene.addChild(sprite);
+        Game.addSprite('view/flag.png', 0, x, y, 65, 20, function () {
+            var _i = i;
+
+            if (
+                game.state === State.Play
+                && game.playerList[game.active].uid === uid
+            ) {
+                if (
+                    game.phase === Phase.Main
+                    && game.playerList[game.active].field[i].length === game.size[i]
+                ) {
+                    activeScore = Game.score(game.weather[i], game.playerList[game.active].field[i]);
+                    if (game.playerList[unActive].field[i].length > 0) {
+                        unActiveScore = Game.maxScore(-1, game.stock, game.weather[i], game.size[i], game.playerList[unActive].field[i]);
+                    } else {
+                        unActiveScore = Game.maxScoreForNothing(game, game.weather[i], game.size[i]);
+                    }
+                    if (activeScore >= unActiveScore) {
+                        return function () {
+                            Game.send('d' + _i);
+                        };
+                    }
+                } else if (game.flagList[i] === -1) {
+                    if (game.phase === Phase.Fog) {
+                        return function () {
+                            Game.send('g' + _i);
+                        };
+                    } else if(game.phase === Phase.Mud) {
+                        return function () {
+                            Game.send('h' + _i);
+                        };
+                    }
+                }
             }
-        }
+        } ());
     }
 }
 
 Game.addTouch = function (game) {
-    var i, sprite;
-    if (game.state === State.Play && game.playerList[game.active].uid === uid) {
+    var i, x, y, sprite;
+
+    if (
+        game.state === State.Play
+        && game.playerList[game.active].uid === uid
+    ) {
         if (game.phase === Phase.Common || game.phase === Phase.Traitor2) {
             for (i = 0; i < game.flagList.length; i++) {
-                if (game.flagList[i] === -1 && game.playerList[game.active].field[i].length < game.size[i]) {
-                    sprite = new Sprite(65, 160);
-                    sprite.image = Game.core.assets['view/touch.png'];
-                    sprite.x = i * 75 + 5;
-                    if (game.phase === Phase.Common) {
-                        sprite.addEventListener('touchstart', function () {
-                            var _i = i;
+                x = i * 75 + 5;
+                y = game.active * 182 + 89;
+                if (
+                    game.flagList[i] === -1
+                    && game.playerList[game.active].field[i].length < game.size[i]
+                ) {
+                    Game.addSprite('view/touch.png', 0, x, y, 65, 160, function () {
+                        var _i = i;
+
+                        if (game.phase === Phase.Common) {
                             return function () {
                                 Game.send('f' + _i);
                             };
-                        } ());
-                        if (game.active === 0) {
-                            sprite.y = 89;
                         } else {
-                            sprite.y = 271;
-                        }
-                    } else {
-                        sprite.addEventListener('touchstart', function () {
-                            var _i = i;
                             return function () {
                                 Game.send('p' + _i);
                             };
-                        } ());
-                        if (game.active === 0) {
-                            sprite.y = 89;
-                        } else {
-                            sprite.y = 271;
                         }
-                    }
-                    Game.core.rootScene.addChild(sprite);
+                    } ());
                 }
             }
         } else if (game.phase === Phase.Redeploy2) {
             for (i = 0; i < game.flagList.length; i++) {
-                if (game.flagList[i] === -1) {
-                    sprite = new Sprite(65, 160);
-                    sprite.image = Game.core.assets['view/touch.png'];
-                    sprite.x = i * 75 + 5;
-                    sprite.addEventListener('touchstart', function () {
+                x = i * 75 + 5;
+                y = game.active * 182 + 89;
+                if (
+                    game.flagList[i] === -1
+                    && game.target.y !== i
+                    && game.playerList[game.active].field[i].length < game.size[i]
+                ) {
+                    Game.addSprite('view/touch.png', 0, x, y, 65, 160, function () {
                         var _i = i;
+
                         return function () {
                             Game.send('m' + _i);
                         };
                     } ());
-                    if (game.active === 0) {
-                        sprite.y = 89;
-                    } else {
-                        sprite.y = 271;
-                    }
-                    Game.core.rootScene.addChild(sprite);
                 }
             }
         }
     }
 }
 
-Game.addField = function (game, idx) {
-    var i, j, sprite;
-    for (i = 0; i < game.playerList[idx].field.length; i++) {
-        for (j = 0; j < game.playerList[idx].field[i].length; j++) {
-            if (game.before.idx === idx && game.before.y === i && game.before.x === j) {
-                sprite = new Sprite(71, 71);
-                sprite.image = Game.core.assets['view/before.png'];
-                sprite.x = i * 75 + 2;
-                if (idx === 0) {
-                    sprite.y = 181 - j * 31;
+Game.addField = function (game, playerIdx) {
+    var i, j, x, y, frame;
+
+    for (i = 0; i < game.playerList[playerIdx].field.length; i++) {
+        for (j = 0; j < game.playerList[playerIdx].field[i].length; j++) {
+            if (
+                game.before.idx === playerIdx
+                && game.before.y === i
+                && game.before.x === j
+            ) {
+                x = i * 75 + 2;
+                if (playerIdx === 0) {
+                    y = 181 - j * 31;
                 } else {
-                    sprite.y = j * 31 + 268;
+                    y = j * 31 + 268;
                 }
-                Game.core.rootScene.addChild(sprite);
+                Game.addSprite('view/before.png', 0, x, y, 71, 71);
             }
-            sprite = new Sprite(65, 65);
-            sprite.image = Game.core.assets['view/card.png'];
-            sprite.frame = ((0xff00 & game.playerList[idx].field[i][j]) >> 8) * 10 + (0x00ff & game.playerList[idx].field[i][j]);
-            sprite.x = i * 75 + 5;
-            if (idx === 0) {
-                sprite.y = 184 - j * 31;
+            x = i * 75 + 5;
+            if (playerIdx === 0) {
+                y = 184 - j * 31;
             } else {
-                sprite.y = j * 31 + 271;
+                y = j * 31 + 271;
             }
-            if (game.state === State.Play && game.playerList[game.active].uid === uid && game.flagList[i] === -1) {
-                if (game.active === idx && game.phase === Phase.Redeploy1) {
-                    sprite.addEventListener('touchstart', function () {
-                        var _i = i, _j = j;
+            frame = ((0xff00 & game.playerList[playerIdx].field[i][j]) >> 8) * 10
+                    + (0x00ff & game.playerList[playerIdx].field[i][j]);
+
+            Game.addSprite('view/card.png', frame, x, y, 65, 65, function () {
+                if (
+                    game.state === State.Play
+                    && game.playerList[game.active].uid === uid
+                    && game.flagList[i] === -1
+                ) {
+                    var _i = i, _j = j;
+
+                    if (game.active === playerIdx && game.phase === Phase.Redeploy1) {
                         return function () {
                             Game.send('l' + _i + ' ' + _j);
                         };
-                    } ());
-                } else if (game.active !== idx) {
-                    if (game.phase === Phase.Deserter) {
-                        sprite.addEventListener('touchstart', function () {
-                            var _i = i, _j = j;
+                    } else if (game.active !== playerIdx) {
+                        if (game.phase === Phase.Deserter) {
                             return function () {
                                 Game.send('n' + _i + ' ' + _j);
                             };
-                        } ());
-                    } else if (game.phase === Phase.Traitor1 && (game.playerList[idx].field[i][j] & 0xff00) !== 0x0600) {
-                        sprite.addEventListener('touchstart', function () {
-                            var _i = i, _j = j;
+                        } else if (
+                            game.phase === Phase.Traitor1
+                            && (game.playerList[playerIdx].field[i][j] & 0xff00) !== 0x0600
+                        ) {
                             return function () {
                                 Game.send('o' + _i + ' ' + _j);
                             };
-                        } ());
+                        }
                     }
                 }
-            }
-            Game.core.rootScene.addChild(sprite);
-            if (game.state === State.Play && game.target.y === i && game.target.x === j) {
-                sprite = new Sprite(65, 65);
-                sprite.image = Game.core.assets['view/card.png'];
-                sprite.frame = 72;
-                sprite.opacity = 0.7;
-                sprite.x = i * 75 + 5;
-                if (game.active === idx) {
-                    if (game.phase === Phase.Redeploy2) {
-                        if (idx === 0) {
-                            sprite.y = 184 - j * 31;
-                        } else {
-                            sprite.y = j * 31 + 271;
-                        }
-                        Game.core.rootScene.addChild(sprite);
+            } ());
+
+            if (
+                game.state === State.Play
+                && game.target.y === i
+                && game.target.x === j
+            ) {
+                x = i * 75 + 5;
+                if (
+                    (
+                        game.active === playerIdx
+                        && game.phase === Phase.Redeploy2
+                    ) || (
+                        game.active !== playerIdx
+                        && game.phase === Phase.Traitor2
+                    )
+                ) {
+                    if (playerIdx === 0) {
+                        y = 184 - j * 31;
+                    } else {
+                        y = j * 31 + 271;
                     }
-                } else {
-                    if (game.phase === Phase.Traitor2) {
-                        if (idx === 0) {
-                            sprite.y = 184 - j * 31;
-                        } else {
-                            sprite.y = j * 31 + 271;
-                        }
-                        Game.core.rootScene.addChild(sprite);
-                    }
+                    Game.addSprite('view/card.png', 72, x, y, 65, 65, null, 0.7);
                 }
             }
         }
@@ -533,112 +499,80 @@ Game.addField = function (game, idx) {
 }
 
 Game.addTroopDeck = function (game) {
-    var sprite = new Sprite(65, 65);
-    sprite.image = Game.core.assets['view/card.png'];
-    sprite.frame = 70;
-    sprite.x = 695;
-    sprite.y = 425;
-    if (game.state === State.Play && game.playerList[game.active].uid === uid && game.troopDeck.length > 0) {
-        if (game.phase === Phase.Draw) {
-            sprite.addEventListener('touchstart', function () {
-                Game.send('q');
-            });
-        } else if (game.phase === Phase.Scout1 || game.phase === Phase.Scout2) {
-            sprite.addEventListener('touchstart', function () {
-                Game.send('i');
-            });
+    Game.addSprite('view/card.png', 70, 695, 425, 65, 65, function () {
+        if (
+            game.state === State.Play
+            && game.playerList[game.active].uid === uid
+            && game.troopDeck.length > 0
+        ) {
+            if (game.phase === Phase.Draw) {
+                return function () {
+                    Game.send('q');
+                };
+            } else if (game.phase === Phase.Scout1 || game.phase === Phase.Scout2) {
+                return function () {
+                    Game.send('i');
+                };
+            }
         }
-    }
-    Game.core.rootScene.addChild(sprite);
-    sprite = new Label(game.troopDeck.length + '枚');
-    sprite.x = 700;
-    sprite.y = 430;
-    sprite.font = '14px monospace';
-    Game.core.rootScene.addChild(sprite);
+    } ());
+    Game.addLabel(game.troopDeck.length + '枚', 700, 430);
 }
 
 Game.addTacticsDeck = function (game) {
-    var sprite = new Sprite(65, 65);
-    sprite.image = Game.core.assets['view/card.png'];
-    sprite.frame = 71;
-    sprite.x = 765;
-    sprite.y = 425;
-    if (game.state === State.Play && game.playerList[game.active].uid === uid && game.tacticsDeck.length > 0) {
-        if (game.phase === Phase.Draw) {
-            sprite.addEventListener('touchstart', function () {
-                Game.send('r');
-            });
-        } else if (game.phase === Phase.Scout1 || game.phase === Phase.Scout2) {
-            sprite.addEventListener('touchstart', function () {
-                Game.send('j');
-            });
+    Game.addSprite('view/card.png', 71, 765, 425, 65, 65, function () {
+        if (
+            game.state === State.Play
+            && game.playerList[game.active].uid === uid
+            && game.tacticsDeck.length > 0
+        ) {
+            if (game.phase === Phase.Draw) {
+                return function () {
+                    Game.send('r');
+                };
+            } else if (game.phase === Phase.Scout1 || game.phase === Phase.Scout2) {
+                return function () {
+                    Game.send('j');
+                };
+            }
         }
-    }
-    Game.core.rootScene.addChild(sprite);
-    sprite = new Label(game.tacticsDeck.length + '枚');
-    sprite.x = 770;
-    sprite.y = 430;
-    sprite.font = '14px monospace';
-    Game.core.rootScene.addChild(sprite);
+    } ());
+    Game.addLabel(game.tacticsDeck.length + '枚', 770, 430);
 }
 
-Game.addTalon = function (game, idx) {
-    var i, sprite;
-    for (i = 0; i < game.playerList[idx].talon.length; i++) {
-        sprite = new Sprite(65, 65);
-        sprite.image = Game.core.assets['view/card.png'];
-        sprite.frame = ((0xff00 & game.playerList[idx].talon[i]) >> 8) * 10 + (0x00ff & game.playerList[idx].talon[i]);
-        sprite.x = i * 45 + 432;
-        if (idx === 0) {
-            sprite.y = 2;
-        } else {
-            sprite.y = 453;
-        }
-        Game.core.rootScene.addChild(sprite);
+Game.addTalon = function (game, playerIdx) {
+    var i, x, y, frame;
+
+    for (i = 0; i < game.playerList[playerIdx].talon.length; i++) {
+        x = i * 45 + 432;
+        y = playerIdx * 451 + 2;
+        frame = ((0xff00 & game.playerList[playerIdx].talon[i]) >> 8) * 10
+                + (0x00ff & game.playerList[playerIdx].talon[i]);
+        Game.addSprite('view/card.png', frame, x, y, 65, 65);
     }
 }
 
 Game.addCommand = function (game) {
-    var sprite, unActive, canPlayTroop = false, haveTroop = false;
+    var unActive, canPlayTroop = false, haveTroop = false;
 
     if (game.state === State.Ready) {
-        sprite = new Sprite(80, 25);
-        sprite.image = Game.core.assets['view/btn.png'];
-        sprite.x = 725;
-        sprite.y = 265;
         if (game.playerList[0].uid === '' || game.playerList[1].uid === '') {
-            sprite.frame = 0;
-            sprite.addEventListener('touchstart', function () {
+            Game.addSprite('view/btn.png', 0, 725, 265, 80, 25, function () {
                 Game.send('a');
             });
-            Game.core.rootScene.addChild(sprite);
-        } else if(game.playerList[0].uid === uid || game.playerList[1].uid === uid) {
-            sprite.frame = 2;
-            sprite.addEventListener('touchstart', function () {
+        } else if (game.playerList[0].uid === uid || game.playerList[1].uid === uid) {
+            Game.addSprite('view/btn.png', 2, 725, 265, 80, 25, function () {
                 Game.send('c');
             });
-            Game.core.rootScene.addChild(sprite);
         }
         if (game.playerList[0].uid === uid || game.playerList[1].uid === uid) {
-            sprite = new Sprite(80, 25);
-            sprite.image = Game.core.assets['view/btn.png'];
-            sprite.x = 725;
-            sprite.y = 305;
-            sprite.frame = 1;
-            sprite.addEventListener('touchstart', function () {
+            Game.addSprite('view/btn.png', 1, 725, 305, 80, 25, function () {
                 Game.send('b');
             });
-            Game.core.rootScene.addChild(sprite);
         }
     } else if (game.playerList[game.active].uid === uid) {
-        sprite = new Label('');
-        sprite.x = 690;
-        sprite.y = 193;
-        sprite.font = '14px monospace';
-
         if (game.phase === Phase.Main) {
-            sprite.text = '旗の獲得か、カードを<br />プレイして下さい。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('旗の獲得か、カードを<br>プレイして下さい。', 690, 193);
             for (i in game.flagList) {
                 if (game.flagList[i] === -1 && game.playerList[game.active].field[i].length < game.size[i]) {
                     canPlayTroop = true;
@@ -652,68 +586,46 @@ Game.addCommand = function (game) {
                 }
             }
             if (!canPlayTroop || !haveTroop) {
-                sprite = new Sprite(80, 25);
-                sprite.image = Game.core.assets['view/btn.png'];
-                sprite.frame = 3;
-                sprite.x = 705;
-                sprite.y = 300;
-                sprite.addEventListener('touchstart', function () {
+                Game.addSprite('view/btn.png', 3, 705, 300, 80, 25, function () {
                     Game.send('s');
                 });
-                Game.core.rootScene.addChild(sprite);
             }
         } else if (game.phase === Phase.Common) {
-            sprite.text = '戦場へカードを出せま<br />す。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('戦場へカードを出せま<br>す。', 690, 193);
         } else if (game.phase === Phase.Fog) {
-            sprite.text = '戦場を霧にできます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('戦場を霧にできます。', 690, 193);
         } else if (game.phase === Phase.Mud) {
-            sprite.text = '戦場を沼にできます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('戦場を沼にできます。', 690, 193);
         } else if (game.phase === Phase.Scout1 || game.phase === Phase.Scout2) {
-            sprite.text = '偵察により山札からカ<br />ードを引けます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('偵察により山札からカ<br>ードを引けます。', 690, 193);
         } else if (game.phase === Phase.Scout3) {
-            sprite.text = '山札の上にカードを戻<br />せます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('山札の上にカードを戻<br>せます。', 690, 193);
         } else if (game.phase === Phase.Redeploy1) {
-            sprite.text = '再配置するカードを選<br />べます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('再配置するカードを選<br>べます。', 690, 193);
         } else if (game.phase === Phase.Redeploy2) {
             if (game.playerList[game.active].uid === uid) {
-                sprite.text = 'カードを移動か、除外<br />できます。';
-                Game.core.rootScene.addChild(sprite);
+                Game.addLabel('カードを移動か、除外<br>できます。', 690, 193);
                 if (game.playerList[game.active].uid === uid) {
-                    sprite = new Sprite(80, 25);
-                    sprite.image = Game.core.assets['view/btn.png'];
-                    sprite.frame = 4;
-                    sprite.x = 690;
-                    sprite.y = 385;
-                    sprite.addEventListener('touchstart', function () {
+                    Game.addSprite('view/btn.png', 4, 690, 385, 80, 25, function () {
                         Game.send('m-1');
                     });
-                    Game.core.rootScene.addChild(sprite);
                 }
             }
         } else if (game.phase === Phase.Deserter) {
-            sprite.text = 'カードを除外できます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('カードを除外できます。', 690, 193);
         } else if (game.phase === Phase.Traitor1) {
-            sprite.text = '裏切らせる部隊カード<br />を選べます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('裏切らせる部隊カード<br>を選べます。', 690, 193);
         } else if (game.phase === Phase.Traitor2) {
-            sprite.text = '部隊カードを移動でき<br />ます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('部隊カードを移動でき<br>ます。', 690, 193);
         } else if (game.phase === Phase.Draw) {
-            sprite.text = '山札からカードを引け<br />ます。';
-            Game.core.rootScene.addChild(sprite);
+            Game.addLabel('山札からカードを引け<br>ます。', 690, 193);
         }
     }
 }
 
 Game.maxScoreForNothing = function (game, weather, size) {
     var result, i, j, k, l;
+
     result = -1;
     if (weather === 1 || weather === 3) {
         k = l = 0;
@@ -827,6 +739,7 @@ Game.maxScoreForNothing = function (game, weather, size) {
 
 Game.maxScore = function (max, stock, weather, size, sample) {
     var score, i, j;
+
     if (sample.length === size) {
         return Game.score(weather, sample);
     }
@@ -850,6 +763,7 @@ Game.maxScore = function (max, stock, weather, size, sample) {
 Game.score = function (weather, formation) {
     var sample = [], i, j, k, l, isFlush, isStraight, isThree,
     flush, straight, three, leader = 0, companion = 0, shield = 0;
+
     for (i = 0; i < formation.length; i++) {
         switch (formation[i]) {
             case Tactics.Alexander:
