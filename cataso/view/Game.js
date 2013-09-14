@@ -722,7 +722,7 @@ Game.addStock = function (game) {
     sprite.x = 380;
     sprite.image = new Surface(48, 50);
     sprite.image.context.strokeStyle = 'black';
-    sprite.image.context.fillStyle = 'rgb(185,122,87)';
+    sprite.image.context.fillStyle = 'rgb(0,0,0)';
     sprite.image.context.fillRect(0, 50 - game.card.length * 2, 48, game.card.length * 2);
     sprite.image.context.strokeRect(0, 0, 48, 50);
     Game.core.rootScene.addChild(sprite);
