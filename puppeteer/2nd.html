@@ -7,9 +7,7 @@
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Cache-Control" content="no-cache">
         <meta http-equiv="Expires" content="0">
-        <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-        <script src="http://code.createjs.com/preloadjs-0.3.1.min.js"></script>
-        <script src="http://code.createjs.com/soundjs-0.4.1.min.js"></script>
+        <script src="../UnitePlayer.js"></script>
         <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <style>
             body {
@@ -56,15 +54,15 @@
         <div id="play" style="display: none;">
 	        <div class="container">
                 <div class="row">
-                    <div class="span3">
+                    <div class="span2">
                         <p><i class="icon-user"></i><span class="label">あなた</span>：<span id="uid"></span></p>
                         <p><i class="icon-user"></i><span class="label">管理者</span>：<span id="cid"></span></p>
-                        <div style="overflow-y: scroll; border: 1px black solid; width: 290px; height: 118px;">
+                        <div style="overflow-y: scroll; border: 1px black solid; width: 190px; height: 118px;">
                             <p><i class="icon-user"></i><span class="label">ログインユーザー一覧</span></p>
                             <ul id="user-list">
                             </ul>
                         </div>
-                        <div id="log" style="overflow-y: scroll; border: 1px black solid; width: 290px; height: 360px;"></div>
+                        <div id="log" style="overflow-y: scroll; border: 1px black solid; width: 190px; height: 360px;"></div>
                     </div>
                     <div class="span9">
                         <iframe id="view" src="view.html" style="border: 1px black solid; width: 860px; height: 540px;"></iframe>
@@ -75,20 +73,17 @@
                         <i class="icon-pencil"></i>
                         <input id="chat-text" style="border: 1px black solid; width: 830px;" type="text" />
                     </div>
-                    <div class="span3">
+                    <div class="span2">
                         <i class="icon-music"></i>
-                        <input id="bell-btn" class="btn btn-primary" type="button" value="ベル" style="width: 75px;" />
                         <input id="chat-silent-btn" class="btn btn-warning" type="button" value="チャット音" style="width: 75px;" />
-                        <input id="bell-silent-btn" class="btn btn-warning" type="button" value="ベル音" style="width: 75px;" />
                     </div>
                 </div>
             </div>
         </div>
-        <script src="../tkmonline-1st.js"></script>
+        <script src="../tkmonline-1st-2.js"></script>
         <script>
             Tkm.instanceIdx = 3;
-            Tkm.manifest.push({ src: './view/build.mp3', id: 'build' });
         </script>
-        <script src="../tkmonline-2nd.js"></script>
+        <script src="../tkmonline-2nd-2.js"></script>
     </body>
 </html>

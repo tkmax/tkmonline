@@ -59,7 +59,7 @@ Game.onLoad = function () {
 Game.onMessage = function (game) {
     var i;
 
-    if (!Game.isMute && game.sound !== '') sound(game.sound);
+    if (game.sound !== '') sound(game.sound);
     Game.removeAll();
     Game.addBackGround();
     Game.addHeadLine(game);
@@ -631,13 +631,13 @@ Game.addBuild = function (game, playerIdx) {
                 && game.playerList[game.active].uid === uid
                 && playerIdx !== game.active
                 && game.playerList[playerIdx].build[i] !== Card.Lookout
-                && game.playerList[playerIdx].build[i].length < 8
+                && game.playerList[playerIdx].build.length < 8
                 && (
                     game.playerList[playerIdx].job !== Job.Evangelist
                     || !game.playerList[playerIdx].isOpen
                 ) && (
-                    (game.playerList[playerIdx].build[i] & 0x0f00) >> 8)
-                    <= (game.playerList[game.active].coin + 1
+                    ((game.playerList[playerIdx].build[i] & 0x0f00) >> 8)
+                    <= game.playerList[game.active].coin + 1
                 )
             ) {
                 return function () {
