@@ -181,8 +181,10 @@ Game.addCommand = function (game) {
                                 && game.isFirst
                                 && game.deck.length >= 3
                             ) || (
-                                game.obsOwner !== game.active
-                                && game.deck.length >= 2
+                                (
+                                    game.obsOwner !== game.active
+                                    || !game.isFirst
+                                ) && game.deck.length >= 2
                             )
                         ) {   
                             Game.addSprite('view/btn.png', 3, 425, 385, 80, 25, function () {
