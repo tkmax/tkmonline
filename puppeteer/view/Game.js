@@ -59,12 +59,13 @@ Game.onLoad = function () {
 Game.onMessage = function (game) {
     var i;
 
-    if (game.sound !== '') sound(game.sound);
+    if (!Game.isMute && game.sound !== '') sound(game.sound);
     Game.removeAll();
     Game.addBackGround();
     Game.addHeadLine(game);
     Game.addCommand(game);
     for (i = 0; i < 5; i++) Game.addPlayer(game, i);
+    Game.addSound(game);
 }
 
 Game.removeAll = function () {
@@ -102,10 +103,10 @@ Game.addHeadLine = function (game) {
                 text = '対戦中 - 盗む';
                 break;
             case Phase.Trade:
-                text = '対戦中 - 手札交換';
+                text = '対戦中 - 交換(人)';
                 break;
             case Phase.Replace:
-                text = '対戦中 - 手札入れ替え';
+                text = '対戦中 - 交換(山札)';
                 break;
             case Phase.Destroy:
                 text = '対戦中 - 破壊';
@@ -416,12 +417,13 @@ Game.addCommand = function (game) {
                     for (i = 2, j = 0; i < game.job.length; i++) {
                         if (
                             (
-                                game.job[i] >= 0
-                                && !game.playerList[game.job[i]].isOpen
-                                && i !== game.kill
-                            )
-                            || game.job[i] === -1
-                            || game.job[i] === -3
+                                (
+                                    game.job[i] >= 0
+                                    && !game.playerList[game.job[i]].isOpen
+                                )
+                                || game.job[i] === -1
+                                || game.job[i] === -3
+                            ) && i !== game.kill
                         ) {
                             Game.addSprite('view/btn.png', i + 7, (j % 4) * 85 + 425, Math.floor(j / 4) * 30 + 405, 80, 25, function () {
                                 var _i = i;
@@ -703,6 +705,18 @@ Game.score = function (game, playerIdx) {
     }
 
     return { 'score': score, 'bonus': bonus };
+}
+
+Game.addSound = function (game) {
+    var frame;
+
+    frame = Game.isMute ? 35 : 34;
+
+    Game.addSprite('view/btn.png', frame, 760, 346, 80, 25, function () {
+        Game.isMute = !Game.isMute;
+
+        this.frame = Game.isMute ? 35 : 34;
+    });
 }
 
 Game.color = function (type) {
