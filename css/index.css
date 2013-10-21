@@ -1,3 +1,11 @@
+a {
+    border: 0;
+}
+
+#yuyuko {
+    margin: 15px 0 5px 20px;
+}
+
 /* body */
 
 body {
@@ -13,98 +21,39 @@ body {
     color: black;
 }
 
-/* login */
-            
-#login #yuyuko {
-    position: absolute;
-    left: 400px;
+/* instanceList */
+
+#instanceList {
+    margin: 5px 0 35px 50px;
 }
 
-#login #login-uid {
-    position: absolute;
-    width: 170px;
-    height: 26px;
-    top: 95px;
-    left: 50px;
-    border: 2px black solid;
-    font-size: 20px;
+#instanceList .instance {
+    width: 160px;
 }
 
-#login #login-btn {
-    position: absolute;
-    top: 50px;
-    left: 250px;
-}
-            
-#login #login-users {
-    position: absolute;
-    padding: 0;
-    top: 175px;
-    left: 70px;
-}
-
-#login #err-msg {
-    position: absolute;
-    top: 163px;
-    left: 20px;
-    color: red;
-    display: none;
-    font-size: 11px;
+#instanceList .instance .count {
+    background-color: orange;
+    color: white;
+    float: left;
+    padding: 2px;
+    margin: 1px;
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-/* play */
-
-#play #user-list {
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    top: 35px;
-    left: 10px;
-    width: 210px;
-    height: 155px;
-    border: 2px black solid;
-    overflow-y: scroll;
+#instanceList .instance .title {
+    background-color: black;
+    color: white;
+    float: left;
+    padding: 2px;
+    margin: 1px;
+    width: 128px;
+    font-size: 12px;
+    font-weight: bold;
 }
 
-#play #log {
-    position: absolute;
-    top: 210px;
-    left: 10px;
-    width: 210px;
-    height: 365px;
-    border: 2px black solid;
-    overflow-y: scroll;
-    font-size: 13px;
-}
-
-#play #view {
-    position: absolute;
-    top: 35px;
-    left: 235px;
-    width: 860px;
-    height: 540px;
-    border: 2px black solid;
-}
-
-#play #chat-text {
-    position: absolute;
-    top: 595px;
-    left: 10px;
-    width: 950px;
-    height: 25px;
-    font-size: 18px;
-    border: 2px black solid;
-}
-
-#play #chat-silent-btn {
-    position: absolute;
-    top: 595px;
-    left: 980px;
-}
-
-/* footer */
-#footer {
-    position: absolute;
-    top: 635px;
-    left: 10px;
-}
+#instanceList .instance .button:hover {
+    opacity: 0.7;
+} 
