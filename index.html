@@ -1,147 +1,132 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="utf-8" />
-        <title>Tkm Online</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Cache-Control" content="no-cache">
-        <meta http-equiv="Expires" content="0">
-        <script src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-        <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-        <style>
-            body {
-                padding-top: 60px;
-            }
-            ul {
-                list-style: none;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="navbar-inner">
-                <div class="container">
-				    <a class="brand" href="#"><strong>Tkm Online</strong></a>
-                    <ul class="nav">
-                        <li class="active"><a href="#">新着情報</a></li>
-                        <li><a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">したらば掲示板</a></li>
-                        <li><a href="http://www57.atwiki.jp/tkmonline/" target="_blank">＠ウィキ</a></li>
-                    </ul>
-                </div>
-		    </div>
-	    </div>
+<head>
+    <meta charset="utf-8" />
+    <title>Tkm Online</title>
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+<body>
+    <div id="header">
+        Tkm Online ( <a href="http://www57.atwiki.jp/tkmonline/" target="_blank">wiki</a> | <a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">bbs</a> )
+    </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="span1"></div>
-                <div class="span11">
-                    <p><i class="icon-info-sign"></i>対応ブラウザ : Google Chrome 16 以降, Firefox 11 以降, Safari 6 以降, IE 10 以降</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="span1"></div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title0" class="label" style="width: 108px;"></span><span id="count0" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./battleraiso/I.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title1" class="label" style="width: 108px;"></span><span id="count1" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./battleraiso/II.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title2" class="label" style="width: 108px;"></span><span id="count2" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./battleraiso/III.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title3" class="label" style="width: 108px;"></span><span id="count3" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./battleraiso/IV.html" target="_blank"><img src="./icon/battleraiso.png" alt="battleraiso"></img></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="span1"></div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title4" class="label" style="width: 108px;"></span><span id="count4" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./puppeteer/I.html" target="_blank"><img src="./icon/puppeteer.png" alt="puppeteer"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title5" class="label" style="width: 108px;"></span><span id="count5" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./puppeteer/II.html" target="_blank"><img src="./icon/puppeteer.png" alt="puppeteer"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title6" class="label" style="width: 108px;"></span><span id="count6" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./puppeteer/III.html" target="_blank"><img src="./icon/puppeteer.png" alt="puppeteer"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title7" class="label" style="width: 108px;"></span><span id="count7" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./puppeteer/IV.html" target="_blank"><img src="./icon/puppeteer.png" alt="puppeteer"></img></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="row">
-                <div class="span1"></div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title8" class="label" style="width: 108px;"></span><span id="count4" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./cataso/I.html" target="_blank"><img src="./icon/cataso.png" alt="cataso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title9" class="label" style="width: 108px;"></span><span id="count5" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./cataso/II.html" target="_blank"><img src="./icon/cataso.png" alt="cataso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title10" class="label" style="width: 108px;"></span><span id="count6" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./cataso/III.html" target="_blank"><img src="./icon/cataso.png" alt="cataso"></img></a></li>
-                    </ul>
-                </div>
-                <div class="span2">
-                    <ul>
-                        <li><span id="title11" class="label" style="width: 108px;"></span><span id="count7" class="label label-info" style="width: 20px;">0</span></li>
-                        <li><a href="./cataso/IV.html" target="_blank"><img src="./icon/cataso.png" alt="cataso"></img></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
+    <img id ="yuyuko" src="img/index_yuyuko.png" alt="yuyuko" /></a>
 
-        <script>
-            var instanceList, ws, instanceIndex;
+    <div id="instanceList">
+        <table>
+            <tr>
+                <td>
+                    <div id="instance0" class="instance">
+                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <a href="battleraiso/I.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance1" class="instance">
+                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <a href="battleraiso/II.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance2" class="instance">
+                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <a href="battleraiso/III.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance3" class="instance">
+                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <a href="battleraiso/IV.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="instance4" class="instance">
+                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <a href="puppeteer/I.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance5" class="instance">
+                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <a href="puppeteer/II.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance6" class="instance">
+                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <a href="puppeteer/III.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance7" class="instance">
+                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <a href="puppeteer/IV.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="instance8" class="instance">
+                        <span class="count">0</span><span class="title">カタソ</span>
+                        <a href="cataso/I.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance9" class="instance">
+                        <span class="count">0</span><span class="title">カタソ</span>
+                        <a href="cataso/II.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance10" class="instance">
+                        <span class="count">0</span><span class="title">カタソ</span>
+                        <a href="cataso/III.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
+                    </div>
+                </td>
+                <td>
+                    <div id="instance11" class="instance">
+                        <span class="count">0</span><span class="title">カタソ</span>
+                        <a href="cataso/IV.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 
-            ws = new WebSocket('ws://210.152.156.23:7911');
+    <div id="footer">
+        <p>対応ブラウザ : Chrome 16 以降, Firefox 11 以降, Safari 6 以降, IE 10 以降</p>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline/battleraiso/I.html" data-text="TkmOnline(バトルライソI)" data-lang="ja">ツイート</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
 
-            ws.onopen = function () {
-                ws.send(String.fromCharCode(0) + 'a');
-                setInterval(function () {
+    <script>
+        var ws = new WebSocket('ws://210.152.156.23:7911');
+
+        ws.onopen = function () {
+            
+            ws.send(String.fromCharCode(0) + 'a');
+            
+            setInterval(
+                function () {
                     ws.send(String.fromCharCode(0) + 'a');
-                }, 5000);
-            }
-
-            ws.onmessage = function (e) {
-                var info, i;
-                info = JSON.parse(e.data.substring(1));
-                for (i in info) {
-                    $('#title' + info[i].index).text(info[i].title);
-                    $('#count' + info[i].index).text(info[i].count);
                 }
+                , 5000
+            );
+        }
+
+        ws.onmessage = function (e) {
+            var args, i, span;
+
+            args = JSON.parse(e.data.substring(1));
+
+            for (i = 0; i < args.length; i++) {
+                span = document.getElementById('instance' + i).getElementsByTagName('span');
+                span[0].textContent = args[i].count;
+                span[1].textContent = args[i].title;
             }
-        </script>
-    </body>
+        }
+    </script>
+</body>
 </html>
