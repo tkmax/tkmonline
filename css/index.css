@@ -2,6 +2,10 @@ a {
     border: 0;
 }
 
+a img {
+    border: 0;
+}
+
 #yuyuko {
     margin: 15px 0 5px 20px;
 }
