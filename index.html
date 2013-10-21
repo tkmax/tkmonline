@@ -17,25 +17,25 @@
             <tr>
                 <td>
                     <div id="instance0" class="instance">
-                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <span class="count-orange">0</span><span class="title">バトルライソ</span>
                         <a href="battleraiso/I.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance1" class="instance">
-                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <span class="count-orange">0</span><span class="title">バトルライソ</span>
                         <a href="battleraiso/II.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance2" class="instance">
-                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <span class="count-orange">0</span><span class="title">バトルライソ</span>
                         <a href="battleraiso/III.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance3" class="instance">
-                        <span class="count">0</span><span class="title">バトルライソ</span>
+                        <span class="count-orange">0</span><span class="title">バトルライソ</span>
                         <a href="battleraiso/IV.html" target="_blank"><img class="button" src="icon/battleraiso.png" alt="battleraiso" /></a>
                     </div>
                 </td>
@@ -43,25 +43,25 @@
             <tr>
                 <td>
                     <div id="instance4" class="instance">
-                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <span class="count-orange">0</span><span class="title">パペッティア</span>
                         <a href="puppeteer/I.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance5" class="instance">
-                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <span class="count-orange">0</span><span class="title">パペッティア</span>
                         <a href="puppeteer/II.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance6" class="instance">
-                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <span class="count-orange">0</span><span class="title">パペッティア</span>
                         <a href="puppeteer/III.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance7" class="instance">
-                        <span class="count">0</span><span class="title">パペッティア</span>
+                        <span class="count-orange">0</span><span class="title">パペッティア</span>
                         <a href="puppeteer/IV.html" target="_blank"><img class="button" src="icon/puppeteer.png" alt="puppeteer" /></a>
                     </div>
                 </td>
@@ -69,25 +69,25 @@
             <tr>
                 <td>
                     <div id="instance8" class="instance">
-                        <span class="count">0</span><span class="title">カタソ</span>
+                        <span class="count-orange">0</span><span class="title">カタソ</span>
                         <a href="cataso/I.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance9" class="instance">
-                        <span class="count">0</span><span class="title">カタソ</span>
+                        <span class="count-orange">0</span><span class="title">カタソ</span>
                         <a href="cataso/II.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance10" class="instance">
-                        <span class="count">0</span><span class="title">カタソ</span>
+                        <span class="count-orange">0</span><span class="title">カタソ</span>
                         <a href="cataso/III.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
                     </div>
                 </td>
                 <td>
                     <div id="instance11" class="instance">
-                        <span class="count">0</span><span class="title">カタソ</span>
+                        <span class="count-orange">0</span><span class="title">カタソ</span>
                         <a href="cataso/IV.html" target="_blank"><img class="button" src="icon/cataso.png" alt="cataso" /></a>
                     </div>
                 </td>
@@ -105,9 +105,9 @@
         var ws = new WebSocket('ws://210.152.156.23:7911');
 
         ws.onopen = function () {
-            
+
             ws.send(String.fromCharCode(0) + 'a');
-            
+
             setInterval(
                 function () {
                     ws.send(String.fromCharCode(0) + 'a');
@@ -124,6 +124,11 @@
             for (i = 0; i < args.length; i++) {
                 span = document.getElementById('instance' + i).getElementsByTagName('span');
                 span[0].textContent = args[i].count;
+                if (span[0].textContent === '0') {
+                    span[0].className = 'count-orange';
+                } else {
+                    span[0].className = 'count-pink';
+                }
                 span[1].textContent = args[i].title;
             }
         }

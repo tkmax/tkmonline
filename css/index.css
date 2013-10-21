@@ -31,8 +31,20 @@ body {
     width: 160px;
 }
 
-#instanceList .instance .count {
+#instanceList .instance .count-orange {
     background-color: orange;
+    color: white;
+    float: left;
+    padding: 2px;
+    margin: 1px;
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#instanceList .instance .count-pink {
+    background-color: deeppink;
     color: white;
     float: left;
     padding: 2px;
