@@ -8,6 +8,6 @@ sound = function (id) {
     window.parent.Tkm.sound(id);
 }
 
-onLoad = function() {}
+onLoad = function () { }
 
-onMessage = function(msg) {}
+onMessage = function (msg) { }

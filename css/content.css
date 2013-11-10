@@ -55,6 +55,7 @@ body {
 /* play */
 
 #play #user-list {
+    background-color: gainsboro;
     position: absolute;
     padding: 0;
     margin: 0;
@@ -67,6 +68,7 @@ body {
 }
 
 #play #log {
+    background-color: gainsboro;
     position: absolute;
     top: 210px;
     left: 10px;
@@ -107,4 +109,24 @@ body {
     position: absolute;
     top: 635px;
     left: 10px;
+}
+
+/* .uid */
+.uid {
+    background-color: black;
+    color: white;
+    padding: 2px;
+    margin: 1px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* .trip */
+.trip {
+    background-color: green;
+    color: white;
+    padding: 2px;
+    margin: 1px;
+    font-size: 12px;
+    font-weight: bold;
 }

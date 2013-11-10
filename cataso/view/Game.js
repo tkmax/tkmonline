@@ -72,7 +72,7 @@ Game.onMessage = function (game) {
     Game.addBackGround();
     Game.addHeadLine(game);
     Game.addCommand(game);
-    for (i = 0; i < 4; i++) Game.addPlayer(game, i);
+    for (i = 0; i < game.playerNumber; i++) Game.addPlayer(game, i);
     Game.addStock(game);
     Game.addHarbor(game);
     Game.addTileList(game);
@@ -173,32 +173,36 @@ Game.addHeadLine = function (game) {
 }
 
 Game.addCommand = function (game) {
-    var i, j, sprite, canJoin, canLeave, canStart;
+    var i, sprite, canJoin, canLeave, canStart;
 
     if (game.state === State.Ready) {
         canJoin = canLeave = canStart = false;
-        for (i = j = 0; i < game.playerList.length; i++) {
+        for (i = 0; i < game.playerList.length; i++) {
             if (game.playerList[i].uid === '') {
                 canJoin = true;
             } else {
-                j++;
                 if (game.playerList[i].uid === uid) canLeave = true;
             }
         }
-        if (i === j) canStart = true;
+        if (
+            game.playerList[0].uid !== ''
+            && game.playerList[1].uid !== ''
+            && game.playerList[2].uid !== ''
+        ) canStart = true;
         if (canJoin) {
-            Game.addSprite('view/btn.png', 0, 600, 410, 80, 25, function () {
+            Game.addSprite('view/btn.png', 0, 640, 410, 80, 25, function () {
                 Game.send('b');
-            });
-        } else if (canStart) {
-            Game.addSprite('view/btn.png', 2, 600, 410, 80, 25, function () {
-                Game.send('d');
             });
         }
         if (canLeave) {
-            Game.addSprite('view/btn.png', 1, 685, 410, 80, 25, function () {
+            Game.addSprite('view/btn.png', 1, 725, 410, 80, 25, function () {
                 Game.send('c');
             });
+            if (canStart) {
+                Game.addSprite('view/btn.png', 2, 555, 410, 80, 25, function () {
+                    Game.send('d');
+                });
+            }
         }
     } else if (game.playerList[game.active].uid === uid) {
         switch (game.phase) {
@@ -328,7 +332,7 @@ Game.addCommand = function (game) {
     switch (game.phase) {
         case Phase.Burst:
             Game.addSprite('view/skin.png', 0, 525, 338, 313, 180);
-            for (i = 0; i < 4; i++) Game.addBurstCommand(game, i);
+            for (i = 0; i < game.playerNumber; i++) Game.addBurstCommand(game, i);
             break;
         case Phase.DomesticTrade2:
             if(game.playerList[game.trade.playerIdx].uid === uid) Game.addDomesticTrade2Command(game);
@@ -394,7 +398,7 @@ Game.addInternationalTradeCommand = function (game) {
             var _i = i, _cost = cost, _pool = pool, _req = req;
 
             return function () {
-                if (Game.trade.destroy[_i] - _cost > 0) {
+                if (Game.trade.destroy[_i] - _cost >= 0) {
                     Game.trade.destroy[_i] -= _cost;
                     Game.trade.pool--;
                     _req.text = '' + Game.trade.destroy[_i];

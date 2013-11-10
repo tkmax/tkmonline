@@ -1,4 +1,4 @@
-﻿var ctrlr, view, Tkm = function() { }, unitePlayer = function() { };
+﻿var ctrlr, view, Tkm = function() { };
 
 Tkm.wsurl = 'ws://210.152.156.23:7911';
 Tkm.ws = null;
@@ -15,7 +15,9 @@ Tkm.manifest = [
 ];
 
 Tkm.sound = function (id) {
-    createjs.Sound.play(id);
+    var instance = createjs.Sound.createInstance(id);
+    instance.setVolume(0.5);
+    instance.play();
 }
 
 Tkm.send = function (msg) {
@@ -45,22 +47,20 @@ Tkm.updateUserList = function () {
         foo = Tkm.userList[i].split('%');
         switch (foo[0]) {
             case view.uid:
-                
-                if (foo[0] === view.cid) {
-                    bar = '☆○'
-                } else {
-                    bar = '○';    
-                }
+                if (foo[0] === view.cid)
+                    bar = '$@';
+                else
+                    bar = '&nbsp;@';
                 break;
             case view.cid:
-                bar = '☆';
+                bar = '$&nbsp;';
                 break
             default:
-                bar = '　';
+                bar = '&nbsp;&nbsp;';
                 break;
         }
-        bar += foo[0];
-        if (foo.length > 1) bar += '◆' + foo[1];
+        bar += '<span class="uid">' + foo[0] + '</span>';
+        if (foo.length > 1) bar += '◆' + '<span class="trip">' + foo[1] + '</span>';
 
         document.getElementById('user-list').innerHTML += '<li>' + bar + '</li>';
     }

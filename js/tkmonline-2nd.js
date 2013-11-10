@@ -12,21 +12,23 @@ window.onload = function () {
     }
 
     Tkm.ws.onmessage = function (evnt) {
-        var i, tmp1, tmp2, optn;
+        var i, foo, bar, optn;
 
         if (view.uid === null) {
             switch (evnt.data[0]) {
                 case 'B':
                     optn = Tkm.splitForSyntax3(evnt.data);
-                    if (optn[0] === '') {
+                    if (optn[0] === '')
                         Tkm.userList.length = 0;
-                    } else {
+                    else
                         Tkm.userList = optn;
-                    }
                     if (Tkm.userList.length > 0) {
                         document.getElementById('login-users').innerHTML = '';
                         for (i = 0; i < Tkm.userList.length; i++) {
-                            document.getElementById('login-users').innerHTML += '<li>' + Tkm.userList[i] + '</li>';
+                            foo = Tkm.userList[i].split('%');
+                            bar = '<span class="uid">' + foo[0] + '</span>';
+                            if (foo.length > 1) bar += '◆' + '<span class="trip">' + foo[1] + '</span>';
+                            document.getElementById('login-users').innerHTML += '<li>' + bar + '</li>';
                         }
                     } else {
                         document.getElementById('login-users').innerHTML = '<li>ログイン中のユーザーはいません。</li>';
@@ -36,8 +38,8 @@ window.onload = function () {
                     document.getElementById('login').style.display = 'none';
                     document.getElementById('play').style.display = 'block';
                     view.onLoad();
-                    tmp1 = (Tkm.splitForSyntax1(evnt.data)).split('%');
-                    view.uid = tmp1[0];
+                    foo = (Tkm.splitForSyntax1(evnt.data)).split('%');
+                    view.uid = foo[0];
                     document.getElementById('chat-text').onkeypress = function (e) {
                         if (this.value !== '' && (e.which === 13 || e.keyCode === 13)) {
                             Tkm.send('e' + this.value);
@@ -63,11 +65,10 @@ window.onload = function () {
             switch (evnt.data[0]) {
                 case 'B':
                     optn = Tkm.splitForSyntax3(evnt.data);
-                    if (optn[0] === '') {
+                    if (optn[0] === '')
                         Tkm.userList.length = 0;
-                    } else {
+                    else
                         Tkm.userList = optn;
-                    }
                     Tkm.updateUserList();
                     break;
                 case 'E':
@@ -77,7 +78,7 @@ window.onload = function () {
                     break;
                 case 'F':
                     optn = Tkm.splitForSyntax1(evnt.data);
-                    for (i in Tkm.userList) {
+                    for (i = 0; i < Tkm.userList.length; i++) {
                         if (Tkm.userList[i] === optn) {
                             Tkm.userList.splice(i, 1);
                             break;
@@ -85,21 +86,22 @@ window.onload = function () {
                     }
                     Tkm.updateUserList();
                     break;
+                case 'G':
+                    view.cid = '';
+                    Tkm.updateUserList();
+                    break;
                 case 'H':
                     if (document.getElementById('chat-silent-btn').textContent === 'チャット音') Tkm.sound('chat');
                     optn = Tkm.splitForSyntax2(evnt.data);
-                    if (optn[0] === '?') {
-                        document.getElementById('log').innerHTML
-                        += '<span style="color: deeppink;">' + optn[1] + '</span></br>';
-                    } else {
-                        document.getElementById('log').innerHTML
-                        += optn[0] + ':' + optn[1] + '</br>';
-                    }
+                    if (optn[0] === '?')
+                        document.getElementById('log').innerHTML += '<span style="color: deeppink;">' + optn[1] + '</span></br>';
+                    else
+                        document.getElementById('log').innerHTML += '<span class="uid">' + optn[0] + '</span>:' + optn[1] + '</br>';
                     document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
                     break;
                 case 'I':
-                    tmp1 = (Tkm.splitForSyntax1(evnt.data)).split('%');
-                    view.cid = tmp1[0];
+                    foo = (Tkm.splitForSyntax1(evnt.data)).split('%');
+                    view.cid = foo[0];
                     Tkm.updateUserList();
                     break;
                 case 'J':
