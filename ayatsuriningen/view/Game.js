@@ -306,7 +306,7 @@ Game.addCommand = function (game) {
                             && (
                                 game.playerList[j].job !== Job.Evangelist
                                 || !game.playerList[j].isOpen
-                            )
+                            ) && game.playerList[j].build.lengt < 8
                         ) {
                             for (k = 0; !canDestroy && k < game.playerList[j].build.length; k++) {
                                 if (
