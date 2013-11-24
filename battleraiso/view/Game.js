@@ -17,7 +17,10 @@ Game.send = function (msg) {
 Game.addLabel = function (text, x, y, font) {
     var label;
 
-    if (!font) font = '14px monospace';
+    if (!font)
+        font = '14px "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
+    else
+        font +=  '"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
     label = new Label(text);
     label.x = x;
     label.y = y;

@@ -8,7 +8,7 @@ window.onload = function () {
     Tkm.ws = new WebSocket(Tkm.wsurl);
 
     Tkm.ws.onopen = function () {
-        Tkm.send('b');
+        Tkm.send('a');
     }
 
     Tkm.ws.onmessage = function (evnt) {
@@ -16,8 +16,8 @@ window.onload = function () {
 
         if (view.uid === null) {
             switch (evnt.data[0]) {
-                case 'B':
-                    optn = Tkm.splitForSyntax3(evnt.data);
+                case 'A':
+                    optn = Tkm.splitSyntax3(evnt.data);
                     if (optn[0] === '')
                         Tkm.userList.length = 0;
                     else
@@ -34,15 +34,15 @@ window.onload = function () {
                         document.getElementById('login-users').innerHTML = '<li>ログイン中のユーザーはいません。</li>';
                     }
                     break;
-                case 'C':
+                case 'B':
                     document.getElementById('login').style.display = 'none';
                     document.getElementById('play').style.display = 'block';
                     view.onLoad();
-                    foo = (Tkm.splitForSyntax1(evnt.data)).split('%');
+                    foo = (Tkm.splitSyntax1(evnt.data)).split('%');
                     view.uid = foo[0];
                     document.getElementById('chat-text').onkeypress = function (e) {
                         if (this.value !== '' && (e.which === 13 || e.keyCode === 13)) {
-                            Tkm.send('e' + this.value);
+                            Tkm.send('c' + this.value);
                             this.value = '';
                         }
                     }
@@ -57,27 +57,27 @@ window.onload = function () {
                     }
                     Tkm.updateUserList();
                     break;
-                case 'D':
+                case 'C':
                     document.getElementById('err-msg').style.display = 'block';
                     break;
             }
         } else {
             switch (evnt.data[0]) {
-                case 'B':
-                    optn = Tkm.splitForSyntax3(evnt.data);
+                case 'A':
+                    optn = Tkm.splitSyntax3(evnt.data);
                     if (optn[0] === '')
                         Tkm.userList.length = 0;
                     else
                         Tkm.userList = optn;
                     Tkm.updateUserList();
                     break;
-                case 'E':
-                    optn = Tkm.splitForSyntax1(evnt.data);
+                case 'D':
+                    optn = Tkm.splitSyntax1(evnt.data);
                     Tkm.userList.push(optn);
                     Tkm.updateUserList();
                     break;
-                case 'F':
-                    optn = Tkm.splitForSyntax1(evnt.data);
+                case 'E':
+                    optn = Tkm.splitSyntax1(evnt.data);
                     for (i = 0; i < Tkm.userList.length; i++) {
                         if (Tkm.userList[i] === optn) {
                             Tkm.userList.splice(i, 1);
@@ -86,26 +86,31 @@ window.onload = function () {
                     }
                     Tkm.updateUserList();
                     break;
+                case 'F':
+                    foo = (Tkm.splitSyntax1(evnt.data)).split('%');
+                    view.cid = foo[0];
+                    Tkm.updateUserList();
+                    break;
                 case 'G':
                     view.cid = '';
                     Tkm.updateUserList();
                     break;
                 case 'H':
                     if (document.getElementById('chat-silent-btn').textContent === 'チャット音') Tkm.sound('chat');
-                    optn = Tkm.splitForSyntax2(evnt.data);
-                    if (optn[0] === '?')
-                        document.getElementById('log').innerHTML += '<span style="color: deeppink;">' + optn[1] + '</span></br>';
-                    else
-                        document.getElementById('log').innerHTML += '<span class="uid">' + optn[0] + '</span>:' + optn[1] + '</br>';
+                    optn = Tkm.splitSyntax2(evnt.data);
+                    if (optn[0] === '?') {
+                        document.getElementById('log').innerHTML
+                            += '<span style="color: ' + optn[1] + ';">' + optn[2] + '</span></br>';
+                    } else {
+                        document.getElementById('log').innerHTML
+                            += '<span class="uid">' + optn[0]
+                            + '</span>:<span style="color: ' + optn[1] + ';">'
+                            + optn[2] + '</span></br>';
+                    }
                     document.getElementById('log').scrollTop = document.getElementById('log').scrollHeight;
                     break;
                 case 'I':
-                    foo = (Tkm.splitForSyntax1(evnt.data)).split('%');
-                    view.cid = foo[0];
-                    Tkm.updateUserList();
-                    break;
-                case 'J':
-                    view.onMessage(Tkm.splitForSyntax1(evnt.data));
+                    view.onMessage(Tkm.splitSyntax1(evnt.data));
                     break;
             }
         }
@@ -114,7 +119,7 @@ window.onload = function () {
             var login_uid = document.getElementById('login-uid');
 
             if (login_uid.value !== '') {
-                Tkm.send('c' + login_uid.value);
+                Tkm.send('b' + login_uid.value);
                 login_uid.value = '';
             }
         }

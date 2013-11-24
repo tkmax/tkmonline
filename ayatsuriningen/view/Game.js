@@ -17,7 +17,10 @@ Game.send = function (msg) {
 Game.addLabel = function (text, x, y, font) {
     var label;
 
-    if (!font) font = '14px monospace';
+    if (!font)
+        font = '14px "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
+    else
+        font +=  '"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
     label = new Label(text);
     label.x = x;
     label.y = y;
@@ -306,7 +309,7 @@ Game.addCommand = function (game) {
                             && (
                                 game.playerList[j].job !== Job.Evangelist
                                 || !game.playerList[j].isOpen
-                            ) && game.playerList[j].build.lengt < 8
+                            ) && game.playerList[j].build.length < 8
                         ) {
                             for (k = 0; !canDestroy && k < game.playerList[j].build.length; k++) {
                                 if (
@@ -465,7 +468,7 @@ Game.addCommand = function (game) {
                         } ());
                     }
                 }
-                Game.addLabel(game.discard + '枚 破棄', 520, 420, '24px monospace');
+                Game.addLabel(game.discard + '枚 破棄', 520, 420, '24px');
                 break;
             case Phase.Destroy:
                 if (game.playerList[game.active].uid === uid) Game.addLabel('破壊して下さい。', 540, 440);

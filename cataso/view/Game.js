@@ -22,7 +22,10 @@ Game.send = function (msg) {
 Game.addLabel = function (text, x, y, font) {
     var label;
 
-    if (!font) font = '14px monospace';
+    if (!font)
+        font = '14px "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
+    else
+        font += ' ' + '"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif'; 
     label = new Label(text);
     label.x = x;
     label.y = y;
@@ -358,10 +361,10 @@ Game.addBurstCommand = function (game, playerIdx) {
                 } ());
             }
         } else {
-            Game.addLabel('バースト中 あと' + game.playerList[playerIdx].burst + '枚破棄', 545, 45 * playerIdx + 348, '24px monospace');
+            Game.addLabel('バースト中 あと' + game.playerList[playerIdx].burst + '枚破棄', 545, 45 * playerIdx + 348, '24px');
         }
     } else {
-        Game.addLabel('待機中', 655, 45 * playerIdx + 348, '24px monospace');
+        Game.addLabel('待機中', 655, 45 * playerIdx + 348, '24px');
     }
 }
 
@@ -639,14 +642,14 @@ Game.addPlayer = function (game, playerIdx) {
         || game.playerList[playerIdx].uid === uid
     ) {
         Game.addLabel(
-            game.playerList[playerIdx].score + '点(+' + game.playerList[playerIdx].bonus + ')', 661, 78 * playerIdx + 28, '12px monospace'
+            game.playerList[playerIdx].score + '点(+' + game.playerList[playerIdx].bonus + ')', 661, 78 * playerIdx + 28, '12px'
         );
     } else {
-        Game.addLabel('??点(+?)', 661, 78 * playerIdx + 28, '12px monospace');
+        Game.addLabel('??点(+?)', 661, 78 * playerIdx + 28, '12px');
     }
-    Game.addLabel('道' + game.playerList[playerIdx].road, 715, 78 * playerIdx + 28, '12px monospace');
-    Game.addLabel('家' + game.playerList[playerIdx].settlement, 745, 78 * playerIdx + 28, '12px monospace');
-    Game.addLabel('街' + game.playerList[playerIdx].city, 770, 78 * playerIdx + 28, '12px monospace');
+    Game.addLabel('道' + game.playerList[playerIdx].road, 715, 78 * playerIdx + 28, '12px');
+    Game.addLabel('家' + game.playerList[playerIdx].settlement, 745, 78 * playerIdx + 28, '12px');
+    Game.addLabel('街' + game.playerList[playerIdx].city, 770, 78 * playerIdx + 28, '12px');
     if (game.largestArmy === playerIdx) Game.addSprite('view/prize.png', 0, 799, 78 * playerIdx + 26, 20, 20);
     if (game.longestRoad === playerIdx) Game.addSprite('view/prize.png', 1, 818, 78 * playerIdx + 26, 20, 20);
     k = 0;

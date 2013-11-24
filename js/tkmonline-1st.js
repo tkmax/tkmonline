@@ -5,7 +5,7 @@ Tkm.ws = null;
 Tkm.instanceIdx = null;
 Tkm.userList = [];
 Tkm.manifest = [
-    { src: '../mp3/chat.mp3', id: 'chat' }
+      { src: '../mp3/chat.mp3', id: 'chat' }
     , { src: '../mp3/build.mp3', id: 'build' }
     , { src: '../mp3/dice.mp3', id: 'dice' }
     , { src: '../mp3/robber.mp3', id: 'robber' }
@@ -24,17 +24,17 @@ Tkm.send = function (msg) {
     Tkm.ws.send(String.fromCharCode(Tkm.instanceIdx) + msg);
 }
 
-Tkm.splitForSyntax1 = function(src) {
+Tkm.splitSyntax1 = function(src) {
     return src.substring(1);
  }
 
-Tkm.splitForSyntax2 = function(src) {
-    var result = /^([^ ]*) ?(.*)$/.exec(src.substring(1));
+Tkm.splitSyntax2 = function(src) {
+    var result = /^([^ ]*) ([^ ]*) ?(.*)$/.exec(src.substring(1));
     result.shift();
     return result;
 }
 
-Tkm.splitForSyntax3 = function (src) {
+Tkm.splitSyntax3 = function (src) {
     return (src.substring(1)).split(' ');
 }
 
@@ -50,15 +50,16 @@ Tkm.updateUserList = function () {
                 if (foo[0] === view.cid)
                     bar = '$@';
                 else
-                    bar = '&nbsp;@';
+                    bar = '　@';
                 break;
             case view.cid:
-                bar = '$&nbsp;';
+                bar = '$　';
                 break
             default:
-                bar = '&nbsp;&nbsp;';
+                bar = '　　';
                 break;
         }
+        bar = '<span style = "color: white;">' + bar + '</span>';
         bar += '<span class="uid">' + foo[0] + '</span>';
         if (foo.length > 1) bar += '◆' + '<span class="trip">' + foo[1] + '</span>';
 
