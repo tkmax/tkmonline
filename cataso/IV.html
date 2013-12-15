@@ -4,10 +4,9 @@
     <meta charset="utf-8" />
     <title>カタソIV</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/buttons.css">
-    <link rel="stylesheet" href="../css/content.css">
-    <script src="http://code.createjs.com/preloadjs-0.4.0.min.js"></script>
-    <script src="http://code.createjs.com/soundjs-0.5.0.min.js"></script>
+    <link rel="stylesheet" href="../css/room.css">
+    <script src="../js/preloadjs-0.4.0.min.js"></script>
+    <script src="../js/soundjs-0.5.0.min.js"></script>
 </head>
 <body>
     <div id="header">
@@ -15,11 +14,11 @@
     </div>
 
     <div id="login">
-        <a id="login-btn" href="#" class="button button-circle button-flat-primary">log&thinsp;in</a>
+        <img id="login-btn" class="button" src="../img/login.png" />
         <input id="login-uid" type="text" placeholder="半角英数12字以内" />
         <ul id="login-users"></ul>
         <p id="err-msg">使用できないuidか、既にログインユーザーに使用されています。</p>
-        <image id="yuyuko" src="../img/yuyuko.png" alt="ゆゆこ"></span>
+        <image id="ship" src="../img/ship.png" alt="海はいかなる川をも拒まず" />
     </div>
 
     <div id="play" style="display: none;">
@@ -27,17 +26,18 @@
         <div id="log"></div>
         <iframe id="view" src="view.html"></iframe>
         <input id="chat-text" type="text" />
-        <a id="chat-silent-btn" href="#" class="button button-pill button-flat-highlight">チャット音</a>
+        <img id="chat-silent-btn" class="button" src="../img/chat-on.png" alt="on" />
+        <img id="se-silent-btn" class="button" src="../img/se-on.png" alt="on" />
     </div>
 
     <div id="footer">
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline/cataso/IV.html" data-text="TkmOnline(カタソIV)" data-lang="ja">ツイート</a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline/cataso/I.html" data-text="TkmOnline(カタソI)" data-lang="ja">ツイート</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </div>
 
     <script src="../js/tkmonline-1st.js"></script>
     <script>
-        Tkm.instanceIdx = 11;
+        Tkm.roomIdx = 3;
     </script>
     <script src="../js/tkmonline-2nd.js"></script>
 </body>

@@ -47,12 +47,21 @@ window.onload = function () {
                         }
                     }
                     document.getElementById('chat-silent-btn').onclick = function () {
-                        if (this.textContent === 'チャット音') {
-                            this.className = 'button button-pill button-flat';
-                            this.textContent = 'OFF';
+                        if (this.alt === 'on') {
+                            this.src = '../img/chat-off.png';
+                            this.alt = 'off';
                         } else {
-                            this.className = 'button button-pill button-flat-highlight';
-                            this.textContent = 'チャット音';
+                            this.src = '../img/chat-on.png';
+                            this.alt = 'on';
+                        }
+                    }
+                    document.getElementById('se-silent-btn').onclick = function () {
+                        if (this.alt === 'on') {
+                            this.src = '../img/se-off.png';
+                            this.alt = 'off';
+                        } else {
+                            this.src = '../img/se-on.png';
+                            this.alt = 'on';
                         }
                     }
                     Tkm.updateUserList();
@@ -96,7 +105,7 @@ window.onload = function () {
                     Tkm.updateUserList();
                     break;
                 case 'H':
-                    if (document.getElementById('chat-silent-btn').textContent === 'チャット音') Tkm.sound('chat');
+                    if (document.getElementById('chat-silent-btn').alt === 'on') Tkm.sound('chat');
                     optn = Tkm.splitSyntax2(evnt.data);
                     if (optn[0] === '?') {
                         document.getElementById('log').innerHTML

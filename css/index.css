@@ -1,13 +1,9 @@
-a {
+a, img {
     border: 0;
 }
 
-a img {
-    border: 0;
-}
-
-#yuyuko {
-    margin: 15px 0 5px 20px;
+#chess {
+    margin: 5px 0 5px 5px;
 }
 
 /* body */
@@ -15,7 +11,7 @@ a img {
 body {
     background-color: white;
     color: black;
-    font-family: monospace;
+    font-family: "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif;
     font-size: 14px;
 }
 
@@ -25,51 +21,66 @@ body {
     color: black;
 }
 
-/* instanceList */
+/* roomList */
 
-#instanceList {
-    margin: 5px 0 35px 50px;
+#roomList {
+    margin: 5px 0 20px 70px;
 }
 
-#instanceList .instance {
-    width: 160px;
+#roomList .category {
+    background-color: green;
+    color: white;
+    float: left;
+    padding: 2px;
+    text-align: center;
+    font-weight: bold;
 }
 
-#instanceList .instance .count-orange {
-    background-color: orange;
+#roomList .room {
+    width: 135px;
+}
+
+#roomList .room .count-empty {
+    background-color: gray;
     color: white;
     float: left;
     padding: 2px;
     margin: 1px;
-    width: 20px;
+    width: 14px;
     text-align: center;
-    font-size: 16px;
+    font-size: 10px;
     font-weight: bold;
 }
 
-#instanceList .instance .count-pink {
+#roomList .room .count-orver {
     background-color: deeppink;
     color: white;
     float: left;
     padding: 2px;
     margin: 1px;
-    width: 20px;
+    width: 14px;
     text-align: center;
-    font-size: 16px;
+    font-size: 10px;
     font-weight: bold;
 }
 
-#instanceList .instance .title {
+#roomList .room .title {
     background-color: black;
     color: white;
     float: left;
     padding: 2px;
     margin: 1px;
-    width: 128px;
-    font-size: 12px;
+    width: 90px;
+    text-align: center;
+    font-size: 10px;
     font-weight: bold;
 }
 
-#instanceList .instance .button:hover {
+#roomList .room .button {
+    display: block;
+    margin-left: 10px;
+}
+
+#roomList .room .button:hover {
     opacity: 0.7;
 } 

@@ -15,7 +15,7 @@ body {
 
 /* login */
             
-#login #yuyuko {
+#login #ship {
     position: absolute;
     left: 400px;
 }
@@ -32,8 +32,8 @@ body {
 
 #login #login-btn {
     position: absolute;
-    top: 50px;
-    left: 250px;
+    top: 60px;
+    left: 260px;
 }
             
 #login #login-users {
@@ -71,10 +71,10 @@ body {
     background-color: black;
     color: white;
     position: absolute;
-    top: 210px;
+    top: 195px;
     left: 10px;
     width: 210px;
-    height: 365px;
+    height: 380px;
     border: 2px black solid;
     overflow-y: scroll;
     font-size: 13px;
@@ -83,7 +83,7 @@ body {
 #play #view {
     position: absolute;
     top: 35px;
-    left: 235px;
+    left: 225px;
     width: 860px;
     height: 540px;
     border: 2px black solid;
@@ -91,9 +91,9 @@ body {
 
 #play #chat-text {
     position: absolute;
-    top: 595px;
+    top: 590px;
     left: 10px;
-    width: 950px;
+    width: 900px;
     height: 25px;
     font-size: 18px;
     border: 2px black solid;
@@ -101,15 +101,26 @@ body {
 
 #play #chat-silent-btn {
     position: absolute;
-    top: 595px;
-    left: 980px;
+    top: 593px;
+    left: 920px;
+}
+
+#play #se-silent-btn {
+    position: absolute;
+    top: 593px;
+    left: 1005px;
 }
 
 /* footer */
 #footer {
     position: absolute;
-    top: 635px;
+    top: 630px;
     left: 10px;
+}
+
+/* .button */
+.button:hover {
+    opacity: 0.7;
 }
 
 /* .uid */

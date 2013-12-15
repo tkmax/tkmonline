@@ -2,10 +2,12 @@
 
 Tkm.wsurl = 'ws://210.152.156.23:7911';
 Tkm.ws = null;
-Tkm.instanceIdx = null;
+Tkm.roomIdx = null;
 Tkm.userList = [];
 Tkm.manifest = [
-      { src: '../mp3/chat.mp3', id: 'chat' }
+    { src: '../mp3/chat.mp3', id: 'chat' }
+    , {src: '../mp3/join.mp3', id: 'join'}
+    , { src: '../mp3/opening.mp3', id: 'opening' }
     , { src: '../mp3/build.mp3', id: 'build' }
     , { src: '../mp3/dice.mp3', id: 'dice' }
     , { src: '../mp3/robber.mp3', id: 'robber' }
@@ -15,13 +17,13 @@ Tkm.manifest = [
 ];
 
 Tkm.sound = function (id) {
-    var instance = createjs.Sound.createInstance(id);
-    instance.setVolume(0.5);
-    instance.play();
+    var room = createjs.Sound.createInstance(id);
+    room.setVolume(0.5);
+    room.play();
 }
 
 Tkm.send = function (msg) {
-    Tkm.ws.send(String.fromCharCode(Tkm.instanceIdx) + msg);
+    Tkm.ws.send(String.fromCharCode(Tkm.roomIdx) + msg);
 }
 
 Tkm.splitSyntax1 = function(src) {
