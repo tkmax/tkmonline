@@ -76,11 +76,6 @@ body {
     font-weight: bold;
 }
 
-#roomList .room .button {
-    display: block;
-    margin-left: 10px;
-}
-
 #roomList .room .button:hover {
     opacity: 0.7;
 } 
