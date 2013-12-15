@@ -1343,13 +1343,17 @@ Game.canBuildRoads = function (game) {
 Game.playerSumResource = function (player) {
     var i, sum = 0;
 
-    for (i = player.resource.length - 1; i >= 0; i--) sum += player.resource[i];
+    for (i = player.resource.length - 1; i >= 0; i--)
+        sum += player.resource[i];
+
     return sum;
 }
 
 Game.sumResource = function(game) {
     var i, sum = 0;
 
-    for (i = game.resource.length - 1; i >= 0; i--) sum += game.resource[i];
+    for (i = game.resource.length - 1; i >= 0; i--)
+        sum += game.resource[i];
+
     return sum;
 }
