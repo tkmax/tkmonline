@@ -302,12 +302,14 @@ Game.addCommand = function (game) {
                 this.addCardCommand(game);
                 break;
             case Phase.BuildRoad:
-            case Phase.RoadBuilding1:
-            case Phase.RoadBuilding2:
                 this.addLabel('道を配置して下さい。', 615, 400);
                 this.addSprite('view/btn.png', 13, 640, 425, 80, 25, function () {
                     Game.send('e');
                 });
+                break;
+            case Phase.RoadBuilding1:
+            case Phase.RoadBuilding2:
+                this.addLabel('道を配置して下さい。', 615, 415);
                 break;
             case Phase.BuildSettlement:
                 this.addLabel('家を配置して下さい。', 615, 400);
@@ -342,7 +344,7 @@ Game.addCommand = function (game) {
             for (i = game.playerNumber - 1; i >= 0; i--) this.addBurstCommand(game, i);
             break;
         case Phase.DomesticTrade2:
-            if(game.playerList[game.trade.playerIdx].uid === uid) this.addDomesticTrade2Command(game);
+            if (game.playerList[game.trade.playerIdx].uid === uid) this.addDomesticTrade2Command(game);
             break;
     }
 }
