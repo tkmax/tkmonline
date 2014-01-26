@@ -732,7 +732,7 @@ Game.addSellCommand = function (game) {
         if (hotelChain[i].isSubsidiary) {
             stockPrice = this.getStockPrice(game, i);
             this.addLabel('' + stockPrice, i * 40 + 560, 401, '12px');
-            inputLabel = this.addLabel('' + this.sell.input[i], i * 40 + 558, 425, '12px');
+            inputLabel = this.addLabel('' + this.sell.input[i], i * 40 + 558, 429, '12px');
 
             this.addSprite('view/updown.png', 0, i * 40 + 579, 422, 15, 15, function () {
                 var _i = i, _inputLabel = inputLabel, _stockPrice = stockPrice;
