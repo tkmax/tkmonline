@@ -190,16 +190,16 @@ Game.addCommand = function (game) {
             && game.playerList[2].uid !== ''
         ) canStart = true;
         if (canJoin) {
-            this.addSprite('view/btn.png', 0, 640, 410, 80, 25, function () {
+            this.addSprite('view/btn.png', 0, 642, 410, 80, 25, function () {
                 Game.send('b');
             });
         }
         if (canLeave) {
-            this.addSprite('view/btn.png', 1, 725, 410, 80, 25, function () {
+            this.addSprite('view/btn.png', 1, 732, 410, 80, 25, function () {
                 Game.send('c');
             });
             if (canStart) {
-                this.addSprite('view/btn.png', 2, 555, 410, 80, 25, function () {
+                this.addSprite('view/btn.png', 2, 552, 410, 80, 25, function () {
                     Game.send('d');
                 });
             }
