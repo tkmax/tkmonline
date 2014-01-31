@@ -844,7 +844,10 @@ Game.addTradeCommand = function (game) {
                 var _i = i, _outputLabel = outputLabel;
 
                 return function () {
-                    if (Game.trade.ticket > 0) {
+                    if (
+                           Game.trade.ticket > 0
+                        && game.certificate[_i] - Game.trade.output[_i] > 0
+                    ) {
                         Game.trade.output[_i]++;
                         Game.trade.ticket--;
                         _outputLabel.text = '' + Game.trade.output[_i];
