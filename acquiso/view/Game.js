@@ -439,7 +439,7 @@ Game.addPlayer = function (game, playerIndex) {
 
     this.addLabel(game.playerList[playerIndex].uid, 550, 78 * playerIndex + 28);
 
-    this.addLabel('$' + game.playerList[playerIndex].money, 667, 78 * playerIndex + 30);
+    this.addLabel('$' + game.playerList[playerIndex].money, 667, 78 * playerIndex + 28);
 
     if (
            game.state === State.Ready
