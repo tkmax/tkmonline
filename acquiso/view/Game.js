@@ -209,7 +209,7 @@ Game.haveCanPlayTile = function (game) {
 }
 
 Game.isFinish = function (game) {
-    var i, haveHotelChain = false, isFinish = false;
+    var i, haveHotelChain = false, isFinish = true;
 
     for (i = game.hotelChain.length - 1; i >= 0; i--) {
         if (game.hotelChain[i].position !== Position.None) {
@@ -219,11 +219,10 @@ Game.isFinish = function (game) {
                 isFinish = true;
                 break;
             } else if (game.hotelChain[i].size < 11) {
-                break;
+                isFinish = false;
             }
         }
     }
-    if (haveHotelChain && i < 0) isFinish = true;
 
     return isFinish;
 }
