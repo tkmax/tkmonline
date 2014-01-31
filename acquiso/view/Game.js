@@ -66,9 +66,10 @@ Game.onLoad = function () {
     this.core.fps = 5;
     this.core.preload(
         'view/active.png', 'view/background.png', 'view/button.png'
-        , 'view/hotelchain-horizontal.png', 'view/hotelchain-vertical.png'
-        , 'view/lock.png' ,'view/map.png' , 'view/market.png'
-        , 'view/priority.png' , 'view/skin.png', 'view/tab.png'
+        , 'view/fresh.png', 'view/hotelchain-horizontal.png'
+        , 'view/hotelchain-vertical.png', 'view/independence.png'
+        , 'view/lock.png', 'view/map.png' , 'view/market.png'
+        , 'view/priority.png', 'view/skin.png', 'view/tab.png'
         , 'view/tile.png', 'view/updown.png'
     );
     this.core.onload = function () {
@@ -450,8 +451,19 @@ Game.addPlayer = function (game, playerIndex) {
         frame = 108;
 
     for (i = game.playerList[playerIndex].hand.length - 1; i >= 0; i--) {
-        if (frame !== 108) frame = game.playerList[playerIndex].hand[i];
-        this.addSprite('view/tile.png', frame, i * 50 + 535, 78 * playerIndex + 55, 42, 42, function () {
+        if (frame !== 108) {
+            frame = game.playerList[playerIndex].hand[i];
+            for (j = game.playerList[playerIndex].fresh.length - 1; j >= 0; j--) {
+                if(frame === game.playerList[playerIndex].fresh[j]) {
+                    this.addSprite(
+                        'view/fresh.png', 0
+                        , 50 * i + 533
+                        , 78 * playerIndex + 53, 46, 46
+                    );
+                }
+            }
+        }
+        this.addSprite('view/tile.png', frame, 50 * i + 535, 78 * playerIndex + 55, 42, 42, function () {
             var _i = i;
 
             if (
@@ -618,7 +630,7 @@ Game.addHotelChain = function (game) {
                 );
             }
             if (
-                game.hotelChain[i].isSubsidiary
+                   hotelChain.isSubsidiary
                 && (
                        game.phase === Phase.Merge
                     || game.phase === Phase.Sell
@@ -640,6 +652,13 @@ Game.addHotelChain = function (game) {
                         , null, 0.5
                     );
                 }
+            }
+            if(hotelChain.size >= 11) {
+                this.addSprite(
+                    'view/independence.png', 0
+                    , (position % 12) * 42 + 12
+                    , Math.floor(position / 12) * 42 + 129, 22, 28
+                );
             }
         }
     }
