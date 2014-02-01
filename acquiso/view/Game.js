@@ -385,6 +385,8 @@ Game.addCommand = function (game) {
         if (game.playerList[game.priority].uid === uid) {
             switch (game.phase) {
                 case Phase.Play:
+                    for (i = this.buy.output.length - 1; i >= 0; i--)
+                        this.buy.output[i] = 0;
                     this.addLabel('タイルを配置して下さい。', 600, 400);
                     this.addSprite('view/button.png', 6, 600, 425, 80, 25, function () {
                         if (game.canTrash && Game.haveDeadTile(game)) Game.send('f');
@@ -406,6 +408,12 @@ Game.addCommand = function (game) {
                     this.addLabel('親チェーンを選択して下さい。', 600, 415);
                     break;
                 case Phase.Merge:
+                    for (i = 0; i < 7; i++) {
+                        this.trade.input[i]
+                        = this.trade.output[i]
+                        = this.sell.input[i]
+                        = 0;
+                    }
                     this.addSprite('view/skin.png', 3, 525, 338, 313, 180);
                     this.addSprite('view/button.png', 8, 552, 348, 80, 25, function () {
                         Game.send('l');
@@ -669,9 +677,6 @@ Game.addHotelChain = function (game) {
 Game.addBuyCommand = function (game) {
     var i, hotelChain = game.hotelChain, stockPrice, ticketLabel, sumLabel, outputLabel;
 
-    for (i = this.buy.output.length - 1; i >= 0; i--)
-        this.buy.output[i] = 0;
-
     this.buy.ticket = game.buyTicket;
     this.buy.sum = 0;
 
@@ -692,7 +697,7 @@ Game.addBuyCommand = function (game) {
                 return function () {
                     if (
                            Game.buy.ticket > 0
-                        && game.certificate[_i] - Game.buy.output[_i] >= 0
+                        && game.certificate[_i] - Game.buy.output[_i] > 0
                         && game.playerList[game.priority].money - (Game.buy.sum + _stockPrice) > 0
                     ) {
                         Game.buy.output[_i]++;
@@ -739,9 +744,6 @@ Game.addBuyCommand = function (game) {
 
 Game.addSellCommand = function (game) {
     var i, hotelChain = game.hotelChain, stockPrice, sumLabel, inputLabel;
-
-    for (i = this.sell.input.length - 1; i >= 0; i--)
-        this.sell.input[i] = 0;
 
     this.sell.sum = 0;
 
@@ -798,9 +800,6 @@ Game.addSellCommand = function (game) {
 
 Game.addTradeCommand = function (game) {
     var i, hotelChain = game.hotelChain, stockPrice, ticketLabel, inputLabel, outputLabel;
-
-    for (i = this.sell.input.length - 1; i >= 0; i--)
-        this.trade.input[i] = this.trade.output[i] = 0;
 
     this.trade.ticket = 0;
 
