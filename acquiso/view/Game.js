@@ -224,6 +224,8 @@ Game.isFinish = function (game) {
         }
     }
 
+    if (!haveHotelChain) isFinish = false;
+
     return isFinish;
 }
 
@@ -404,6 +406,7 @@ Game.addCommand = function (game) {
                     this.addLabel('親チェーンを選択して下さい。', 600, 415);
                     break;
                 case Phase.Merge:
+                    this.addSprite('view/skin.png', 3, 525, 338, 313, 180);
                     this.addSprite('view/button.png', 8, 552, 348, 80, 25, function () {
                         Game.send('l');
                     });
@@ -689,7 +692,7 @@ Game.addBuyCommand = function (game) {
                 return function () {
                     if (
                            Game.buy.ticket > 0
-                        && game.certificate[_i] - Game.buy.output[_i] > 0
+                        && game.certificate[_i] - Game.buy.output[_i] >= 0
                         && game.playerList[game.priority].money - (Game.buy.sum + _stockPrice) > 0
                     ) {
                         Game.buy.output[_i]++;
