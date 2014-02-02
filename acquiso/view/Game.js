@@ -730,7 +730,11 @@ Game.addBuyCommand = function (game) {
     }
 
     this.addSprite('view/button.png', 3, 552, 480, 80, 25, function () {
-        if (Game.buy.sum > 0) Game.send('q' + Game.buy.output.join(' '));
+        if (Game.buy.sum > 0) {
+            for (i = this.buy.output.length - 1; i >= 0; i--)
+                this.buy.output[i] = 0;
+            Game.send('q' + Game.buy.output.join(' '));
+        }
     });
 
     this.addSprite('view/button.png', 4, 642, 480, 80, 25, function () {
