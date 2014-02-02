@@ -179,7 +179,7 @@
 
             args = e.data.substring(1).split(' ');
 
-            for (i = 0; i <= 20; i++) {
+            for (i = 0; i <= 19; i++) {
                 element = document.getElementById('room' + i).getElementsByTagName('span')[0];
                 element.textContent = args[i * 3];
                 if (element.textContent === '0')
