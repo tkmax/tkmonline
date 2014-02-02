@@ -408,12 +408,15 @@ Game.addCommand = function (game) {
                     this.addLabel('親チェーンを選択して下さい。', 600, 415);
                     break;
                 case Phase.Merge:
+                    this.trade.ticket = 0;
+                    this.sell.sum = 0;
                     for (i = 0; i < 7; i++) {
                         this.trade.input[i]
                         = this.trade.output[i]
                         = this.sell.input[i]
                         = 0;
                     }
+
                     this.addSprite('view/skin.png', 3, 525, 338, 313, 180);
                     this.addSprite('view/button.png', 8, 552, 348, 80, 25, function () {
                         Game.send('l');
@@ -690,6 +693,10 @@ Game.addBuyCommand = function (game) {
         this.buy.ticket -= this.buy.output[i];
 
     this.buy.sum = 0;
+    for (i = this.buy.output.length - 1; i >= 0; i--) {
+        if (this.buy.output[i] > 0)
+            this.buy.sum += this.getStockPrice(game, i) * this.buy.output[i];
+    }
 
     this.addSprite('view/skin.png', 0, 525, 338, 313, 180);
     this.addLabel('株券を購入できます。', 530, 346);
@@ -760,8 +767,6 @@ Game.addBuyCommand = function (game) {
 Game.addSellCommand = function (game) {
     var i, hotelChain = game.hotelChain, stockPrice, sumLabel, inputLabel;
 
-    this.sell.sum = 0;
-
     this.addSprite('view/skin.png', 1, 525, 338, 313, 180);
     this.addLabel('吸収ホテルチェーンの株券を売却できます。', 530, 346);
     sumLabel = this.addLabel('合計:$' + this.sell.sum, 530, 455);
@@ -815,8 +820,6 @@ Game.addSellCommand = function (game) {
 
 Game.addTradeCommand = function (game) {
     var i, hotelChain = game.hotelChain, stockPrice, ticketLabel, inputLabel, outputLabel;
-
-    this.trade.ticket = 0;
 
     this.addSprite('view/skin.png', 2, 525, 338, 313, 180);
     this.addLabel('吸収ホテルチェーンの株券を交換できます。', 530, 346);
