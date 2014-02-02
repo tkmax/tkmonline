@@ -663,7 +663,14 @@ Game.addHotelChain = function (game) {
                     );
                 }
             }
-            if(hotelChain.size >= 11) {
+
+            if(hotelChain.size >= 41) {
+                this.addSprite(
+                    'view/independence.png', 1
+                    , (position % 12) * 42 + 12
+                    , Math.floor(position / 12) * 42 + 129, 22, 28
+                );
+            } else if(hotelChain.size >= 11) {
                 this.addSprite(
                     'view/independence.png', 0
                     , (position % 12) * 42 + 12
@@ -675,9 +682,13 @@ Game.addHotelChain = function (game) {
 }
 
 Game.addBuyCommand = function (game) {
-    var i, hotelChain = game.hotelChain, stockPrice, ticketLabel, sumLabel, outputLabel;
+    var i, hotelChain = game.hotelChain, stockPrice
+        , ticketLabel, sumLabel, outputLabel;
 
     this.buy.ticket = game.buyTicket;
+    for (i = this.buy.output.length - 1; i >= 0; i--)
+        this.buy.ticket -= this.buy.output[i];
+
     this.buy.sum = 0;
 
     this.addSprite('view/skin.png', 0, 525, 338, 313, 180);
@@ -698,7 +709,7 @@ Game.addBuyCommand = function (game) {
                     if (
                            Game.buy.ticket > 0
                         && game.certificate[_i] - Game.buy.output[_i] > 0
-                        && game.playerList[game.priority].money - (Game.buy.sum + _stockPrice) > 0
+                        && game.playerList[game.priority].money - (Game.buy.sum + _stockPrice) >= 0
                     ) {
                         Game.buy.output[_i]++;
                         Game.buy.sum += _stockPrice;
