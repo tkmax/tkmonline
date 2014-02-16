@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
+<div id="wrap">
     <div id="header">
         Tkm Online ( <a href="http://www57.atwiki.jp/tkmonline/" target="_blank">wiki</a> | <a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">bbs</a> )
     </div>
@@ -23,7 +24,9 @@
                 <td>
                     <div id="room0" class="room">
                         <span class="count-empty">0</span><span class="title">カタソI</span>
-                        <a href="cataso/I.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソIを開く" /></a>
+                        <a href="cataso/I.html" target="_blank">
+                            <img class="button" src="img/cataso-ready.png" alt="カタソIを開く" />
+                        </a>
                     </div>
                 </td>
                 <td>
@@ -160,6 +163,7 @@
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline" data-text="TkmOnline" data-lang="ja">ツイート</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </div>
+</div>
 
     <script>
         var ws = new WebSocket('ws://210.152.156.23:7911');
