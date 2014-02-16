@@ -7,7 +7,6 @@ a, img {
 }
 
 /* body */
-
 body {
     background-color: white;
     color: black;
@@ -15,14 +14,31 @@ body {
     font-size: 14px;
 }
 
+/* wrap */
+#wrap {
+    background-color: white;
+    margin-left : auto ;
+    margin-right : auto;
+    width: 805px;
+    padding: 15px 30px 5px 30px;
+}
+
 /* header */
+#header {  
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;  
+    height: 22px;  
+    background-color: black;  
+    color: white;  
+}
 
 #header a {
-    color: black;
+    color: white;
 }
 
 /* roomList */
-
 #roomList {
     margin: 5px 0 20px 70px;
 }
