@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="utf-8" />
-    <title>view</title>
-    <script src="../js/view.js"></script>
-    <script src="../js/enchant.min.js"></script>
-    <script src="view/Const.js"></script>
-    <script src="view/Game.js"></script>
-    <script>
-        onLoad = function () {
-            Game.onLoad();
-        }
-        onMessage = function (msg) {
-            if (Game.isOpen) {
-                Game.onMessage(JSON.parse(msg));
-            }
-        }
-    </script>
+<meta charset="utf-8" />
+<title>view</title>
+<link rel="stylesheet" href="../css/html5reset-1.6.1.css" />
+<script src="../js/view.js"></script>
+<script src="../js/enchant.min.js"></script>
+<script src="view/Const.js"></script>
+<script src="view/Game.js"></script>
+<script>
+    onLoad = function () {
+        Game.onLoad();
+    }
+
+    onMessage = function (message) {
+        if (Game.isOpen) { Game.onMessage(JSON.parse(message)); }
+    }
+</script>
 </head>
-<body>
-    <div id="enchant-stage" style="top: 2px; left: 3px;"></div>
+<body><div id="enchant-stage"></div>
 </body>
 </html>

@@ -1,97 +1,161 @@
-a, img {
-    border: 0;
-}
-
-#chess {
-    margin: 5px 0 5px 5px;
-}
-
-/* body */
 body {
     background-color: white;
+    font-family: "メイリオ","Meiryo",arial,"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro",Osaka,"ＭＳ Ｐゴシック","MS PGothic",Sans-Serif;
     color: black;
-    font-family: "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif;
-    font-size: 14px;
 }
 
-/* wrap */
-#wrap {
-    background-color: white;
-    margin-left : auto ;
-    margin-right : auto;
-    width: 805px;
-    padding: 15px 30px 5px 30px;
-}
-
-/* header */
-#header {  
+#header {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;  
-    height: 22px;  
-    background-color: black;  
-    color: white;  
+    background-color: black;
+    width: 100%;
+    height: 30px;
+    font-size: 22px;
+    color: white;
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.25);
+    text-align: center;
+    line-height: 1.5;
 }
 
 #header a {
     color: white;
 }
 
-/* roomList */
-#roomList {
-    margin: 5px 0 20px 70px;
+#title {
+    float: left;
+    width: 200px;
 }
 
-#roomList .category {
+#wiki {
+    float: left;
+    width: 80px;
+}
+
+#bbs {
+    float: left;
+    width: 80px;
+}
+
+#wrapper {
+    margin: 0 auto 0 auto;
+    width: 850px;
+    padding-top: 40px;
+}
+
+#wrapper a {
+    color: white;
+}
+
+#catch-copy {
+    background-image: url(../png/catch-copy.png);
+    width: 850px;
+    height: 60px;
+}
+
+#eye-catch {
+    background-image: url(../png/chess.png);
+    width: 801px;
+    height: 576px;
+    margin: 0 auto 0 auto;
+    border-radius: 10px;
+}
+
+#room-table {
+    margin: 15px 0 15px 0;
+    font-size: 16px;
+}
+
+.group-name {
     background-color: green;
     color: white;
-    float: left;
-    padding: 2px;
+    height: 20px;
+    width: 80px;
     text-align: center;
-    font-weight: bold;
+    line-height: 1.4;
+    border-radius: 5px;
 }
 
-#roomList .room {
-    width: 135px;
-}
-
-#roomList .room .count-empty {
-    background-color: gray;
+.room {
     color: white;
-    float: left;
-    padding: 2px;
-    margin: 1px;
-    width: 14px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: bold;
+    padding: 5px;
 }
 
-#roomList .room .count-orver {
-    background-color: deeppink;
-    color: white;
-    float: left;
-    padding: 2px;
-    margin: 1px;
-    width: 14px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-#roomList .room .title {
-    background-color: black;
-    color: white;
-    float: left;
-    padding: 2px;
-    margin: 1px;
-    width: 90px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: bold;
-}
-
-#roomList .room .button:hover {
+.room:hover {
     opacity: 0.7;
-} 
+}
+
+.room-title {
+    float: left;
+    background-color: black;
+    height: 20px;
+    width: 125px;
+    text-align: center;
+    line-height: 1.4;
+    border-top-left-radius: 10px;
+}
+
+.room-number {
+    float: left;
+    background-color: gray;
+    height: 20px;
+    width: 35px;
+    text-align: center;
+    line-height: 1.4;
+    border-top-right-radius: 10px;
+}
+
+.cataso-ready {
+    background-image: url(../png/cataso-ready.png);
+    height: 140px;
+    width: 160px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.acquiso-ready {
+    background-image: url(../png/acquiso-ready.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.cataso-playing {
+    background-image: url(../png/cataso-playing.png);
+    height: 140px;
+    width: 160px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.acquiso-playing {
+    background-image: url(../png/acquiso-playing.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+#footer {
+    background-color: black;
+    width: 100%;
+    height: 200px;
+}
+
+#support-browser {
+    width: 850px;
+    margin: 0 auto 0 auto;
+    padding-top: 10px;
+    text-align: center;
+    color: white;
+    font-size: 20px;
+}
+
+#twitter {
+    width: 90px;
+    margin: 0 auto 0 auto;
+    padding-top: 10px;
+}

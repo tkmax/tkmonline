@@ -1,13 +1,14 @@
-var uid = null, cid = null;
+var uid = null;
+var cid = null;
 
-var send = function (msg) {
-    window.parent.Tkm.send('d' + msg);
+var send = function (message) {
+    window.parent.Tkm.send('d' + message);
 }
 
-var sound = function (id) {
-    if (window.parent.document.getElementById('se-silent-btn').alt === 'on') window.parent.Tkm.sound(id);
+var sound = function (type) {
+    window.parent.Tkm.sound(type);
 }
 
 var onLoad = function () { }
 
-var onMessage = function (msg) { }
+var onMessage = function (message) { }

@@ -1,44 +1,76 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="utf-8" />
     <title>アクワイソV</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/room.css">
-    <script src="../js/preloadjs-0.4.0.min.js"></script>
-    <script src="../js/soundjs-0.5.0.min.js"></script>
+    <link rel="stylesheet" href="../css/html5reset-1.6.1.css" />
+    <link rel="stylesheet" href="../css/room.css" />
+    <script src="../js/preloadjs-0.4.1.min.js"></script>
+    <script src="../js/soundjs-0.5.2.min.js"></script>
 </head>
+
 <body>
-    <div id="header">
-        <a class="brand" href="../index.html" target="_blank">Tkm Online</a>&nbsp;>>&nbsp;アクワイソV
-    </div>
+<div id="header">
+    <div id="title">TkmOnline</div>
+    <div id="room-name">アクワイソV</div>
+</div>
 
+<div id="wrapper">
     <div id="login">
-        <img id="login-btn" class="button" src="../img/login.png" />
-        <input id="login-uid" type="text" placeholder="半角英数12字以内" />
-        <ul id="login-users"></ul>
-        <p id="err-msg">使用できないuidか、既にログインユーザーに使用されています。</p>
-        <img id="ship" src="../img/ship.png" alt="海はいかなる川をも拒まず" />
+        <div id="login-left">
+            <input id="login-input-uid" type="text" placeholder="半角英数12字以内" />
+            <div id="login-button"></div>
+            <div style="clear:both;"></div>
+            <div id="login-error"></div>
+            <div id="login-user-list"></div>
+        </div>
+        <div id="login-eye-catch"></div>
     </div>
 
-    <div id="play" style="display: none;">
-	    <ul id="user-list"></ul>
-        <div id="log"></div>
-        <iframe id="view" src="view.html"></iframe>
-        <input id="chat-text" type="text" />
-        <img id="chat-silent-btn" class="button" src="../img/chat-on.png" alt="on" />
-        <img id="se-silent-btn" class="button" src="../img/se-on.png" alt="on" />
+    <div id="play">
+        <div id="play-button-se" class="button">効果音</div>
+        <div id="play-button-bs" class="button">ベル音</div>
+        <select id="play-select-volume">
+            <option value="0.01">1%</option>
+            <option value="0.03">3%</option>
+            <option value="0.05">5%</option>
+            <option value="0.1">10%</option>
+            <option value="0.15">15%</option>
+            <option value="0.2">20%</option>
+            <option value="0.3">30%</option>
+            <option value="0.4">40%</option>
+            <option value="0.5">50%</option>
+            <option value="0.6">60%</option>
+            <option value="0.7">70%</option>
+            <option value="0.8">80%</option>
+            <option value="0.9">90%</option>
+            <option value="1">100%</option>
+        </select>
+        <div style="clear:both;"></div>
+        <div id="play-left">
+            <div id="play-user-list"></div>
+            <div id="play-log"></div>
+        </div>
+        <iframe id="play-view" src="view.html"></iframe>
+        <div style="clear:both;"></div>
+        <input id="play-input-chat" type="text" />
+        <div id="play-button-dice" class="button">ダイス</div>
+        <div id="play-button-bell" class="button">ベル</div>
     </div>
+</div>
 
-    <div id="footer">
+<div id="footer">
+    <div id="support-browser">対応ブラウザ:&nbsp;Chrome&nbsp;16&nbsp;以降,&nbsp;Firefox&nbsp;11&nbsp;以降,&nbsp;Safari&nbsp;6&nbsp;以降,&nbsp;IE&nbsp;10&nbsp;以降</div>
+    <div id="twitter">
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline/acquiso/V.html" data-text="TkmOnline(アクワイソV)" data-lang="ja">ツイート</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </div>
+</div>
 
-    <script src="../js/tkmonline-1st.js"></script>
-    <script>
-        Tkm.roomIdx = 17;
-    </script>
-    <script src="../js/tkmonline-2nd.js"></script>
+<script src="../js/tkm-initialize.js"></script>
+<script>Tkm.roomIndex = 17;</script>
+<script src="../js/tkm-onload.js"></script>
 </body>
+
 </html>

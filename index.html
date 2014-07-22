@@ -1,211 +1,239 @@
 ﻿<!DOCTYPE html>
 <html lang="ja">
+
 <head>
 <meta charset="utf-8" />
-<title>Tkm Online</title>
-<link rel="stylesheet" href="./css/index.css">
+<title>Tkm&nbsp;Online</title>
+<link rel="stylesheet" href="./css/html5reset-1.6.1.css" />
+<link rel="stylesheet" href="./css/index.css" />
 </head>
+
 <body>
 <div id="header">
-    Tkm&nbsp;Online&nbsp;(&nbsp;<a href="http://www57.atwiki.jp/tkmonline/" target="_blank">wiki</a>&nbsp;|&nbsp;<a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank">bbs</a>&nbsp;)&nbsp;&nbsp;&nbsp;&nbsp;登録不要・インストール不要&nbsp;今すぐ遊べるボードゲーム対戦サイト
+    <div id="title">TkmOnline</div>
+    <a href="http://www57.atwiki.jp/tkmonline/" target="_blank"><div id="wiki">WIKI</div></a>
+    <a href="http://jbbs.livedoor.jp/netgame/12693/" target="_blank"><div id="bbs">BBS</div></a>
 </div>
-<div id="wrap">
-    <img id ="chess" src="img/chess.png" alt="chess" />
-    <div id="roomList">
-        <table>
-            <tr>
-                <td>
-                    <span class="category">野良卓</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="room0" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソI</span>
-                        <a href="cataso/I.html" target="_blank">
-                            <img class="button" src="img/cataso-ready.png" alt="カタソIを開く" />
-                        </a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room1" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソII</span>
-                        <a href="cataso/II.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソIIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room2" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソIII</span>
-                        <a href="cataso/III.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソIIIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room3" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソI</span>
-                        <a href="acquiso/I.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room4" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソII</span>
-                        <a href="acquiso/II.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソIIを開く" /></a>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span class="category">身内卓</span>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="room5" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソIV</span>
-                        <a href="cataso/IV.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソIVを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room6" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソV</span>
-                        <a href="cataso/V.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソVを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room7" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソVI</span>
-                        <a href="cataso/VI.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソVIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room8" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソVII</span>
-                        <a href="cataso/VII.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソVIIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room9" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソVIII</span>
-                        <a href="cataso/VIII.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソVIIIを開く" /></a>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="room10" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソIX</span>
-                        <a href="cataso/IX.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソIXを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room11" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソX</span>
-                        <a href="cataso/X.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソXを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room12" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソXI</span>
-                        <a href="cataso/XI.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソXIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room13" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソXII</span>
-                        <a href="cataso/XII.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソXIIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room14" class="room">
-                        <span class="count-empty">0</span><span class="title">カタソXIII</span>
-                        <a href="cataso/XIII.html" target="_blank"><img class="button" src="img/cataso-ready.png" alt="カタソXIIIを開く" /></a>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div id="room15" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソIII</span>
-                        <a href="acquiso/III.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソIIIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room16" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソIV</span>
-                        <a href="acquiso/IV.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソIVを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room17" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソV</span>
-                        <a href="acquiso/V.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソVを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room18" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソVI</span>
-                        <a href="acquiso/VI.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソVIを開く" /></a>
-                    </div>
-                </td>
-                <td>
-                    <div id="room19" class="room">
-                        <span class="count-empty">0</span><span class="title">アクワイソVII</span>
-                        <a href="acquiso/VII.html" target="_blank"><img class="button" src="img/acquiso-ready.png" alt="アクワイソVIIを開く" /></a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
 
-    <div id="footer">
-        <p>対応ブラウザ : Chrome 16 以降, Firefox 11 以降, Safari 6 以降, IE 10 以降</p>
+<div id="wrapper">
+    <div id="catch-copy"></div>
+
+    <div id="eye-catch"></div>
+    
+    <table id="room-table">
+        <tr>
+            <td><div class="group-name">野良卓</div></td>
+        </tr>
+        <tr>
+            <td id="room0" class="room">
+                <a href="cataso/I.html" target="_blank">
+                    <div class="room-title">カタソI</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room1" class="room">
+                <a href="cataso/II.html" target="_blank">
+                    <div class="room-title">カタソII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room2" class="room">
+                <a href="cataso/III.html" target="_blank">
+                    <div class="room-title">カタソIII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room3" class="room">
+                <a href="acquiso/I.html" target="_blank">
+                    <div class="room-title">アクワイソI</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+            <td id="room4" class="room">
+                <a href="acquiso/II.html" target="_blank">
+                    <div class="room-title">アクワイソII</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td><div class="group-name">身内卓</div></td>
+        </tr>
+        <tr>
+            <td id="room5" class="room">
+                <a href="cataso/IV.html" target="_blank">
+                    <div class="room-title">カタソIV</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room6" class="room">
+                <a href="cataso/V.html" target="_blank">
+                    <div class="room-title">カタソV</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room7" class="room">
+                <a href="cataso/VI.html" target="_blank">
+                    <div class="room-title">カタソVI</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room8" class="room">
+                <a href="cataso/VII.html" target="_blank">
+                    <div class="room-title">カタソVII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room9" class="room">
+                <a href="cataso/VIII.html" target="_blank">
+                    <div class="room-title">カタソVIII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td id="room10" class="room">
+                <a href="cataso/IX.html" target="_blank">
+                    <div class="room-title">カタソIX</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room11" class="room">
+                <a href="cataso/X.html" target="_blank">
+                    <div class="room-title">カタソX</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room12" class="room">
+                <a href="cataso/XI.html" target="_blank">
+                    <div class="room-title">カタソXI</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room13" class="room">
+                <a href="cataso/XII.html" target="_blank">
+                    <div class="room-title">カタソXII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+            <td id="room14" class="room">
+                <a href="cataso/XIII.html" target="_blank">
+                    <div class="room-title">カタソXIII</div>
+                    <div class="room-number"></div>
+                    <div class="cataso-ready"></div>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <td id="room15" class="room">
+                <a href="acquiso/III.html" target="_blank">
+                    <div class="room-title">アクワイソIII</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+            <td id="room16" class="room">
+                <a href="acquiso/IV.html" target="_blank">
+                    <div class="room-title">アクワイソIV</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+            <td id="room17" class="room">
+                <a href="acquiso/V.html" target="_blank">
+                    <div class="room-title">アクワイソV</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+            <td id="room18" class="room">
+                <a href="acquiso/VI.html" target="_blank">
+                    <div class="room-title">アクワイソVI</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+            <td id="room19" class="room">
+                <a href="acquiso/VII.html" target="_blank">
+                    <div class="room-title">アクワイソVII</div>
+                    <div class="room-number"></div>
+                    <div class="acquiso-ready"></div>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="footer">
+    <div id="support-browser">対応ブラウザ:&nbsp;Chrome&nbsp;16&nbsp;以降,&nbsp;Firefox&nbsp;11&nbsp;以降,&nbsp;Safari&nbsp;6&nbsp;以降,&nbsp;IE&nbsp;10&nbsp;以降</div>
+    <div id="twitter">
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://tkmax.github.io/tkmonline" data-text="TkmOnline" data-lang="ja">ツイート</a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
     </div>
 </div>
 
-    <script>
-        var ws = new WebSocket('ws://210.152.156.23:7911');
+<script>
+    var ws = new WebSocket('ws://210.152.156.23:7911');
 
-        ws.onopen = function () {
-            ws.send(String.fromCharCode(100));
+    ws.onopen = function () {
+        ws.send(String.fromCharCode(100));
 
-            setInterval(
+        setInterval(
                 function () {
                     ws.send(String.fromCharCode(100));
                 }, 5000
-            );
-        }
+        );
+    }
 
-        ws.onmessage = function (e) {
-            var args, i, element;
+    ws.onmessage = function (e) {
+        var args = e.data.substring(1).split(' ');
 
-            args = e.data.substring(1).split(' ');
+        var i;
+        for (i = 0; i <= 19; i++) {
+            var roomDiv = document.getElementById('room' + i).getElementsByTagName('div');
+            roomDiv[1].textContent = args[i * 3];
 
-            for (i = 0; i <= 19; i++) {
-                element = document.getElementById('room' + i).getElementsByTagName('span')[0];
-                element.textContent = args[i * 3];
-                if (element.textContent === '0')
-                    element.className = 'count-empty';
-                else
-                    element.className = 'count-orver';
-                element = document.getElementById('room' + i).getElementsByTagName('img')[0];
+            if (roomDiv[1].textContent === '0') {
+                roomDiv[1].style.backgroundColor = 'gray';
+            } else {
+                roomDiv[1].style.backgroundColor = 'deeppink';
+            }
 
-                switch (args[i * 3 + 1]) {
-                    case 'a':
-                        if (args[i * 3 + 2] === 'p')
-                            element.src = './img/acquiso-playing.png';
-                        else
-                            element.src = './img/acquiso-ready.png';
-                        break;
-                    case 'c':
-                        if (args[i * 3 + 2] === 'p')
-                            element.src = './img/cataso-playing.png';
-                        else
-                            element.src = './img/cataso-ready.png';
-                        break;
-                }
+            switch (args[i * 3 + 1]) {
+                case 'a':
+                    if (args[i * 3 + 2] === 'p') {
+                        roomDiv[2].className = 'acquiso-playing';
+                    } else {
+                        roomDiv[2].className = 'acquiso-ready';
+                    }
+                    break;
+                case 'c':
+                    if (args[i * 3 + 2] === 'p') {
+                        roomDiv[2].className = 'cataso-playing';
+                    } else {
+                        roomDiv[2].className = 'cataso-ready';
+                    }
+                    break;
             }
         }
-    </script>
+    }
+</script>
+
+
 </body>
+
 </html>

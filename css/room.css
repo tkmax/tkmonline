@@ -1,143 +1,278 @@
-/* body */
+/* Suggested order:
+ * display
+ * list-style
+ * position
+ * float
+ * clear
+ * width
+ * height
+ * margin
+ * padding
+ * border
+ * background
+ * color
+ * font
+ * text-align
+ * overflow-y
+ * border-radius
+ * box-shadow
+ */
 
 body {
-    background-color: white;
-    color: black;
-    font-family: "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif;
-    font-size: 14px;
-}
-
-/* header */
-
-#header a {
+    background: white;
     color: black;
 }
 
-/* login */
-            
-#login #ship {
-    position: absolute;
-    left: 400px;
+#header {
+    position: fixed;
+    width: 100%;
+    height: 30px;
+    background: black;
+    color: white;
+    font: bold 25px/32px "メイリオ","Meiryo";
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.25);
 }
 
-#login #login-uid {
-    position: absolute;
+#title {
+    float: left;
+    width: 200px;
+    text-align: center;
+}
+
+#room-name {
+    float: left;
+    width: 180px;
+}
+
+#wrapper {
+    width: 1100px;
+    height: 615px;
+    margin: auto;
+    padding: 45px 0 0 0;
+}
+
+#login {
+    width: 994px;
+    margin: 0 auto 0 auto;
+}
+
+#login-left {
+    float: left;
+    width: 490px;
+}
+
+#login-input-uid {
+    float: left;
     width: 170px;
     height: 26px;
-    top: 95px;
-    left: 50px;
+    margin: 35px 0 0 100px;
     border: 2px black solid;
-    font-size: 20px;
+    font: 20px "メイリオ","Meiryo";
+    border-radius: 5px;
 }
 
-#login #login-btn {
-    position: absolute;
-    top: 60px;
-    left: 260px;
-}
-            
-#login #login-users {
-    position: absolute;
-    padding: 0;
-    top: 175px;
-    left: 70px;
+#login-button {
+    float: left;
+    width: 100px;
+    height: 100px;
+    margin: 0 0 0 25px;
+    background: url(../png/login.png);
 }
 
-#login #err-msg {
-    position: absolute;
-    top: 163px;
-    left: 20px;
+#login-error {
+    padding: 10px 0 10px 0;
     color: red;
+    font: bold 16px "メイリオ","Meiryo";
+    text-align: center;
+}
+
+#login-user-list {
+    margin: 0 0 0 86px;
+    font: 16px "メイリオ","Meiryo";
+}
+
+#login-eye-catch {
+    float: left;
+    width: 504px;
+    height: 600px;
+    background: url(../png/ship.png);
+}
+
+#play {
     display: none;
-    font-size: 11px;
+    width: 1004px;
+    margin: 0 auto 0 auto;
 }
 
-/* play */
-
-#play #user-list {
-    background-color: black;
-    position: absolute;
-    padding: 0;
-    margin: 0;
-    top: 35px;
-    left: 10px;
-    width: 210px;
-    height: 155px;
-    border: 2px black solid;
-    overflow-y: scroll;
-}
-
-#play #log {
-    background-color: black;
-    color: white;
-    position: absolute;
-    top: 195px;
-    left: 10px;
-    width: 210px;
-    height: 380px;
-    border: 2px black solid;
-    overflow-y: scroll;
-    font-size: 13px;
-}
-
-#play #view {
-    position: absolute;
-    top: 35px;
-    left: 225px;
-    width: 860px;
-    height: 540px;
-    border: 2px black solid;
-}
-
-#play #chat-text {
-    position: absolute;
-    top: 590px;
-    left: 10px;
-    width: 900px;
+#play-button-se {
+    float: left;
+    width: 80px;
     height: 25px;
-    font-size: 18px;
+    background: orange;
+    color: white;
+    font: bold 20px/28px "メイリオ","Meiryo";
+    text-align: center;
+    border-radius: 5px;
+}
+
+#play-button-bs {
+    float: left;
+    width: 80px;
+    height: 25px;
+    margin: 0 0 0 5px;
+    background: orange;
+    color: white;
+    font: bold 20px/28px "メイリオ","Meiryo";
+    text-align: center;
+    border-radius: 5px;
+}
+
+#play-select-volume {
+    float: left;
+    width: 80px;
+    height: 25px;
+    margin: 0 0 0 5px;
+    font: 16px/24px "メイリオ","Meiryo";
+    text-align: center;
+    border-radius: 5px;
+}
+
+#play-left {
+    float: left;
+    width: 195px;
+}
+
+#play-user-list {
+    width: 191px;
+    height: 153px;
+    margin: 3px 0 0 0;
+    padding: 2px;
+    background: black;
+    color: white;
+    overflow: scroll;
+}
+
+#play-log {
+    width: 191px;
+    height: 378px;
+    margin: 5px 0 0 0;
+    padding: 2px;
+    background: black;
+    color: white;
+    overflow: scroll;
+}
+
+#play-view {
+    float: left;
+    width: 800px;
+    height: 545px;
+    margin: 3px 0 0 5px;
+}
+
+#play-input-chat {
+    float: left;
+    width: 820px;
+    height: 25px;
+    margin: 3px 0 0 0;
     border: 2px black solid;
+    font: 18px "メイリオ","Meiryo";
 }
 
-#play #chat-silent-btn {
-    position: absolute;
-    top: 593px;
-    left: 920px;
+#play-button-dice {
+    float: left;
+    width: 80px;
+    height: 25px;
+    margin: 5px 0 0 5px;
+    background: green;
+    color: white;
+    font: bold 20px/28px "メイリオ","Meiryo";
+    text-align: center;
+    border-radius: 5px;
 }
 
-#play #se-silent-btn {
-    position: absolute;
-    top: 593px;
-    left: 1005px;
+#play-button-bell {
+    float: left;
+    width: 80px;
+    height: 25px;
+    margin: 5px 0 0 5px;
+    background: green;
+    color: white;
+    font: bold 20px/28px "メイリオ","Meiryo";
+    text-align: center;
+    border-radius: 5px;
 }
 
-/* footer */
 #footer {
-    position: absolute;
-    top: 630px;
-    left: 10px;
+    width: 100%;
+    height: 200px;
 }
 
-/* .button */
+#support-browser {
+    width: 850px;
+    margin: 0 auto 0 auto;
+    padding: 10px 0 0 0;
+    font: bold 20px "メイリオ","Meiryo";
+    text-align: center;
+}
+
+#twitter {
+    width: 90px;
+    margin: 0 auto 0 auto;
+    padding: 10px 0 0 0;
+}
+
 .button:hover {
     opacity: 0.7;
 }
 
-/* .uid */
-.uid {
-    background-color: gray;
-    color: white;
-    padding: 1px;
-    font-size: 12px;
-    font-weight: bold;
+.user {
+    height: 18px;
+    margin: 0 0 2px 0;
+    font: bold 12px "メイリオ","Meiryo";
 }
 
-/* .trip */
-.trip {
-    background-color: green;
+.chat {
+    margin: 0 0 2px 0;
+    font: bold 12px "メイリオ","Meiryo";
+}
+
+.owner-icon {
+    float: left;
+    width: 14px;
+    height: 18px;
+    background: url(../png/owner-icon.png);
+}
+
+.common-icon {
+    float: left;
+    width: 14px;
+    height: 18px;
+}
+
+.my-icon {
+    float: left;
+    width: 14px;
+    height: 18px;
+    background: url(../png/my-icon.png);
+}
+
+.user-icon {
+    float: left;
+    width: 14px;
+    height: 18px;
+    background: url(../png/user-icon.png);
+}
+
+.uid {
+    padding: 0 2px 0 2px;
+    background: gray;
     color: white;
-    padding: 2px;
-    margin: 1px;
-    font-size: 12px;
-    font-weight: bold;
+    border-radius: 5px;
+}
+
+.trip {
+    padding: 0 2px 0 2px;
+    background: green;
+    color: white;
+    border-radius: 5px;
 }

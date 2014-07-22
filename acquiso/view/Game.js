@@ -3,217 +3,260 @@ enchant();
 var Game = function () { }
 
 Game.isOpen = false;
-Game.isSent = false;
-Game.isMute = false;
+Game.canSend = true;
 Game.core = null;
-Game.tab = 0;
-Game.buy = {
-    output: [0, 0, 0, 0, 0, 0, 0]
-    , ticket: 0
-    , sum: 0
-};
-Game.sell = {
-    input: [0, 0, 0, 0, 0, 0, 0]
-    , sum: 0
-};
-Game.trade = {
-    input: [0, 0, 0, 0, 0, 0, 0]
-    , output: [0, 0, 0, 0, 0, 0, 0]
-    , ticket: 0
-};
-Game.tab = Tab.HotelChain;
+Game.tab = Tab.HOTEL_CHAIN;
 
-Game.send = function (msg) {
-    if (!this.isSent) {
-        send(msg);
-        this.isSent = true;
+Game.buy = {
+      output: [0, 0, 0, 0, 0, 0, 0]
+    , ticket: 0
+    , summary: 0
+};
+
+Game.sell = {
+      input: [0, 0, 0, 0, 0, 0, 0]
+    , summary: 0
+};
+
+Game.trade = {
+      input: [0, 0, 0, 0, 0, 0, 0]
+    , output: [0, 0, 0, 0, 0, 0, 0]
+    , pool: 0
+};
+
+Game.send = function (message) {
+    if (this.canSend) {
+        send(message);
+        this.canSend = false;
     }
 }
 
 Game.addLabel = function (text, x, y, font) {
     var label;
 
-    if (!font)
-        font = '14px "ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif';
-    else
-        font += ' ' + '"ヒラギノ角ゴ Pro W3","Hiragino Kaku Gothic Pro","メイリオ",Meiryo,"ＭＳ Ｐゴシック",sans-serif'; 
+    if (!font) {
+        font = '14px "メイリオ",Meiryo';
+    } else {
+        font += ' ' + '"メイリオ",Meiryo';
+    }
+
     label = new Label(text);
     label.x = x;
     label.y = y;
     label.font = font;
+
     this.core.rootScene.addChild(label);
 
     return label;
 }
 
 Game.addSprite = function (image, frame, x, y, width, height, onTouch, opacity) {
-    var sprite;
+    var sprite = new Sprite(width, height);
 
-    sprite = new Sprite(width, height);
     sprite.image = this.core.assets[image];
     sprite.frame = frame;
     sprite.x = x;
     sprite.y = y;
     sprite.opacity = opacity;
-    if (onTouch) sprite.addEventListener('touchstart', onTouch);
+
+    if (onTouch) { sprite.addEventListener('touchstart', onTouch); }
+
     this.core.rootScene.addChild(sprite);
 
     return sprite;
 }
 
 Game.onLoad = function () {
-    this.core = new Core(840, 520);
+    this.core = new Core(800, 545);
+
     this.core.fps = 5;
+
     this.core.preload(
-        'view/active.png', 'view/background.png', 'view/button.png'
-        , 'view/fresh.png', 'view/hotelchain-horizontal.png'
-        , 'view/hotelchain-vertical.png', 'view/independence.png'
-        , 'view/lock.png', 'view/map.png' , 'view/market.png'
-        , 'view/priority.png', 'view/skin.png', 'view/tab.png'
-        , 'view/tile.png', 'view/updown.png'
+          'view/active.png'
+        , 'view/background.png'
+        , 'view/button.png'
+        , 'view/fresh.png'
+        , 'view/hotelchain-horizontal.png'
+        , 'view/hotelchain-vertical.png'
+        , 'view/independence.png'
+        , 'view/lock.png'
+        , 'view/map.png'
+        , 'view/market.png'
+        , 'view/priority.png'
+        , 'view/skin.png'
+        , 'view/tab.png'
+        , 'view/tile.png'
+        , 'view/updown.png'
     );
+
     this.core.onload = function () {
         Game.isOpen = true;
         Game.send('a');
     }
+
     this.core.start();
 }
 
 Game.onMessage = function (game) {
-    sound(game.sound);
+    if(game.sound !== '') { sound(game.sound); }
+    
+    this.canSend = true;
+
     this.rePaint(game);
 }
 
-Game.rePaint = function(game) {
+Game.rePaint = function (game) {
     this.removeAll();
-    this.addBackGround();
+    this.addSprite('view/background.png', 0, 0, 0, 800, 545);
     this.addHeadLine(game);
     this.addCommand(game);
-    for (i = game.playerNumber - 1; i >= 0; i--) this.addPlayer(game, i);
+
+    var i;
+    var len1 = game.playerSize;
+    for (i = 0; i < len1; i++) { this.addPlayer(game, i); }
+
     this.addMarket(game);
     this.addMap(game);
+    this.addCanPlayTile(game);
     this.addHotelChain(game);
 }
 
 Game.removeAll = function () {
-    this.isSent = false;
-    while (this.core.rootScene.childNodes.length > 0)
+    while (this.core.rootScene.childNodes.length > 0) {
         this.core.rootScene.removeChild(this.core.rootScene.childNodes[0]);
+    }
 }
 
 Game.isDeadTile = function (game, index) {
-    var i, isJoinHotelChain = [false, false, false, false, false, false, false]
-      , hotelChain, safetyHotelChain = 0;
+    var hasJoin = [false, false, false, false, false, false, false];
+    var hotelChain;
+    var safety = 0;
 
-    i = game.playerList[game.priority].hand[index];
+    var i = game.playerList[game.priority].hand[index];
 
     if (i >= 12) {
         hotelChain = game.map[i - 12].hotelChain;
-        if (hotelChain !== HotelChain.None) isJoinHotelChain[hotelChain] = true;
+
+        if (hotelChain !== HotelChain.NONE) { hasJoin[hotelChain] = true; }
     }
+
     if (i % 12 > 0) {
         hotelChain = game.map[i - 1].hotelChain;
-        if (hotelChain !== HotelChain.None) isJoinHotelChain[hotelChain] = true;
+
+        if (hotelChain !== HotelChain.NONE) { hasJoin[hotelChain] = true; }
     }
+
     if (i % 12 < 11) {
         hotelChain = game.map[i + 1].hotelChain;
-        if (hotelChain !== HotelChain.None) isJoinHotelChain[hotelChain] = true;
+
+        if (hotelChain !== HotelChain.NONE) { hasJoin[hotelChain] = true; }
     }
+
     if (i <= 95) {
         hotelChain = game.map[i + 12].hotelChain;
-        if (hotelChain !== HotelChain.None) isJoinHotelChain[hotelChain] = true;
+
+        if (hotelChain !== HotelChain.NONE) { hasJoin[hotelChain] = true; }
     }
 
-    for (i = 0; i < 7; i++)
-        if (isJoinHotelChain[i] && game.hotelChain[i].size >= 11) safetyHotelChain++;
+    for (i = 0; i < 7; i++) {
+        if (hasJoin[i] && game.hotelChain[i].size >= 11) { safety++; }
+    }
     
-    if (safetyHotelChain >= 2)
+    if (safety >= 2) {
         return true;
-    else
+    } else {
         return false;
-}
-
-Game.haveDeadTile = function (game) {
-    var i, have = false;
-
-    for (i = game.playerList[game.priority].hand.length - 1; !have && i >= 0; i--)
-        if (this.isDeadTile(game, i)) have = true;
-
-    return have;
+    }
 }
 
 Game.canPlayTile = function (game, index) {
-    var i, canPlay = false, isAvailable = false, cell, isJoinCoverNone = false
-      , isJoinHotelChain = false;
-
     if (!this.isDeadTile(game, index)) {
-        for (i = 0; !isAvailable && i < 7; i++)
-            if (game.hotelChain[i].position === Position.None) isAvailable = true;
-
-        if (isAvailable) {
-            canPlay = true;
-        } else {
-            i = game.playerList[game.priority].hand[index];
-            
-            if (i >= 12) {
-                cell = game.map[i - 12];
-                if (cell.isCover) {
-                    if (cell.hotelChain === HotelChain.None)
-                        isJoinCoverNone = true;
-                    else
-                        isJoinHotelChain = true;
-                }
+        var i;
+        for (i = 0; i < 7; i++) {
+            if (game.hotelChain[i].position === Position.NONE) {
+                return true;
             }
-            if (i % 12 > 0) {
-                cell = game.map[i - 1];
-                if (cell.isCover) {
-                    if (cell.hotelChain === HotelChain.None)
-                        isJoinCoverNone = true;
-                    else
-                        isJoinHotelChain = true;
-                }
-            }
-            if (i % 12 < 11) {
-                cell = game.map[i + 1];
-                if (cell.isCover) {
-                    if (cell.hotelChain === HotelChain.None)
-                        isJoinCoverNone = true;
-                    else
-                        isJoinHotelChain = true;
-                }
-            }
-            if (i <= 95) {
-                cell = game.map[i + 12];
-                if (cell.isCover) {
-                    if (cell.hotelChain === HotelChain.None)
-                        isJoinCoverNone = true;
-                    else
-                        isJoinHotelChain = true;
-                }
-            }
-
-            if (isJoinHotelChain || !isJoinCoverNone) canPlay = true;
         }
+
+        var cell;
+        var hasHotelChain = false;
+        var hasNotHotelChain = false;
+
+        i = game.playerList[game.priority].hand[index];
+
+        if (i >= 12) {
+            cell = game.map[i - 12];
+
+            if (cell.isCover) {
+                if (cell.hotelChain === HotelChain.NONE) {
+                    hasNotHotelChain = true;
+                } else {
+                    hasHotelChain = true;
+                }
+            }
+        }
+
+        if (i % 12 > 0) {
+            cell = game.map[i - 1];
+
+            if (cell.isCover) {
+                if (cell.hotelChain === HotelChain.NONE) {
+                    hasNotHotelChain = true;
+                } else {
+                    hasHotelChain = true;
+                }
+            }
+        }
+
+        if (i % 12 < 11) {
+            cell = game.map[i + 1];
+
+            if (cell.isCover) {
+                if (cell.hotelChain === HotelChain.NONE) {
+                    hasNotHotelChain = true;
+                } else {
+                    hasHotelChain = true;
+                }
+            }
+        }
+
+        if (i <= 95) {
+            cell = game.map[i + 12];
+
+            if (cell.isCover) {
+                if (cell.hotelChain === HotelChain.NONE) {
+                    hasNotHotelChain = true;
+                } else {
+                    hasHotelChain = true;
+                }
+            }
+        }
+
+        if (!hasNotHotelChain || hasHotelChain) { return true; }
     }
 
-    return canPlay;
+    return false;
 }
 
-Game.haveCanPlayTile = function (game) {
-    var i, priorityPlayer = game.playerList[game.priority], canPlay = false;
+Game.hasCanPlayTile = function (game) {
+    var i;
+    var len1 = game.playerList[game.priority].hand.length;
+    for (i =  0; i < len1; i++) {
+        if (this.canPlayTile(game, i)) { return true; }
+    }
 
-    for (i = priorityPlayer.hand.length - 1; !canPlay && i >= 0; i--)
-        if (this.canPlayTile(game, i)) canPlay = true;
-
-    return canPlay;
+    return false;
 }
 
 Game.isFinish = function (game) {
-    var i, haveHotelChain = false, isFinish = true;
+    var hasHotelChain = false;
+    var isFinish = true;
 
-    for (i = game.hotelChain.length - 1; i >= 0; i--) {
-        if (game.hotelChain[i].position !== Position.None) {
-            haveHotelChain = true;
+    var i;
+    var len1 = game.hotelChain.length;
+    for (i = 0; i < len1; i++) {
+        if (game.hotelChain[i].position !== Position.NONE) {
+            hasHotelChain = true;
 
             if (game.hotelChain[i].size >= 41) {
                 isFinish = true;
@@ -224,217 +267,148 @@ Game.isFinish = function (game) {
         }
     }
 
-    if (!haveHotelChain) isFinish = false;
+    if (!hasHotelChain) { isFinish = false; }
 
     return isFinish;
 }
 
 Game.getStockPrice = function (game, type) {
-    var size = game.hotelChain[type].size, price = 0;
+    var size = game.hotelChain[type].size;
 
-    if (size >= 41)
-        price = StockPrice[type][8];
-    else if(size >= 31)
-        price = StockPrice[type][7];
-    else if(size >= 21)
-        price = StockPrice[type][6];
-    else if(size >= 11)
-        price = StockPrice[type][5];
-    else if(size >= 6)
-        price = StockPrice[type][4];
-    else if(size >= 5)
-        price = StockPrice[type][3];
-    else if(size >= 4)
-        price = StockPrice[type][2];
-    else if(size >= 3)
-        price = StockPrice[type][1];
-    else if(size >= 2)
-        price = StockPrice[type][0];
+    if (size >= 41) {
+        return STOCK_PRICE[type][8];
+    } else if(size >= 31) {
+        return STOCK_PRICE[type][7];
+    } else if(size >= 21) {
+        return STOCK_PRICE[type][6];
+    } else if(size >= 11) {
+        return STOCK_PRICE[type][5];
+    } else if(size >= 6) {
+        return STOCK_PRICE[type][4];
+    } else if(size >= 5) {
+        return STOCK_PRICE[type][3];
+    } else if(size >= 4) {
+        return STOCK_PRICE[type][2];
+    } else if(size >= 3) {
+        return STOCK_PRICE[type][1];
+    } else if(size >= 2) {
+        return STOCK_PRICE[type][0];
+    }
 
-    return price;
+    return 0;
 }
 
 Game.getMajorityBonus = function (game, type) {
-    var size = game.hotelChain[type].size, bonus = 0;
+    var size = game.hotelChain[type].size;
 
-    if (size >= 41)
-        bonus = MajorityBonus[type][8];
-    else if(size >= 31)
-        bonus = MajorityBonus[type][7];
-    else if(size >= 21)
-        bonus = MajorityBonus[type][6];
-    else if(size >= 11)
-        bonus = MajorityBonus[type][5];
-    else if(size >= 6)
-        bonus = MajorityBonus[type][4];
-    else if(size >= 5)
-        bonus = MajorityBonus[type][3];
-    else if(size >= 4)
-        bonus = MajorityBonus[type][2];
-    else if(size >= 3)
-        bonus = MajorityBonus[type][1];
-    else if(size >= 2)
-        bonus = MajorityBonus[type][0];
+    if (size >= 41) {
+        return MAJORITY_BONUS[type][8];
+    } else if(size >= 31) {
+        return MAJORITY_BONUS[type][7];
+    } else if(size >= 21) {
+        return MAJORITY_BONUS[type][6];
+    } else if(size >= 11) {
+        return MAJORITY_BONUS[type][5];
+    } else if(size >= 6) {
+        return MAJORITY_BONUS[type][4];
+    } else if(size >= 5) {
+        return MAJORITY_BONUS[type][3];
+    } else if(size >= 4) {
+        return MAJORITY_BONUS[type][2];
+    } else if(size >= 3) {
+        return MAJORITY_BONUS[type][1];
+    } else if(size >= 2) {
+        return MAJORITY_BONUS[type][0];
+    }
 
-    return bonus;
+    return 0;
 }
 
 Game.getMinorityBonus = function (game, type) {
-    var size = game.hotelChain[type].size, bonus = 0;
+    var size = game.hotelChain[type].size;
 
-    if (size >= 41)
-        bonus = MinorityBonus[type][8];
-    else if(size >= 31)
-        bonus = MinorityBonus[type][7];
-    else if(size >= 21)
-        bonus = MinorityBonus[type][6];
-    else if(size >= 11)
-        bonus = MinorityBonus[type][5];
-    else if(size >= 6)
-        bonus = MinorityBonus[type][4];
-    else if(size >= 5)
-        bonus = MinorityBonus[type][3];
-    else if(size >= 4)
-        bonus = MinorityBonus[type][2];
-    else if(size >= 3)
-        bonus = MinorityBonus[type][1];
-    else if(size >= 2)
-        bonus = MinorityBonus[type][0];
+    if (size >= 41) {
+        return MINORITY_BONUS[type][8];
+    } else if(size >= 31) {
+        return MINORITY_BONUS[type][7];
+    } else if(size >= 21) {
+        return MINORITY_BONUS[type][6];
+    } else if(size >= 11) {
+        return MINORITY_BONUS[type][5];
+    } else if(size >= 6) {
+        return MINORITY_BONUS[type][4];
+    } else if(size >= 5) {
+        return MINORITY_BONUS[type][3];
+    } else if(size >= 4) {
+        return MINORITY_BONUS[type][2];
+    } else if(size >= 3) {
+        return MINORITY_BONUS[type][1];
+    } else if(size >= 2) {
+        return MINORITY_BONUS[type][0];
+    }
 
-    return bonus;
-}
-
-Game.addBackGround = function () {
-    this.addSprite('view/background.png', 0, 0, 0, 840, 520);
+    return 0;
 }
 
 Game.addHeadLine = function (game) {
     var text = '';
 
-    if (game.state === State.Ready) {
+    if (game.state === State.READY) {
         text = '募集中';
     } else {
         switch (game.phase) {
-            case Phase.StartUp:
-                text = '対戦中 - ターン開始';
-                break;
-            case Phase.Trash:
-                text = '対戦中 - デッドタイル';
-                break;
-            case Phase.Play:
+            case Phase.PLAY:
                 text = '対戦中 - タイル配置';
                 break;
-            case Phase.Chain:
-                text = '対戦中 - チェーン';
+            case Phase.CHAIN:
+                text = '対戦中 - ホテルチェーン';
                 break;
-            case Phase.Absorb:
-                text = '対戦中 - 合併(親チェーン選択)';
+            case Phase.ABSORB:
+                text = '対戦中 - 合併(親ホテルチェーン選択)';
                 break;
-            case Phase.Merge:
+            case Phase.MERGE:
                 text = '対戦中 - 合併';
                 break;
-            case Phase.Sell:
+            case Phase.SELL:
                 text = '対戦中 - 合併(売却)';
                 break;
-            case Phase.Trade:
+            case Phase.TRADE:
                 text = '対戦中 - 合併(交換)';
                 break;
-            case Phase.Buy:
+            case Phase.BUY:
                 text = '対戦中 - 購入';
-                break;
-            case Phase.Draw:
-                text = '対戦中 - ドロー';
                 break;
         }
     }
-    this.addLabel(text, 527, 5);
+
+    this.addLabel(text, 502, 6);
 }
 
 Game.addCommand = function (game) {
-    var i, sprite, canJoin, canLeave, canStart;
-
-    if (game.state === State.Ready) {
-        canJoin = canLeave = canStart = false;
-        for (i = game.playerList.length - 1; i >= 0; i--) {
-            if (game.playerList[i].uid === '')
-                canJoin = true;
-            else
-                if (game.playerList[i].uid === uid) canLeave = true;
-        }
-        if (
-               game.playerList[0].uid !== ''
-            && game.playerList[1].uid !== ''
-            && game.playerList[2].uid !== ''
-        ) canStart = true;
-        if (canJoin) {
-            this.addSprite('view/button.png', 0, 642, 410, 80, 25, function () {
-                Game.send('b');
-            });
-        }
-        if (canLeave) {
-            this.addSprite('view/button.png', 1, 732, 410, 80, 25, function () {
-                Game.send('c');
-            });
-            if (canStart) {
-                this.addSprite('view/button.png', 2, 552, 410, 80, 25, function () {
-                    Game.send('d');
-                });
-            }
-        }
+    if (game.state === State.READY) {
+        this.addReadyCommand(game);
     } else {
         if (game.playerList[game.priority].uid === uid) {
             switch (game.phase) {
-                case Phase.Play:
-                    for (i = this.buy.output.length - 1; i >= 0; i--)
-                        this.buy.output[i] = 0;
-                    this.addLabel('タイルを配置して下さい。', 600, 400);
-                    this.addSprite('view/button.png', 6, 600, 425, 80, 25, function () {
-                        if (game.canTrash && Game.haveDeadTile(game)) Game.send('f');
-                    });
-                    this.addSprite('view/button.png', 7, 690, 425, 80, 25, function () {
-                        if (!Game.haveCanPlayTile(game)) Game.send('i');
-                    });
+                case Phase.PLAY:
+                    this.addPlayCommand(game);
                     break;
-                case Phase.Trash:
-                    this.addLabel('デッドタイルを廃棄して下さい。', 580, 400);
-                    this.addSprite('view/button.png', 10, 640, 425, 80, 25, function () {
-                        Game.send('e');
-                    });
+                case Phase.CHAIN:
+                    this.addLabel('ホテルチェーンを配置して下さい。', 547, 415);
                     break;
-                case Phase.Chain:
-                    this.addLabel('ホテルチェーンを配置して下さい。', 575, 415);
+                case Phase.ABSORB:
+                    this.addLabel('親ホテルチェーンを選択して下さい。', 540, 415);
                     break;
-                case Phase.Absorb:
-                    this.addLabel('親チェーンを選択して下さい。', 600, 415);
+                case Phase.MERGE:
+                    this.addMergeCommand();
                     break;
-                case Phase.Merge:
-                    this.trade.ticket = 0;
-                    this.sell.sum = 0;
-                    for (i = 0; i < 7; i++) {
-                        this.trade.input[i]
-                        = this.trade.output[i]
-                        = this.sell.input[i]
-                        = 0;
-                    }
-
-                    this.addSprite('view/skin.png', 3, 525, 338, 313, 180);
-                    this.addSprite('view/button.png', 8, 552, 348, 80, 25, function () {
-                        Game.send('l');
-                    });
-                    this.addSprite('view/button.png', 9, 642, 348, 80, 25, function () {
-                        Game.send('n');
-                    });
-                    this.addSprite('view/button.png', 4, 732, 348, 80, 25, function () {
-                        Game.send('p');
-                    });
-                    break;
-                case Phase.Sell:
+                case Phase.SELL:
                     this.addSellCommand(game);
                     break;
-                case Phase.Trade:
+                case Phase.TRADE:
                     this.addTradeCommand(game);
                     break;
-                case Phase.Buy:
+                case Phase.BUY:
                     this.addBuyCommand(game);
                     break;
             }
@@ -442,101 +416,156 @@ Game.addCommand = function (game) {
     }
 }
 
-Game.addPlayer = function (game, playerIndex) {
-    var i, j, frame;
+Game.addReadyCommand = function (game) {
+    var canJoin = false;
+    var canLeave = false;
+    var canStart = false;
 
-    if (game.state === State.Playing && game.active === playerIndex)
-        this.addSprite('view/active.png', 0, 529, 78 * playerIndex + 29, 15, 15);
-
-    if (game.state === State.Playing && game.priority === playerIndex)
-        this.addSprite('view/priority.png', 0, 549, 78 * playerIndex + 26, 112, 21);
-
-    this.addLabel(game.playerList[playerIndex].uid, 550, 78 * playerIndex + 28);
-
-    this.addLabel('$' + game.playerList[playerIndex].money, 667, 78 * playerIndex + 28);
+    var i;
+    var len1 = game.playerList.length;
+    for (i = 0; i < len1; i++) {
+        if (game.playerList[i].uid === '') {
+            canJoin = true;
+        } else {
+            if (game.playerList[i].uid === uid) { canLeave = true; }
+        }
+    }
 
     if (
-           game.state === State.Ready
-        || game.playerList[playerIndex].uid === uid
-    )
-        frame = 0;
-    else
-        frame = 108;
+           game.playerList[0].uid !== ''
+        && game.playerList[1].uid !== ''
+        && game.playerList[2].uid !== ''
+    ) {
+        canStart = true;
+    }
 
-    for (i = game.playerList[playerIndex].hand.length - 1; i >= 0; i--) {
+    if (canJoin) {
+        this.addSprite('view/button.png', 0, 610, 422, 80, 25, function () {
+            Game.send('b');
+        });
+    }
+
+    if (canLeave) {
+        this.addSprite('view/button.png', 1, 700, 422, 80, 25, function () {
+            Game.send('c');
+        });
+
+        if (canStart) {
+            this.addSprite('view/button.png', 2, 520, 422, 80, 25, function () {
+                Game.send('d');
+            });
+        }
+    }
+}
+
+Game.addPlayer = function (game, index) {
+    if (game.state === State.PLAYING && game.active === index) {
+        this.addSprite('view/active.png', 0, 503, index * 78 + 29, 15, 15);
+    }
+
+    if (game.state === State.PLAYING && game.priority === index) {
+        this.addSprite('view/priority.png', 0, 523, index * 78 + 26, 112, 21);
+    }
+
+    this.addLabel(game.playerList[index].uid, 524, index * 78 + 28);
+
+    this.addLabel('$' + game.playerList[index].money, 640, index * 78 + 28);
+
+    var frame;
+
+    if (
+           game.state === State.READY
+        || game.playerList[index].uid === uid
+    ) {
+        frame = 0;
+    } else {
+        frame = 108;
+    }
+
+    var i;
+    var len1 = game.playerList[index].hand.length;
+    for (i = 0; i < len1; i++) {
         if (frame !== 108) {
-            frame = game.playerList[playerIndex].hand[i];
-            for (j = game.playerList[playerIndex].fresh.length - 1; j >= 0; j--) {
-                if(frame === game.playerList[playerIndex].fresh[j]) {
-                    this.addSprite(
-                        'view/fresh.png', 0
-                        , 50 * i + 533
-                        , 78 * playerIndex + 53, 46, 46
-                    );
+            frame = game.playerList[index].hand[i];
+
+            this.addSprite('view/tile.png', frame, i * 50 + 504, index * 78 + 52, 40, 40);
+
+            var j;
+            var len2 = game.playerList[index].fresh.length;
+            for(j = 0; j < len2; j++) {
+                if (frame === game.playerList[index].fresh[j]) {
+                    this.addSprite('view/fresh.png', 0, i * 50 + 501, index * 78 + 87, 46, 10);
                 }
             }
-        }
-        this.addSprite('view/tile.png', frame, 50 * i + 535, 78 * playerIndex + 55, 42, 42, function () {
-            var _i = i;
 
             if (
-                   game.state === State.Playing
-                && game.priority === playerIndex
-            ) {
-                switch (game.phase) {
-                    case Phase.Play:
-                        if (Game.canPlayTile(game, _i)) {
-                            return function () {
-                                Game.send('h' + _i);
-                            };
-                        }
-                        break;
-                    case Phase.Trash:
-                        if (Game.isDeadTile(game, _i)) {
-                            return function () {
-                                Game.send('g' + _i);
-                            };
-                        }
-                        break;
-                }
+                game.state === State.PLAYING
+                && game.phase === Phase.PLAY
+                && game.priority === index
+                && game.canTrash
+                && Game.isDeadTile(game, i)
+                ) {
+                this.addSprite(
+                    'view/tile.png'
+                    , 110
+                    , i * 50 + 504
+                    , index * 78 + 52
+                    , 40
+                    , 40
+                    , function () {
+                        var _i = i;
+
+                        return function () {
+                            Game.send('f' + _i);
+                        };
+                    }()
+                    , 0.5
+                );
             }
-        } ());
+        } else {
+            this.addSprite('view/tile.png', frame, i * 50 + 504, index * 78 + 52, 40, 40);
+        }
     }
 }
 
 Game.addMarket = function (game) {
-    var haveHotelChainTab = false, haveMarketTab = false, haveStockHolderTab = false;
-
     if (game.map.length > 0) {
+        var hasHotelChainTab = false;
+        var hasMarketTab = false;
+        var hasExchangeRateTab = false;
+
         switch (Game.tab) {
-            case Tab.HotelChain:
-                haveMarketTab = haveStockHolderTab = true;
+            case Tab.HOTEL_CHAIN:
+                hasMarketTab = hasExchangeRateTab = true;
                 this.addHotelChainTab(game);
                 break;
-            case Tab.Market:
-                haveHotelChainTab = haveStockHolderTab = true;
+            case Tab.MARKET:
+                hasHotelChainTab = hasExchangeRateTab = true;
                 this.addMarketTab(game);
                 break;
-            case Tab.StockHolder:
-                haveHotelChainTab = haveMarketTab = true;
-                this.addStockHolderTab(game);
+            case Tab.EXCHANGE_RATE:
+                hasHotelChainTab = hasMarketTab = true;
+                this.addSprite('view/market.png', Tab.EXCHANGE_RATE, 10, 8, 480, 165);
                 break;
         }
-        if (haveHotelChainTab) {
-            this.addSprite('view/tab.png', 0, 11, 8, 53, 18, function () {
-                Game.tab = Tab.HotelChain;
+
+        if (hasHotelChainTab) {
+            this.addSprite('view/tab.png', 0, 10, 8, 36, 36, function () {
+                Game.tab = Tab.HOTEL_CHAIN;
                 Game.rePaint(game);
             });
         }
-        if (haveMarketTab) {
-            this.addSprite('view/tab.png', 0, 65, 8, 53, 18, function () {
-                Game.tab = Tab.Market;
+
+        if (hasMarketTab) {
+            this.addSprite('view/tab.png', 0, 10, 46, 36, 36, function () {
+                Game.tab = Tab.MARKET;
                 Game.rePaint(game);
             });
         }
-        if (haveStockHolderTab) {
-            this.addSprite('view/tab.png', 0, 119, 8, 53, 18, function () {
-                Game.tab = Tab.StockHolder;
+
+        if (hasExchangeRateTab) {
+            this.addSprite('view/tab.png', 0, 10, 84, 36, 36, function () {
+                Game.tab = Tab.EXCHANGE_RATE;
                 Game.rePaint(game);
             });
         }
@@ -544,325 +573,506 @@ Game.addMarket = function (game) {
 }
 
 Game.addHotelChainTab = function (game) {
-    this.addSprite('view/market.png', 0, 10, 8, 506, 108);
-    this.addLabel('残り:' + game.deck.length, 88, 52, '28px');
+    this.addSprite('view/market.png', Tab.HOTEL_CHAIN, 10, 8, 480, 165);
+    this.addLabel('残り:' + game.deck.length + '枚', 238, 35, '28px');
 }
 
 Game.addMarketTab = function (game) {
+    this.addSprite('view/market.png', Tab.MARKET, 10, 8, 480, 165);
+
     var i;
-
-    this.addSprite('view/market.png', 1, 10, 8, 506, 108);
-    for (i = game.certificate.length - 1; i >= 0; i--) {
-        this.addLabel(game.certificate[i] + '枚', i * 57 + 95, 46, '12px');
-        this.addLabel('$' + Game.getStockPrice(game, i), i * 57 + 90, 63, '12px');
-        this.addLabel('$' + Game.getMajorityBonus(game, i), i * 57 + 86, 80, '12px');
-        this.addLabel('$' + Game.getMinorityBonus(game, i), i * 57 + 86, 97, '12px');
+    var len1 = game.certificate.length;
+    for (i = 0; i < len1; i++) {
+        this.addLabel(game.certificate[i] + '枚', i * 57 + 103, 32, '12px');
+        this.addLabel('$' + Game.getStockPrice(game, i), i * 57 + 98, 49, '12px');
+        this.addLabel('$' + Game.getMajorityBonus(game, i), i * 57 + 94, 66, '12px');
+        this.addLabel('$' + Game.getMinorityBonus(game, i), i * 57 + 94, 83, '12px');
     }
-}
 
-Game.addStockHolderTab = function (game) {
-    var i, j;
-
-    this.addSprite('view/market.png', 2, 10, 8, 506, 108);
-    for (i = game.playerList.length - 1; i >= 0; i--) {
-        this.addLabel(game.playerList[i].uid, 74, i * 17 + 45, '11px');
-        for(j = game.playerList[i].certificate.length - 1; j >= 0; j--) {
-            this.addLabel(game.playerList[i].certificate[j] + '枚', j * 44 + 178, i * 17 + 47, '11px');
+    len1 = game.playerList.length;
+    for (i = 0; i < len1; i++) {
+        var j;
+        var len2 = game.playerList[i].certificate.length;
+        for(j = 0; j < len2; j++) {
+            this.addLabel(game.playerList[i].certificate[j] + '枚', j * 57 + 103, i * 17 + 102, '12px');
         }
     }
 }
 
 Game.addMap = function (game) {
-    var i;
-
     if (game.map.length > 0) {
-        this.addSprite('view/map.png', 0, 10, 125, 506, 380);
-        for (i = game.map.length - 1; i >= 0; i--) {
-            if (game.map[i].isCover)
-                this.addSprite('view/tile.png', i, (i % 12) * 42 + 11, Math.floor(i / 12) * 42 + 126, 42, 42);
+        this.addSprite('view/map.png', 0, 10, 175, 480, 360);
+
+        var i;
+        var len1 = game.map.length;
+        for (i = 0; i < len1; i++) {
+            if (game.map[i].isCover) {
+                this.addSprite('view/tile.png', i, (i % 12) * 40 + 10, Math.floor(i / 12) * 40 + 175, 40, 40);
+            }
         }
-        if (game.justPlayTile !== Position.None) {
+
+        if (game.justTile !== Position.NONE) {
             this.addSprite(
-                'view/tile.png', 109, (game.justPlayTile % 12) * 42 + 11
-                , Math.floor(game.justPlayTile / 12) * 42 + 126, 42, 42, null, 0.5
+                 'view/tile.png'
+                , 109
+                , (game.justTile % 12) * 40 + 10
+                , Math.floor(game.justTile / 12) * 40 + 175
+                , 40
+                , 40
+                , null
+                , 0.5
             );
         }
     }
 }
 
-Game.addHotelChain = function (game) {
-    var i, hotelChain, position, onTouch;
-
-    for (i = 0; i < game.hotelChain.length; i++) {
-        hotelChain = game.hotelChain[i];
-        if (hotelChain.position === Position.None) {
-            if (Game.tab === Tab.HotelChain) {
-                this.addSprite('view/hotelchain-vertical.png', i, i * 43 + 212, 29, 38, 80, function () {
-                    var _i = i;
-
-                    if (
-                           game.state === State.Playing
-                        && game.playerList[game.priority].uid === uid
-                        && game.phase === Phase.Chain
-                    ) {
-                        return function () {
-                            Game.send('j' + _i);
-                        };
-                    }
-                } ());
-            }
-        } else {
-            position = hotelChain.position;
-            onTouch = function () {
-                var _i = i;
-
-                if (
-                       game.state === State.Playing
-                    && game.playerList[game.priority].uid === uid
-                    && game.phase === Phase.Absorb
-                    && game.hotelChain[_i].isParent
-                ) {
-                    return function () {
-                        Game.send('k' + _i);
-                    };
-                }
-            }
-            if (hotelChain.rotation === Rotation.Horizontal) {
+Game.addCanPlayTile = function (game) {
+    if (
+           game.state === State.PLAYING
+        && game.phase === Phase.PLAY
+        && game.playerList[game.priority].uid === uid
+    ) {
+        var i;
+        var len1 = game.playerList[game.priority].hand.length;
+        for (i = 0; i < len1; i++) {
+            if (Game.canPlayTile(game, i)) {
                 this.addSprite(
-                    'view/hotelchain-horizontal.png', i
-                    , (position % 12) * 42 + 13
-                    , Math.floor(position / 12) * 42 + 128, 80, 38
-                    , onTouch()
-                );
-            } else {
-                this.addSprite(
-                    'view/hotelchain-vertical.png', i
-                    , (position % 12) * 42 + 13
-                    , Math.floor(position / 12) * 42 + 128, 38, 80
-                    , onTouch()
-                );
-            }
-            if (
-                   hotelChain.isSubsidiary
-                && (
-                       game.phase === Phase.Merge
-                    || game.phase === Phase.Sell
-                    || game.phase === Phase.Trade
-                )
-            ) {
-                if (hotelChain.rotation === Rotation.Horizontal) {
-                    this.addSprite(
-                        'view/hotelchain-horizontal.png', 7
-                        , (position % 12) * 42 + 13
-                        , Math.floor(position / 12) * 42 + 128, 80, 38
-                        , null, 0.5
-                    );
-                } else {
-                    this.addSprite(
-                        'view/hotelchain-vertical.png', 7
-                        , (position % 12) * 42 + 13
-                        , Math.floor(position / 12) * 42 + 128, 38, 80
-                        , null, 0.5
-                    );
-                }
-            }
+                      'view/tile.png'
+                    , 110
+                    , (game.playerList[game.priority].hand[i] % 12) * 40 + 10
+                    , Math.floor(game.playerList[game.priority].hand[i] / 12) * 40 + 175
+                    , 40
+                    , 40
+                    , function () {
+                          var _i = i;
 
-            if(hotelChain.size >= 41) {
-                this.addSprite(
-                    'view/independence.png', 1
-                    , (position % 12) * 42 + 12
-                    , Math.floor(position / 12) * 42 + 129, 22, 28
-                );
-            } else if(hotelChain.size >= 11) {
-                this.addSprite(
-                    'view/independence.png', 0
-                    , (position % 12) * 42 + 12
-                    , Math.floor(position / 12) * 42 + 129, 22, 28
+                          return function () {
+                              Game.send('g' + _i);
+                          };
+                      }()
+                    , 0.5
                 );
             }
         }
     }
 }
 
-Game.addBuyCommand = function (game) {
-    var i, hotelChain = game.hotelChain, stockPrice
-        , ticketLabel, sumLabel, outputLabel;
+Game.addHotelChain = function (game) {
+    var i;
+    var len1 = game.hotelChain.length;
+    for (i = 0; i < len1; i++) {
+        var independenceX;
+        var independenceY;
 
-    this.buy.ticket = game.buyTicket;
-    for (i = this.buy.output.length - 1; i >= 0; i--)
-        this.buy.ticket -= this.buy.output[i];
+        var hotelChain = game.hotelChain[i];
+        if (hotelChain.position === Position.NONE) {
+            if (Game.tab === Tab.HOTEL_CHAIN) {
+                this.addSprite(
+                      'view/hotelchain-vertical.png'
+                    , i
+                    , i * 39 + 146
+                    , 95
+                    , 36
+                    , 76
+                );
 
-    this.buy.sum = 0;
-    for (i = this.buy.output.length - 1; i >= 0; i--) {
-        if (this.buy.output[i] > 0)
-            this.buy.sum += this.getStockPrice(game, i) * this.buy.output[i];
+                if (
+                       game.state === State.PLAYING
+                    && game.phase === Phase.CHAIN
+                    && game.playerList[game.priority].uid === uid
+                ) {
+                    this.addSprite(
+                          'view/hotelchain-vertical.png'
+                        , 8
+                        , i * 39 + 146
+                        , 95
+                        , 36
+                        , 76
+                        , function () {
+                              var _i = i;
+
+                              return function () {
+                                  Game.send('i' + _i);
+                              };
+                          }()
+                        , 0.5
+                    );
+                }
+            }
+        } else {
+            var positionX = (hotelChain.position % 12) * 40 + 12;
+            var positionY = Math.floor(hotelChain.position / 12) * 40 + 177;
+
+            if (hotelChain.rotation === Rotation.HORIZONTAL) {
+                this.addSprite(
+                      'view/hotelchain-horizontal.png'
+                    , i
+                    , positionX
+                    , positionY
+                    , 76
+                    , 36
+                );
+
+                this.addLabel(hotelChain.size, positionX + 3, positionY + 17);
+
+                if (
+                       game.state === State.PLAYING
+                    && game.phase === Phase.ABSORB
+                    && game.playerList[game.priority].uid === uid
+                    && hotelChain.isParent
+                ) {
+                    this.addSprite(
+                          'view/hotelchain-horizontal.png'
+                        , 8
+                        , positionX
+                        , positionY
+                        , 76
+                        , 36
+                        , function () {
+                              var _i = i;
+
+                              return function () {
+                                  Game.send('j' + _i);
+                              };
+                          }()
+                        , 0.5
+                    );
+                }
+
+                independenceX = positionX + 54;
+                independenceY = positionY + 1;
+            } else {
+                this.addSprite(
+                      'view/hotelchain-vertical.png'
+                    , i
+                    , positionX
+                    , positionY
+                    , 36
+                    , 76
+                );
+
+                this.addLabel(hotelChain.size, positionX + 3, positionY + 57);
+
+                if (
+                       game.state === State.PLAYING
+                    && game.phase === Phase.ABSORB
+                    && game.playerList[game.priority].uid === uid
+                    && hotelChain.isParent
+                ) {
+                    this.addSprite(
+                          'view/hotelchain-vertical.png'
+                        , 8
+                        , positionX
+                        , positionY
+                        , 36
+                        , 76
+                        , function () {
+                            var _i = i;
+
+                            return function () {
+                                Game.send('j' + _i);
+                            };
+                        }()
+                        , 0.5
+                    );
+                }
+
+                independenceX = positionX + 14;
+                independenceY = positionY + 1;
+            }
+
+            if (hotelChain.size >= 41) {
+                this.addSprite(
+                      'view/independence.png'
+                    , 1
+                    , independenceX
+                    , independenceY
+                    , 22
+                    , 22
+                );
+            } else if (hotelChain.size >= 11) {
+                this.addSprite(
+                     'view/independence.png'
+                    , 0
+                    , independenceX
+                    , independenceY
+                    , 22
+                    , 22
+                );
+            }
+
+            if (
+                    hotelChain.isSubsidiary
+                && (
+                       game.phase === Phase.MERGE
+                    || game.phase === Phase.SELL
+                    || game.phase === Phase.TRADE
+                )
+            ) {
+                if (hotelChain.rotation === Rotation.HORIZONTAL) {
+                    this.addSprite(
+                          'view/hotelchain-horizontal.png'
+                        , 7
+                        , positionX
+                        , positionY
+                        , 76
+                        , 36
+                        , null
+                        , 0.5
+                    );
+                } else {
+                    this.addSprite(
+                          'view/hotelchain-vertical.png'
+                        , 7
+                        , positionX
+                        , positionY
+                        , 36
+                        , 76
+                        , null
+                        , 0.5
+                    );
+                }
+            }
+        }
+    }
+}
+
+Game.addPlayCommand = function (game) {
+    var i;
+    var len1 = this.buy.output.length;
+    for (i = 0; i < len1; i++) { this.buy.output[i] = 0; }
+
+    this.addLabel('タイルを配置して下さい。', 572, 400);
+
+    this.addSprite('view/button.png', 7, 610, 425, 80, 25, function () {
+        if (!Game.hasCanPlayTile(game)) { Game.send('h'); }
+    });
+}
+
+Game.addMergeCommand = function () {
+    this.trade.ticket = 0;
+    this.sell.summary = 0;
+
+    var i;
+    for (i = 0; i < 7; i++) {
+        this.trade.input[i] = this.trade.output[i] = this.sell.input[i] = 0;
     }
 
-    this.addSprite('view/skin.png', 0, 525, 338, 313, 180);
-    this.addLabel('株券を購入できます。', 530, 346);
-    ticketLabel = this.addLabel('残り:' + this.buy.ticket, 530, 455);
-    sumLabel = this.addLabel('合計:$' + this.buy.sum, 590, 455);
+    this.addSprite('view/skin.png', 2, 499, 338, 299, 205);
 
-    for (i = hotelChain.length - 1; i >= 0; i--) {
-        if (hotelChain[i].position !== Position.None) {
-            stockPrice = this.getStockPrice(game, i);
-            this.addLabel('' + stockPrice, i * 40 + 560, 401, '12px');
-            outputLabel = this.addLabel('' + this.buy.output[i], i * 40 + 558, 430, '12px');
+    this.addSprite('view/button.png', 8, 520, 358, 80, 25, function () {
+        Game.send('k');
+    });
 
-            this.addSprite('view/updown.png', 0, i * 40 + 579, 422, 15, 15, function () {
-                var _i = i, _outputLabel = outputLabel, _stockPrice = stockPrice;
+    this.addSprite('view/button.png', 9, 610, 358, 80, 25, function () {
+        Game.send('m');
+    });
+
+    this.addSprite('view/button.png', 4, 700, 358, 80, 25, function () {
+        Game.send('o');
+    });
+}
+
+Game.addBuyCommand = function (game) {
+    this.buy.ticket = game.buyTicket;
+    this.buy.summary = 0;
+
+    var i;
+    var len1 = this.buy.output.length;
+    for (i = 0; i < len1; i++) {
+        this.buy.ticket -= this.buy.output[i];
+
+        if (this.buy.output[i] > 0) {
+            this.buy.summary += this.getStockPrice(game, i) * this.buy.output[i];
+        }
+    }
+
+    this.addSprite('view/skin.png', 0, 499, 338, 299, 205);
+    this.addLabel('株券を購入できます。', 514, 351);
+
+    var ticketLabel = this.addLabel('残り:' + this.buy.ticket + '枚', 588, 468);
+    var sumLabel = this.addLabel('合計:$' + this.buy.summary, 655, 468);
+
+    len1 = game.hotelChain.length;
+    for (i = 0; i < len1; i++) {
+        if (game.hotelChain[i].position !== Position.NONE) {
+            var stockPrice = this.getStockPrice(game, i);
+            this.addLabel('' + stockPrice, i * 40 + 519, 406, '12px');
+
+            var outputLabel = this.addLabel('' + this.buy.output[i], i * 40 + 521, 435, '12px');
+
+            this.addSprite('view/updown.png', 0, i * 40 + 538, 427, 15, 15, function () {
+                var _i = i;
+                var _outputLabel = outputLabel;
+                var _stockPrice = stockPrice;
 
                 return function () {
                     if (
                            Game.buy.ticket > 0
                         && game.certificate[_i] - Game.buy.output[_i] > 0
-                        && game.playerList[game.priority].money - (Game.buy.sum + _stockPrice) >= 0
+                        && game.playerList[game.priority].money - (Game.buy.summary + _stockPrice) >= 0
                     ) {
                         Game.buy.output[_i]++;
-                        Game.buy.sum += _stockPrice;
+                        Game.buy.summary += _stockPrice;
                         Game.buy.ticket--;
                         _outputLabel.text = '' + Game.buy.output[_i];
-                        ticketLabel.text = '残り:' + Game.buy.ticket;
-                        sumLabel.text = '合計:$' + Game.buy.sum;
+                        ticketLabel.text = '残り:' + Game.buy.ticket + '枚';
+                        sumLabel.text = '合計:$' + Game.buy.summary;
                     }
                 };
-            } ());
-            this.addSprite('view/updown.png', 1, i * 40 + 579, 436, 15, 15, function () {
-                var _i = i, _outputLabel = outputLabel, _stockPrice = stockPrice;
+            }());
+
+            this.addSprite('view/updown.png', 1, i * 40 + 538, 441, 15, 15, function () {
+                var _i = i;
+                var _outputLabel = outputLabel;
+                var _stockPrice = stockPrice;
 
                 return function () {
                     if (Game.buy.output[_i] > 0) {
                         Game.buy.output[_i]--;
-                        Game.buy.sum -= _stockPrice;
+                        Game.buy.summary -= _stockPrice;
                         Game.buy.ticket++;
                         _outputLabel.text = '' + Game.buy.output[_i];
-                        ticketLabel.text = '残り:' + Game.buy.ticket;
-                        sumLabel.text = '合計:$' + Game.buy.sum;
+                        ticketLabel.text = '残り:' + Game.buy.ticket + '枚';
+                        sumLabel.text = '合計:$' + Game.buy.summary;
                     }
                 };
-            } ());
+            }());
         } else {
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 394, 39, 29);
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 422, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 399, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 427, 39, 29);
         }
     }
 
-    this.addSprite('view/button.png', 3, 552, 480, 80, 25, function () {
-        if (Game.buy.sum > 0) {
-            Game.send('q' + Game.buy.output.join(' '));
-            for (i = Game.buy.output.length - 1; i >= 0; i--)
+    this.addSprite('view/button.png', 3, 520, 500, 80, 25, function () {
+        if (Game.buy.summary > 0) {
+            Game.send('p' + Game.buy.output.join(' '));
+
+            len1 = Game.buy.output.length;
+            for (i = 0; i < len1; i++) {
                 Game.buy.output[i] = 0;
+            }
         }
     });
 
-    this.addSprite('view/button.png', 4, 642, 480, 80, 25, function () {
-        Game.send('r');
+    this.addSprite('view/button.png', 4, 610, 500, 80, 25, function () {
+        Game.send('q');
     });
-
-    this.addSprite('view/button.png', 5, 732, 480, 80, 25, function () {
-        if (Game.isFinish(game)) Game.send('s');
+    
+    this.addSprite('view/button.png', 5, 700, 500, 80, 25, function () {
+        if (Game.isFinish(game)) { Game.send('r'); }
     });
 }
 
 Game.addSellCommand = function (game) {
-    var i, hotelChain = game.hotelChain, stockPrice, sumLabel, inputLabel;
+    this.addSprite('view/skin.png', 0, 499, 338, 299, 205);
+    this.addLabel('吸収ホテルチェーンの株券を売却できます。', 514, 351);
 
-    this.addSprite('view/skin.png', 1, 525, 338, 313, 180);
-    this.addLabel('吸収ホテルチェーンの株券を売却できます。', 530, 346);
-    sumLabel = this.addLabel('合計:$' + this.sell.sum, 530, 455);
+    var sumLabel = this.addLabel('合計:$' + this.sell.summary, 612, 468);
 
-    for (i = hotelChain.length - 1; i >= 0; i--) {
-        if (hotelChain[i].isSubsidiary) {
-            stockPrice = this.getStockPrice(game, i);
-            this.addLabel('' + stockPrice, i * 40 + 560, 401, '12px');
-            inputLabel = this.addLabel('' + this.sell.input[i], i * 40 + 558, 429, '12px');
+    var i;
+    var len1 = game.hotelChain.length;
+    for (i = 0; i < len1; i++) {
+        if (game.hotelChain[i].isSubsidiary) {
+            var stockPrice = this.getStockPrice(game, i);
+            this.addLabel('' + stockPrice, i * 40 + 519, 406, '12px');
 
-            this.addSprite('view/updown.png', 0, i * 40 + 579, 422, 15, 15, function () {
-                var _i = i, _inputLabel = inputLabel, _stockPrice = stockPrice;
-
+            var inputLabel = this.addLabel('' + this.sell.input[i], i * 40 + 521, 435, '12px');
+            
+            this.addSprite('view/updown.png', 0, i * 40 + 538, 427, 15, 15, function () {
+                var _i = i;
+                var _inputLabel = inputLabel;
+                var _stockPrice = stockPrice;
+                
                 return function () {
                     if (game.playerList[game.priority].certificate[_i] - Game.sell.input[_i] > 0) {
                         Game.sell.input[_i]++;
-                        Game.sell.sum += _stockPrice;
+                        Game.sell.summary += _stockPrice;
                         _inputLabel.text = '' + Game.sell.input[_i];
-                        sumLabel.text = '合計:$' + Game.sell.sum;
+                        sumLabel.text = '合計:$' + Game.sell.summary;
                     }
                 };
-            } ());
-            this.addSprite('view/updown.png', 1, i * 40 + 579, 436, 15, 15, function () {
-                var _i = i, _inputLabel = inputLabel, _stockPrice = stockPrice;
+            }());
 
+            this.addSprite('view/updown.png', 1, i * 40 + 538, 441, 15, 15, function () {
+                var _i = i;
+                var _inputLabel = inputLabel;
+                var _stockPrice = stockPrice;
+                
                 return function () {
                     if (Game.sell.input[_i] > 0) {
                         Game.sell.input[_i]--;
-                        Game.sell.sum -= _stockPrice;
+                        Game.sell.summary -= _stockPrice;
                         _inputLabel.text = '' + Game.sell.input[_i];
-                        sumLabel.text = '合計:$' + Game.sell.sum;
+                        sumLabel.text = '合計:$' + Game.sell.summary;
                     }
                 };
-            } ());
+            }());
         } else {
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 394, 39, 29);
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 422, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 399, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 427, 39, 29);
         }
     }
-
-    this.addSprite('view/button.png', 3, 552, 480, 80, 25, function () {
-        if (Game.sell.sum > 0) {
-            Game.send('m' + Game.sell.input.join(' '));
-        }
+    
+    this.addSprite('view/button.png', 3, 570, 500, 80, 25, function () {
+        if (Game.sell.summary > 0) { Game.send('l' + Game.sell.input.join(' ')); }
     });
-
-    this.addSprite('view/button.png', 10, 642, 480, 80, 25, function () {
+    
+    this.addSprite('view/button.png', 6, 660, 500, 80, 25, function () {
         Game.send('e');
     });
 }
 
 Game.addTradeCommand = function (game) {
-    var i, hotelChain = game.hotelChain, stockPrice, ticketLabel, inputLabel, outputLabel;
+    this.addSprite('view/skin.png', 1, 499, 338, 299, 205);
+    this.addLabel('吸収ホテルチェーンの株券を交換できます。', 514, 351);
 
-    this.addSprite('view/skin.png', 2, 525, 338, 313, 180);
-    this.addLabel('吸収ホテルチェーンの株券を交換できます。', 530, 346);
-    ticketLabel = this.addLabel('残り:' + this.trade.ticket, 530, 455);
+    var ticketLabel = this.addLabel('残り:' + this.trade.ticket + '枚', 612, 468);
 
-    for (i = hotelChain.length - 1; i >= 0; i--) {
-        if (hotelChain[i].isSubsidiary) {
-            inputLabel = this.addLabel('' + this.trade.input[i], i * 40 + 560, 401, '12px');
-
-            this.addSprite('view/updown.png', 0, i * 40 + 579, 394, 15, 15, function () {
-                var _i = i, _inputLabel = inputLabel;
-
+    var i;
+    var len1 = game.hotelChain.length;
+    for (i = 0; i < len1; i++) {
+        if (game.hotelChain[i].isSubsidiary) {
+            var inputLabel = this.addLabel('' + this.trade.input[i], i * 40 + 521, 406, '12px');
+            
+            this.addSprite('view/updown.png', 0, i * 40 + 538, 399, 15, 15, function () {
+                var _inputLabel = inputLabel;
+                var _i = i;
+                
                 return function () {
                     if (game.playerList[game.priority].certificate[_i] - Game.trade.input[_i] > 1) {
                         Game.trade.input[_i] += 2;
                         Game.trade.ticket++;
                         _inputLabel.text = '' + Game.trade.input[_i];
-                        ticketLabel.text = '残り:' + Game.trade.ticket;
+                        ticketLabel.text = '残り:' + Game.trade.ticket + '枚';
                     }
                 };
-            } ());
-            this.addSprite('view/updown.png', 1, i * 40 + 579, 408, 15, 15, function () {
-                var _i = i, _inputLabel = inputLabel;
+            }());
 
+            this.addSprite('view/updown.png', 1, i * 40 + 538, 413, 15, 15, function () {
+                var _inputLabel = inputLabel;
+                var _i = i;
+                
                 return function () {
                     if (Game.trade.ticket > 0 && Game.trade.input[_i] > 0) {
                         Game.trade.input[_i] -= 2;
                         Game.trade.ticket--;
                         _inputLabel.text = '' + Game.trade.input[_i];
-                        ticketLabel.text = '残り:' + Game.trade.ticket;
+                        ticketLabel.text = '残り:' + Game.trade.ticket + '枚';
                     }
                 };
-            } ());
+            }());
         } else {
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 394, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 399, 39, 29);
         }
-
-        if (hotelChain[i].isParent) {
-            outputLabel = this.addLabel('' + this.trade.output[i], i * 40 + 560, 429, '12px');
-
-            this.addSprite('view/updown.png', 0, i * 40 + 579, 422, 15, 15, function () {
-                var _i = i, _outputLabel = outputLabel;
-
+        
+        if (game.hotelChain[i].isParent) {
+            var outputLabel = this.addLabel('' + this.trade.output[i], i * 40 + 521, 435, '12px');
+            
+            this.addSprite('view/updown.png', 0, i * 40 + 538, 427, 15, 15, function () {
+                var _outputLabel = outputLabel;
+                var _i = i;
+                
                 return function () {
                     if (
                            Game.trade.ticket > 0
@@ -871,44 +1081,42 @@ Game.addTradeCommand = function (game) {
                         Game.trade.output[_i]++;
                         Game.trade.ticket--;
                         _outputLabel.text = '' + Game.trade.output[_i];
-                        ticketLabel.text = '残り:' + Game.trade.ticket;
+                        ticketLabel.text = '残り:' + Game.trade.ticket + '枚';
                     }
                 };
-            } ());
-            this.addSprite('view/updown.png', 1, i * 40 + 579, 436, 15, 15, function () {
-                var _i = i, _outputLabel = outputLabel;
+            }());
 
+            this.addSprite('view/updown.png', 1, i * 40 + 538, 441, 15, 15, function () {
+                var _outputLabel = outputLabel;
+                var _i = i;
+                
                 return function () {
                     if (Game.trade.output[_i] > 0) {
                         Game.trade.output[_i]--;
                         Game.trade.ticket++;
                         _outputLabel.text = '' + Game.trade.output[_i];
-                        ticketLabel.text = '合計:' + Game.trade.ticket;
+                        ticketLabel.text = '残り:' + Game.trade.ticket + '枚';
                     }
                 };
-            } ());
+            }());
         } else {
-            this.addSprite('view/lock.png', 0, i * 40 + 555, 422, 39, 29);
+            this.addSprite('view/lock.png', 0, i * 40 + 514, 427, 39, 29);
         }
     }
-
-    this.addSprite('view/button.png', 3, 552, 480, 80, 25, function () {
-        var i;
-
+    
+    this.addSprite('view/button.png', 3, 570, 500, 80, 25, function () {
         if (Game.trade.ticket === 0) {
-            for (i = Game.trade.output.length - 1; i >= 0; i--) {
+            len1 = Game.trade.output.length;
+            for (i = 0; i < len1; i++) {
                 if (Game.trade.output[i] > 0) {
-                    Game.send(
-                        'o' + Game.trade.input.join(' ')
-                        + ' ' + Game.trade.output.join(' ')
-                    );
+                    Game.send('n' + Game.trade.input.join(' ') + ' ' + Game.trade.output.join(' '));
                     break;
                 }
             }
         }
     });
-
-    this.addSprite('view/button.png', 10, 642, 480, 80, 25, function () {
+    
+    this.addSprite('view/button.png', 6, 660, 500, 80, 25, function () {
         Game.send('e');
     });
 }

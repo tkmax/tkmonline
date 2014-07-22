@@ -1,225 +1,241 @@
-var State = function () { }
-State.Ready = 'ready';
-State.Play = 'play';
+Index = function () { }
+Index.NONE = -1;
 
-var Phase = function () { }
-Phase.SetupSettlement1 = 'setupsettlement1';
-Phase.SetupRoad1 = 'setuproad1';
-Phase.SetupSettlement2 = 'setupsettlement2';
-Phase.SetupRoad2 = 'setuproad2';
-Phase.DiceRoll = 'diceroll';
-Phase.Burst = 'burst';
-Phase.Robber1 = 'robber1';
-Phase.Robber2 = 'robber2';
-Phase.Main = 'main';
-Phase.BuildRoad = 'buildroad';
-Phase.BuildSettlement = 'buildsettlement';
-Phase.BuildCity = 'buildcity';
-Phase.InternationalTrade = 'internationaltrade';
-Phase.DomesticTrade1 = 'domestictrade1';
-Phase.DomesticTrade2 = 'domestictrade2';
-Phase.Soldier1 = 'soldier1';
-Phase.Soldier2 = 'soldier2';
-Phase.RoadBuilding1 = 'roadbuilding1';
-Phase.RoadBuilding2 = 'roadbuilding2';
-Phase.YearOfPlenty1 = 'yearofplenty1';
-Phase.YearOfPlenty2 = 'yearofplenty2';
-Phase.Monopoly = 'monopoly';
+Option = function () { }
+Option.ALPHABET_SETUP = 0;
+Option.RANDOM_SETUP = 1;
 
-var Resource = function () { }
-Resource.Brick = 0;
-Resource.Wool = 1;
-Resource.Ore = 2;
-Resource.Grain = 3;
-Resource.Lumber = 4;
+State = function () { }
+State.READY = 0;
+State.PLAYING = 1;
 
-var Card = function () { }
-Card.Soldier = 0;
-Card.VictoryPoint = 1;
-Card.RoadBuilding = 2;
-Card.YearOfPlenty = 3;
-Card.Monopoly = 4;
+Phase = function () { }
+Phase.NONE = -1;
+Phase.SETUP_SETTLEMENT1 = 0;
+Phase.SETUP_ROAD1 = 1;
+Phase.SETUP_SETTLEMENT2 = 2;
+Phase.SETUP_ROAD2 = 3;
+Phase.DICE = 4;
+Phase.BURST = 5;
+Phase.ROBBER1 = 6;
+Phase.ROBBER2 = 7;
+Phase.MAIN = 8;
+Phase.BUILD_ROAD = 9;
+Phase.BUILD_SETTLEMENT = 10;
+Phase.BUILD_CITY = 11;
+Phase.DOMESTIC_TRADE1 = 12;
+Phase.DOMESTIC_TRADE2 = 13;
+Phase.INTERNATIONAL_TRADE = 14;
+Phase.SOLDIER1 = 15;
+Phase.SOLDIER2 = 16;
+Phase.ROAD_BUILDING1 = 17;
+Phase.ROAD_BUILDING2 = 18;
+Phase.YEAR_OF_PLENTY1 = 19;
+Phase.YEAR_OF_PLENTY2 = 20;
+Phase.MONOPOLY = 21;
 
-var SettlementRank = function () { }
-SettlementRank.None = 0x0000;
-SettlementRank.Settlement = 0x0100;
-SettlementRank.City = 0x0200;
+Land = function () { }
+Land.DESERT = -1;
 
-var SettlementLink = [
-    [0, 1]
-    , [2, 3]
-    , [4, 5]
-    , [0, 6]
-    , [1, 2, 7]
-    , [3, 4, 8]
-    , [5, 9]
-    , [6, 10, 11]
-    , [7, 12, 13]
-    , [8, 14, 15]
-    , [9, 16, 17]
-    , [10, 18]
-    , [11, 12, 19]
-    , [13, 14, 20]
-    , [15, 16, 21]
-    , [17, 22]
-    , [18, 23, 24]
-    , [19, 25, 26]
-    , [20, 27, 28]
-    , [21, 29, 30]
-    , [22, 31, 32]
-    , [23, 33]
-    , [24, 25, 34]
-    , [26, 27, 35]
-    , [28, 29, 36]
-    , [30, 31, 37]
-    , [32, 38]
-    , [33, 39]
-    , [34, 40, 41]
-    , [35, 42, 43]
-    , [36, 44, 45]
-    , [37, 46, 47]
-    , [38, 48]
-    , [39, 40, 49]
-    , [41, 42, 50]
-    , [43, 44, 51]
-    , [45, 46, 52]
-    , [47, 48, 53]
-    , [49, 54]
-    , [50, 55, 56]
-    , [51, 57, 58]
-    , [52, 59, 60]
-    , [53, 61]
-    , [54, 55, 62]
-    , [56, 57, 63]
-    , [58, 59, 64]
-    , [60, 61, 65]
-    , [62, 66]
-    , [63, 67, 68]
-    , [64, 69, 70]
-    , [65, 71]
-    , [66, 67]
-    , [68, 69]
-    , [70, 71]
+Resource = function () { }
+Resource.BRICK = 0;
+Resource.WOOL = 1;
+Resource.ORE = 2;
+Resource.GRAIN = 3;
+Resource.LUMBER = 4;
+
+SettlementRank = function () { }
+SettlementRank.NONE = 0x0000;
+SettlementRank.SETTLEMENT = 0x0100;
+SettlementRank.CITY = 0x0200;
+
+Card = function () { }
+Card.SOLDIER = 0;
+Card.VICTORY_POINT = 1;
+Card.ROAD_BUILDING = 2;
+Card.YEAR_OF_PLENTY = 3;
+Card.MONOPOLY = 4;
+
+Harbor = function () { }
+Harbor.GENERIC = 0;
+Harbor.BRICK = 1;
+Harbor.WOOL = 2;
+Harbor.ORE = 3;
+Harbor.GRAIN = 4;
+Harbor.LUMBER = 5;
+
+FONT_COLOR = [
+      'red'
+    , 'dodgerblue'
+    , 'yellow'
+    , 'lime'
 ];
 
-var RoadLink = [
-    [0, 3]
-    , [0, 4]
-    , [1, 4]
-    , [1, 5]
-    , [2, 5]
-    , [2, 6]
-    , [3, 7]
-    , [4, 8]
-    , [5, 9]
-    , [6, 10]
-    , [7, 11]
-    , [7, 12]
-    , [8, 12]
-    , [8, 13]
-    , [9, 13]
-    , [9, 14]
-    , [10, 14]
-    , [10, 15]
-    , [11, 16]
-    , [12, 17]
-    , [13, 18]
-    , [14, 19]
-    , [15, 20]
-    , [16, 21]
-    , [16, 22]
-    , [17, 22]
-    , [17, 23]
-    , [18, 23]
-    , [18, 24]
-    , [19, 24]
-    , [19, 25]
-    , [20, 25]
-    , [20, 26]
-    , [21, 27]
-    , [22, 28]
-    , [23, 29]
-    , [24, 30]
-    , [25, 31]
-    , [26, 32]
-    , [27, 33]
-    , [28, 33]
-    , [28, 34]
-    , [29, 34]
-    , [29, 35]
-    , [30, 35]
-    , [30, 36]
-    , [31, 36]
-    , [31, 37]
-    , [32, 37]
-    , [33, 38]
-    , [34, 39]
-    , [35, 40]
-    , [36, 41]
-    , [37, 42]
-    , [38, 43]
-    , [39, 43]
-    , [39, 44]
-    , [40, 44]
-    , [40, 45]
-    , [41, 45]
-    , [41, 46]
-    , [42, 46]
-    , [43, 47]
-    , [44, 48]
-    , [45, 49]
-    , [46, 50]
-    , [47, 51]
-    , [48, 51]
-    , [48, 52]
-    , [49, 52]
-    , [49, 53]
-    , [50, 53]
+COLOR_NAME = [
+      '��'
+    , '��'
+    , '��'
+    , '��'
 ];
 
-var TileLink = [
-    [0, 3, 4, 7, 8, 12]
-    , [1, 4, 5, 8, 9, 13]
-    , [2, 5, 6, 9, 10, 14]
-    , [7, 11, 12, 16, 17, 22]
-    , [8, 12, 13, 17, 18, 23]
-    , [9, 13, 14, 18, 19, 24]
-    , [10, 14, 15, 19, 20, 25]
-    , [16, 21, 22, 27, 28, 33]
-    , [17, 22, 23, 28, 29, 34]
-    , [18, 23, 24, 29, 30, 35]
-    , [19, 24, 25, 30, 31, 36]
-    , [20, 25, 26, 31, 32, 37]
-    , [28, 33, 34, 38, 39, 43]
-    , [29, 34, 35, 39, 40, 44]
-    , [30, 35, 36, 40, 41, 45]
-    , [31, 36, 37, 41, 42, 46]
-    , [39, 43, 44, 47, 48, 51]
-    , [40, 44, 45, 48, 49, 52]
-    , [41, 45, 46, 49, 50, 53]
+RESOURCE_NAME = [
+      '�y'
+    , '�r'
+    , '�S'
+    , '��'
+    , '��'
 ];
 
-var Harbor = function () { }
-Harbor.None = -1;
-Harbor.Brick = 0;
-Harbor.Wool = 1;
-Harbor.Ore = 2;
-Harbor.Grain = 3;
-Harbor.Lumber = 4;
-Harbor.Generic = 5;
-
-var Sea = [
-    [Harbor.Generic, Harbor.None, Harbor.Grain]
-    , [Harbor.None, Harbor.Ore, Harbor.None]
-    , [Harbor.Generic, Harbor.None, Harbor.Wool]
-    , [Harbor.None, Harbor.Generic, Harbor.None]
-    , [Harbor.Generic, Harbor.None, Harbor.Brick]
-    , [Harbor.None, Harbor.Lumber, Harbor.None]
+SETTLEMENT_LINK = [
+      [0, 6]        // 0
+    , [0, 1]        // 1
+    , [1, 2, 7]     // 2
+    , [2, 3]        // 3
+    , [3, 4, 8]     // 4
+    , [4, 5]        // 5
+    , [5, 9]        // 6
+    , [10, 18]      // 7
+    , [6, 10, 11]   // 8
+    , [11, 12, 19]  // 9
+    , [7, 12, 13]   // 10
+    , [13, 14, 20]  // 11
+    , [8, 14, 15]   // 12
+    , [15, 16, 21]  // 13
+    , [9, 16, 17]   // 14
+    , [17, 22]      // 15
+    , [23, 33]      // 16
+    , [18, 23, 24]  // 17
+    , [24, 25, 34]  // 18
+    , [19, 25, 26]  // 19
+    , [26, 27, 35]  // 20
+    , [20, 27, 28]  // 21
+    , [28, 29, 36]  // 22
+    , [21, 29, 30]  // 23
+    , [30, 31, 37]  // 24
+    , [22, 31, 32]  // 25
+    , [32, 38]      // 26
+    , [33, 39]      // 27
+    , [39, 40, 49]  // 28
+    , [34, 40, 41]  // 29
+    , [41, 42, 50]  // 30
+    , [35, 42, 43]  // 31
+    , [43, 44, 51]  // 32
+    , [36, 44, 45]  // 33
+    , [45, 46, 52]  // 34
+    , [37, 46, 47]  // 35
+    , [47, 48, 53]  // 36
+    , [38, 48]      // 37
+    , [49, 54]      // 38
+    , [54, 55, 62]  // 39
+    , [50, 55, 56]  // 40
+    , [56, 57, 63]  // 41
+    , [51, 57, 58]  // 42
+    , [58, 59, 64]  // 43
+    , [52, 59, 60]  // 44
+    , [60, 61, 65]  // 45
+    , [53, 61]      // 46
+    , [62, 66]      // 47
+    , [66, 67]      // 48
+    , [63, 67, 68]  // 49
+    , [68, 69]      // 50
+    , [64, 69, 70]  // 51
+    , [70, 71]      // 52
+    , [65, 71]      // 53
 ];
 
-var ColorName = [
-    '赤'
-    , '青'
-    , '黄'
-    , '緑'
+ROAD_LINK = [
+      [1, 0]    // 0
+    , [1, 2]    // 1
+    , [2, 3]    // 2
+    , [3, 4]    // 3
+    , [4, 5]    // 4
+    , [5, 6]    // 5
+    , [0, 8]    // 6
+    , [2, 10]   // 7
+    , [4, 12]   // 8
+    , [6, 14]   // 9
+    , [7, 8]    // 10
+    , [8, 9]    // 11
+    , [9, 10]   // 12
+    , [10, 11]  // 13
+    , [11, 12]  // 14
+    , [12, 13]  // 15
+    , [13, 14]  // 16
+    , [14, 15]  // 17
+    , [7, 17]   // 18
+    , [9, 19]   // 19
+    , [11, 21]  // 20
+    , [13, 23]  // 21
+    , [15, 25]  // 22
+    , [16, 17]  // 23
+    , [17, 18]  // 24
+    , [18, 19]  // 25
+    , [19, 20]  // 26
+    , [20, 21]  // 27
+    , [21, 22]  // 28
+    , [22, 23]  // 29
+    , [23, 24]  // 30
+    , [24, 25]  // 31
+    , [25, 26]  // 32
+    , [16, 27]  // 33
+    , [18, 29]  // 34
+    , [20, 31]  // 35
+    , [22, 33]  // 36
+    , [24, 35]  // 37
+    , [26, 37]  // 38
+    , [27, 28]  // 39
+    , [28, 29]  // 40
+    , [29, 30]  // 41
+    , [30, 31]  // 42
+    , [31, 32]  // 43
+    , [32, 33]  // 44
+    , [33, 34]  // 45
+    , [34, 35]  // 46
+    , [35, 36]  // 47
+    , [36, 37]  // 48
+    , [28, 38]  // 49
+    , [30, 40]  // 50
+    , [32, 42]  // 51
+    , [34, 44]  // 52
+    , [36, 46]  // 53
+    , [38, 39]  // 54
+    , [39, 40]  // 55
+    , [40, 41]  // 56
+    , [41, 42]  // 57
+    , [42, 43]  // 58
+    , [43, 44]  // 59
+    , [44, 45]  // 60
+    , [45, 46]  // 61
+    , [39, 47]  // 62
+    , [41, 49]  // 63
+    , [43, 51]  // 64
+    , [45, 53]  // 65
+    , [47, 48]  // 66
+    , [48, 49]  // 67
+    , [49, 50]  // 68
+    , [50, 51]  // 69
+    , [51, 52]  // 70
+    , [52, 53]  // 71
+];
+
+LAND_LINK = [
+      [0, 1, 2, 8, 9, 10]       // 0
+    , [2, 3, 4, 10, 11, 12]     // 1
+    , [4, 5, 6, 12, 13, 14]     // 2
+    , [7, 8, 9, 17, 18, 19]     // 3
+    , [9, 10, 11, 19, 20, 21]   // 4
+    , [11, 12, 13, 21, 22, 23]  // 5
+    , [13, 14, 15, 23, 24, 25]  // 6
+    , [16, 17, 18, 27, 28, 29]  // 7
+    , [18, 19, 20, 29, 30, 31]  // 8
+    , [20, 21, 22, 31, 32, 33]  // 9
+    , [22, 23, 24, 33, 34, 35]  // 10
+    , [24, 25, 26, 35, 36, 37]  // 11
+    , [28, 29, 30, 38, 39, 40]  // 12
+    , [30, 31, 32, 40, 41, 42]  // 13
+    , [32, 33, 34, 42, 43, 44]  // 14
+    , [34, 35, 36, 44, 45, 46]  // 15
+    , [39, 40, 41, 47, 48, 49]  // 16
+    , [41, 42, 43, 49, 50, 51]  // 17
+    , [43, 44, 45, 51, 52, 53]  // 18
 ];
