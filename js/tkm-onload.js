@@ -9,12 +9,12 @@ window.onload = function () {
                 var i;
                 var len1 = Tkm.soundUrlList.length;
                 for (i = 0; i < len1; i++) {
-                    var request = new XMLHttpRequest();
+                    var xhr = new XMLHttpRequest();
 
-                    request.open('GET', Tkm.soundUrlList[i], true);
-                    request.responseType = 'arraybuffer';
+                    xhr.open('GET', Tkm.soundUrlList[i] + '.mp3', true);
+                    xhr.responseType = 'arraybuffer';
 
-                    request.onload = (function () {
+                    xhr.onload = (function () {
                         var _i = i;
 
                         return function () {
@@ -24,19 +24,25 @@ window.onload = function () {
                         }
                     })();
 
-                    request.send();
+                    xhr.send();
                 }
             })();
         } catch (e) {
             (function(){
                 Tkm.audio = Tkm.Audio.CREATE_JS;
 
+                var format = '.mp3';
+
+                var userAgent = navigator.userAgent.toLowerCase();
+
+                if(userAgent.match(/firefox/)) { format = '.ogg'; }
+
                 var manifest = [];
 
                 var i;
                 var len1 = Tkm.soundUrlList.length;
                 for (i = 0; i < len1; i++) {
-                    manifest.push({ src: Tkm.soundUrlList[i], id: i });
+                    manifest.push({ src: Tkm.soundUrlList[i] + format, id: i });
                 }
 
                 var queue = new createjs.LoadQueue(true);

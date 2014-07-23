@@ -22,16 +22,16 @@ Tkm.roomIndex = null;
 Tkm.userList = [];
 Tkm.audio = null;
 Tkm.soundUrlList = [
-      '../mp3/bell.mp3'
-    , '../mp3/build.mp3'
-    , '../mp3/chat.mp3'
-    , '../mp3/dice.mp3'
-    , '../mp3/ending.mp3'
-    , '../mp3/get.mp3'
-    , '../mp3/join.mp3'
-    , '../mp3/opening.mp3'
-    , '../mp3/pass.mp3'
-    , '../mp3/robber.mp3'
+      '../se/bell'
+    , '../se/build'
+    , '../se/chat'
+    , '../se/dice'
+    , '../se/ending'
+    , '../se/get'
+    , '../se/join'
+    , '../se/opening'
+    , '../se/pass'
+    , '../se/robber'
 ];
 Tkm.webAudioContext = null;
 Tkm.soundList = [];
@@ -42,19 +42,15 @@ Tkm.isMuteBell = false;
 Tkm._sound = function (type) {
     try {
         if (Tkm.audio === Tkm.Audio.WEB_AUDIO_API) {
-            setTimeout((function () {
-                return function() {
-                    var gainNode = Tkm.webAudioContext.createGain();
-                    var source = Tkm.webAudioContext.createBufferSource();
+            var gainNode = Tkm.webAudioContext.createGain();
+            var source = Tkm.webAudioContext.createBufferSource();
 
-                    source.buffer = Tkm.soundList[type];
-                    source.connect(gainNode);
-                    gainNode.connect(Tkm.webAudioContext.destination);
-                    gainNode.gain.value = Tkm.volume;
+            source.buffer = Tkm.soundList[type];
+            source.connect(gainNode);
+            gainNode.connect(Tkm.webAudioContext.destination);
+            gainNode.gain.value = Tkm.volume;
 
-                    source.start();
-                };
-            })(), 0);
+            source.start();
         } else {
             var instance = createjs.Sound.createInstance(type);
 
