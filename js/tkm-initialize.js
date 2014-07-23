@@ -42,15 +42,19 @@ Tkm.isMuteBell = false;
 Tkm._sound = function (type) {
     try {
         if (Tkm.audio === Tkm.Audio.WEB_AUDIO_API) {
-            var gainNode = Tkm.webAudioContext.createGain();
-            var source = Tkm.webAudioContext.createBufferSource();
+            setTimeout((function () {
+                return function() {
+                    var gainNode = Tkm.webAudioContext.createGain();
+                    var source = Tkm.webAudioContext.createBufferSource();
 
-            source.buffer = Tkm.soundList[type];
-            source.connect(gainNode);
-            gainNode.connect(Tkm.webAudioContext.destination);
-            gainNode.gain.value = Tkm.volume;
+                    source.buffer = Tkm.soundList[type];
+                    source.connect(gainNode);
+                    gainNode.connect(Tkm.webAudioContext.destination);
+                    gainNode.gain.value = Tkm.volume;
 
-            source.start();
+                    source.start();
+                };
+            })(), 0);
         } else {
             var instance = createjs.Sound.createInstance(type);
 
