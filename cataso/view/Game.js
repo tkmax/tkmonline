@@ -1146,6 +1146,14 @@ Game.addCanBuildSettlement = function (game) {
            )
         && this.hasPriorityUid(game, uid)
     ) {
+        var opacity;
+
+        if (game.phase === Phase.BUILD_SETTLEMENT) {
+            opacity = 0.7;
+        } else {
+            opacity = 0;
+        }
+
         var i;
         var len1 = game.settlementList.length;
         for (i = 0; i < len1; i++) {
@@ -1181,7 +1189,7 @@ Game.addCanBuildSettlement = function (game) {
                             return function () {
                                 Game.send('f' + _i);
                             };
-                        }(), 0.7);
+                        }(), opacity);
                     }
                     break;
                 case Phase.SETUP_SETTLEMENT2:
@@ -1192,7 +1200,7 @@ Game.addCanBuildSettlement = function (game) {
                             return function () {
                                 Game.send('h' + _i);
                             };
-                        }(), 0.7);
+                        }(), opacity);
                     }
                     break;
                 case Phase.BUILD_SETTLEMENT:
@@ -1203,7 +1211,7 @@ Game.addCanBuildSettlement = function (game) {
                             return function () {
                                 Game.send('q' + _i);
                             };
-                        }(), 0.7);
+                        }(), opacity);
                     }
                     break;
             }
