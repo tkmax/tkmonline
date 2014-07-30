@@ -484,7 +484,7 @@ Game.addInternationalTrade = function (game) {
     
     this.addLabel('海外貿易をして下さい。', 585, 352);
     
-    var poolLabel = this.addLabel('残り:' + Game.trade.ticket, 635, 465);
+    var poolLabel = this.addLabel('残り:' + Game.trade.pool, 635, 465);
 
     var i;
     for (i = 0; i < 5; i++) {
@@ -510,7 +510,7 @@ Game.addInternationalTrade = function (game) {
             
             return function () {
                 if (Game.trade.input[_i] + _cost <= game.playerList[game.active].resource[_i]) {
-                    _poolLabel.text = '残り:' + ++Game.trade.ticket;
+                    _poolLabel.text = '残り:' + ++Game.trade.pool;
                     Game.trade.input[_i] += _cost;
                     _tradeLabel.text = '' + Game.trade.input[_i];
                 }
@@ -525,7 +525,7 @@ Game.addInternationalTrade = function (game) {
             
             return function () {
                 if (Game.trade.input[_i] > 0) {
-                    _poolLabel.text = '残り:' + --Game.trade.ticket;
+                    _poolLabel.text = '残り:' + --Game.trade.pool;
                     Game.trade.input[_i] -= _cost;
                     _tradeLabel.text = '' + Game.trade.input[_i];
                 }
@@ -540,8 +540,8 @@ Game.addInternationalTrade = function (game) {
             var _tradeLabel = tradeLabel;
             
             return function () {
-                if (Game.trade.ticket > 0) {
-                    _poolLabel.text = '残り:' + --Game.trade.ticket;
+                if (Game.trade.pool > 0 && game.resourceStock[_i] > 0) {
+                    _poolLabel.text = '残り:' + --Game.trade.pool;
                     _tradeLabel.text = '' + ++Game.trade.output[_i];
                 }
             };
@@ -554,7 +554,7 @@ Game.addInternationalTrade = function (game) {
             
             return function () {
                 if (Game.trade.output[_i] > 0) {
-                    _poolLabel.text = '残り:' + ++Game.trade.ticket;
+                    _poolLabel.text = '残り:' + ++Game.trade.pool;
                     _tradeLabel.text = '' + --Game.trade.output[_i];
                 }
             };
@@ -667,7 +667,7 @@ Game.addMonopolyCommand = function (game) {
 }
 
 Game.addMainCommand = function (game) {
-    this.trade.ticket = 0;
+    this.trade.pool = 0;
 
     var i;
     for (i = 0; i < 5; i++) { this.trade.input[i] = this.trade.output[i] = 0; }
