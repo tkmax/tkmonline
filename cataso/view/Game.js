@@ -19,7 +19,7 @@ Game.send = function (message) {
     }
 }
 
-Game.addLabel = function (text, x, y, font) {
+Game.addLabel = function (text, x, y, font, color) {
     if (!font) {
         font = '14px "メイリオ",Meiryo';
     } else {
