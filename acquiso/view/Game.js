@@ -31,7 +31,7 @@ Game.send = function (message) {
     }
 }
 
-Game.addLabel = function (text, x, y, font) {
+Game.addLabel = function (text, x, y, font, color) {
     var label;
 
     if (!font) {
@@ -45,6 +45,8 @@ Game.addLabel = function (text, x, y, font) {
     label.y = y;
     label.font = font;
 
+    if (color) { label.color = color; }
+
     this.core.rootScene.addChild(label);
 
     return label;
@@ -57,9 +59,9 @@ Game.addSprite = function (image, frame, x, y, width, height, onTouch, opacity) 
     sprite.frame = frame;
     sprite.x = x;
     sprite.y = y;
-    sprite.opacity = opacity;
 
     if (onTouch) { sprite.addEventListener('touchstart', onTouch); }
+    if (opacity) { sprite.opacity = opacity; }
 
     this.core.rootScene.addChild(sprite);
 
@@ -713,7 +715,7 @@ Game.addHotelChain = function (game) {
                     , 36
                 );
 
-                this.addLabel(hotelChain.size, positionX + 3, positionY + 17);
+                this.addLabel(hotelChain.size, positionX + 3, positionY + 17, null, i === 2 || i === 3 ? 'white' : 'black');
 
                 if (
                        game.state === State.PLAYING
@@ -751,7 +753,7 @@ Game.addHotelChain = function (game) {
                     , 76
                 );
 
-                this.addLabel(hotelChain.size, positionX + 3, positionY + 57);
+                this.addLabel(hotelChain.size, positionX + 3, positionY + 57, null, i === 2 || i === 3 ? 'white' : 'black');
 
                 if (
                        game.state === State.PLAYING
