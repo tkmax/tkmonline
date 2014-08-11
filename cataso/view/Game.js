@@ -32,7 +32,7 @@ Game.addLabel = function (text, x, y, font, color) {
     label.y = y;
     label.font = font;
 
-    if (color) { label.color = color; }
+    if (color || color === 0) { label.color = color; }
 
     this.core.rootScene.addChild(label);
 
@@ -48,7 +48,7 @@ Game.addSprite = function (image, frame, x, y, width, height, onTouch, opacity) 
     sprite.y = y;
 
     if (onTouch) { sprite.addEventListener('touchstart', onTouch); }
-    if (opacity) { sprite.opacity = opacity; }
+    if (opacity || opacity === 0) { sprite.opacity = opacity; }
 
     this.core.rootScene.addChild(sprite);
 
