@@ -763,6 +763,14 @@ Game.addDice = function (game) {
     }
 }
 
+Game.sumResource = function (game, color) {
+    return game.playerList[color].resource[Resource.BRICK]
+          + game.playerList[color].resource[Resource.WOOL]
+          + game.playerList[color].resource[Resource.ORE]
+          + game.playerList[color].resource[Resource.GRAIN]
+          + game.playerList[color].resource[Resource.LUMBER];
+}
+
 Game.addPlayer = function (game, color) {
     if (game.state === State.PLAYING) {
         if (game.active === color) { this.addSprite('view/active.png', 0, 503, color * 78 + 29, 15, 15); }
@@ -789,11 +797,7 @@ Game.addPlayer = function (game, color) {
 
     var k = 0;
 
-    var summary1 = game.playerList[color].resource[Resource.BRICK]
-                 + game.playerList[color].resource[Resource.WOOL]
-                 + game.playerList[color].resource[Resource.ORE]
-                 + game.playerList[color].resource[Resource.GRAIN]
-                 + game.playerList[color].resource[Resource.LUMBER];
+    var summary1 = this.sumResource(game, color);
 
     if (summary1 > 18) {
         if (game.state === State.READY || game.playerList[color].uid === uid) {
@@ -1504,6 +1508,7 @@ Game.addCanPillageSettlement = function (game) {
             if (
                    rank !== SettlementRank.NONE
                 && color !== game.active
+                && this.sumResource(game, color) > 0
             ) {
                 var x;
                 var y;
