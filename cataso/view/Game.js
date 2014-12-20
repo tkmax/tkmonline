@@ -529,7 +529,7 @@ Game.addInternationalTrade = function (game) {
             var _cost = cost;
             
             return function () {
-                if (Game.trade.input[_i] > 0) {
+                if (Game.trade.input[_i] > 0 && Game.trade.pool > 0) {
                     _poolLabel.text = '残り:' + --Game.trade.pool;
                     Game.trade.input[_i] -= _cost;
                     _tradeLabel.text = '' + Game.trade.input[_i];
@@ -558,7 +558,7 @@ Game.addInternationalTrade = function (game) {
             var _tradeLabel = tradeLabel;
             
             return function () {
-                if (Game.trade.output[_i] > 0) {
+                if (Game.trade.output[_i] > 0 && Game.trade.pool > 0) {
                     _poolLabel.text = '残り:' + ++Game.trade.pool;
                     _tradeLabel.text = '' + --Game.trade.output[_i];
                 }
