@@ -529,7 +529,7 @@ Game.addInternationalTrade = function (game) {
             var _cost = cost;
             
             return function () {
-                if (Game.trade.input[_i] > 0 && Game.trade.pool > 0) {
+                if (Game.trade.input[_i] > 0) {
                     _poolLabel.text = '残り:' + --Game.trade.pool;
                     Game.trade.input[_i] -= _cost;
                     _tradeLabel.text = '' + Game.trade.input[_i];
@@ -568,10 +568,13 @@ Game.addInternationalTrade = function (game) {
     
     this.addSprite('view/button.png', 12, 570, 490, 80, 25, function () {
         var i;
-        for (i = 0; i < 5; i++) {
-            if (Game.trade.input[i] > 0 && Game.trade.pool == 0) {
-                Game.send('z' + Game.trade.input.join(' ') + ' ' + Game.trade.output.join(' '));
-                break;
+
+        if(Game.trade.pool == 0) {
+            for (i = 0; i < 5; i++) {
+                if (Game.trade.input[i] > 0) {
+                    Game.send('z' + Game.trade.input.join(' ') + ' ' + Game.trade.output.join(' '));
+                    break;
+                }
             }
         }
     });
