@@ -558,7 +558,7 @@ Game.addInternationalTrade = function (game) {
             var _tradeLabel = tradeLabel;
             
             return function () {
-                if (Game.trade.output[_i] > 0 && Game.trade.pool > 0) {
+                if (Game.trade.output[_i] > 0) {
                     _poolLabel.text = '残り:' + ++Game.trade.pool;
                     _tradeLabel.text = '' + --Game.trade.output[_i];
                 }
@@ -569,7 +569,7 @@ Game.addInternationalTrade = function (game) {
     this.addSprite('view/button.png', 12, 570, 490, 80, 25, function () {
         var i;
         for (i = 0; i < 5; i++) {
-            if (Game.trade.input[i] > 0) {
+            if (Game.trade.input[i] > 0 && Game.trade.pool == 0) {
                 Game.send('z' + Game.trade.input.join(' ') + ' ' + Game.trade.output.join(' '));
                 break;
             }
