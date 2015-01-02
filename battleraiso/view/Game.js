@@ -862,8 +862,16 @@ Game.addflagList = function (game) {
                 && activePlayer.uid === uid
             ) {
                 if (
-                       game.phase === Phase.MAIN
-                    && activePlayer.field[i].length === game.size[i]
+                    (
+                           game.phase === Phase.MAIN
+                        || game.phase === Phase.COMMON
+                        || game.phase === Phase.FOG
+                        || game.phase === Phase.MUD
+                        || game.phase === Phase.SCOUT1
+                        || game.phase === Phase.REDEPLOY1
+                        || game.phase === Phase.DESERTER
+                        || game.phase === Phase.TRAITOR1
+                    ) && activePlayer.field[i].length === game.size[i]
                 ) {
                     activeScore = Game.score(game.weather[i], activePlayer.field[i]);
 
