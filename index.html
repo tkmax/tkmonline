@@ -168,8 +168,8 @@
                 </a>
             </td>
             <td id="room19" class="room">
-                <a href="acquiso/VII.html" target="_blank">
-                    <div class="room-title">アクワイソVII</div>
+                <a href="battleraiso/I.html" target="_blank">
+                    <div class="room-title">バトルライソI</div>
                     <div class="room-number"></div>
                     <div class="acquiso-ready"></div>
                 </a>
@@ -187,7 +187,7 @@
 </div>
 
 <script>
-    var ws = new WebSocket('ws://210.152.156.183:7911');
+    var ws = new WebSocket('ws://localhost:7911');
 
     ws.onopen = function () {
         ws.send(String.fromCharCode(100));
@@ -219,6 +219,13 @@
                         roomDiv[2].className = 'acquiso-playing';
                     } else {
                         roomDiv[2].className = 'acquiso-ready';
+                    }
+                    break;
+                case 'b':
+                    if (args[i * 3 + 2] === 'p') {
+                        roomDiv[2].className = 'battleraiso-playing';
+                    } else {
+                        roomDiv[2].className = 'battleraiso-ready';
                     }
                     break;
                 case 'c':

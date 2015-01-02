@@ -121,6 +121,15 @@ body {
     border-bottom-right-radius: 10px;
 }
 
+.battleraiso-ready {
+    background-image: url(../png/battleraiso-ready.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 .cataso-playing {
     background-image: url(../png/cataso-playing.png);
     height: 140px;
@@ -132,6 +141,15 @@ body {
 
 .acquiso-playing {
     background-image: url(../png/acquiso-playing.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.battleraiso-playing {
+    background-image: url(../png/battleraiso-playing.png);
     width: 160px;
     height: 140px;
     clear: both;

@@ -569,7 +569,7 @@ Game.addInternationalTrade = function (game) {
     this.addSprite('view/button.png', 12, 570, 490, 80, 25, function () {
         var i;
 
-        if(Game.trade.pool == 0) {
+        if(Game.trade.pool === 0) {
             for (i = 0; i < 5; i++) {
                 if (Game.trade.input[i] > 0) {
                     Game.send('z' + Game.trade.input.join(' ') + ' ' + Game.trade.output.join(' '));
