@@ -360,25 +360,25 @@ Game.addHeadLine = function (game) {
     } else {
         switch (game.phase) {
             case Phase.PLAY:
-                text = '対戦中 - タイル配置';
+                text = 'タイル配置';
                 break;
             case Phase.CHAIN:
-                text = '対戦中 - ホテルチェーン';
+                text = 'ホテルチェーン';
                 break;
             case Phase.ABSORB:
-                text = '対戦中 - 合併(親ホテルチェーン選択)';
+                text = '合併(親ホテルチェーン選択)';
                 break;
             case Phase.MERGE:
-                text = '対戦中 - 合併';
+                text = '合併';
                 break;
             case Phase.SELL:
-                text = '対戦中 - 合併(売却)';
+                text = '合併(売却)';
                 break;
             case Phase.TRADE:
-                text = '対戦中 - 合併(交換)';
+                text = '合併(交換)';
                 break;
             case Phase.BUY:
-                text = '対戦中 - 購入';
+                text = '購入';
                 break;
         }
     }

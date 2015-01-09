@@ -136,70 +136,70 @@ Game.addHeadLine = function (game) {
     } else {
         switch (game.phase) {
             case Phase.SETUP_SETTLEMENT1:
-                text = '対戦中 - 初期配置 家(1件目)';
+                text = '初期配置 家(1件目)';
                 break;
             case Phase.SETUP_ROAD1:
-                text = '対戦中 - 初期配置 道(1本目)';
+                text = '初期配置 道(1本目)';
                 break;
             case Phase.SETUP_SETTLEMENT2:
-                text = '対戦中 - 初期配置 家(2件目)';
+                text = '初期配置 家(2件目)';
                 break;
             case Phase.SETUP_ROAD2:
-                text = '対戦中 - 初期配置 道(2本目)';
+                text = '初期配置 道(2本目)';
                 break;
             case Phase.DICE:
-                text = '対戦中 - ダイス';
+                text = 'ダイス';
                 break;
             case Phase.BURST:
-                text = '対戦中 - バースト';
+                text = 'バースト';
                 break;
             case Phase.ROBBER1:
-                text = '対戦中 - 盗賊(移動)';
+                text = '盗賊(移動)';
                 break;
             case Phase.ROBBER2:
-                text = '対戦中 - 盗賊(略奪)';
+                text = '盗賊(略奪)';
                 break;
             case Phase.MAIN:
-                text = '対戦中 - メイン';
+                text = 'メイン';
                 break;
             case Phase.BUILD_ROAD:
-                text = '対戦中 - 道';
+                text = '道';
                 break;
             case Phase.BUILD_SETTLEMENT:
-                text = '対戦中 - 家';
+                text = '家';
                 break;
             case Phase.BUILD_CITY:
-                text = '対戦中 - 街';
+                text = '街';
                 break;
             case Phase.INTERNATIONAL_TRADE:
-                text = '対戦中 - 海外貿易';
+                text = '海外貿易';
                 break;
             case Phase.DOMESTIC_TRADE1:
-                text = '対戦中 - 国内貿易';
+                text = '国内貿易';
                 break;
             case Phase.DOMESTIC_TRADE2:
-                text = '対戦中 - 国内貿易(確認)';
+                text = '国内貿易(確認)';
                 break;
             case Phase.SOLDIER1:
-                text = '対戦中 - 騎士カード(移動)';
+                text = '騎士カード(移動)';
                 break;
             case Phase.SOLDIER2:
-                text = '対戦中 - 騎士カード(略奪)';
+                text = '騎士カード(略奪)';
                 break;
             case Phase.ROAD_BUILDING1:
-                text = '対戦中 - 街道カード(1本目)';
+                text = '街道カード(1本目)';
                 break;
             case Phase.ROAD_BUILDING2:
-                text = '対戦中 - 街道カード(2本目)';
+                text = '街道カード(2本目)';
                 break;
             case Phase.YEAR_OF_PLENTY1:
-                text = '対戦中 - 収穫カード(1枚目)';
+                text = '収穫カード(1枚目)';
                 break;
             case Phase.YEAR_OF_PLENTY2:
-                text = '対戦中 - 収穫カード(2枚目)';
+                text = '収穫カード(2枚目)';
                 break;
             case Phase.MONOPOLY:
-                text = '対戦中 - 独占カード';
+                text = '独占カード';
                 break;
         }
     }

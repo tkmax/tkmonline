@@ -939,9 +939,9 @@ Game.addField = function (game, index) {
                 x = i * 73 + 4;
 
                 if (index === 0) {
-                    y = 194 - j * 44;
+                    y = 194 - j * 30;
                 } else {
-                    y = j * 44 + 281;
+                    y = j * 30 + 281;
                 }
 
                 this.addSprite('view/before.png', 0, x, y, 70, 71);
@@ -950,9 +950,9 @@ Game.addField = function (game, index) {
             x = i * 73 + 7;
 
             if (index === 0) {
-                y = 197 - j * 44;
+                y = 197 - j * 30;
             } else {
-                y = j * 44 + 284;
+                y = j * 30 + 284;
             }
 
             frame = ((0xff00 & game.playerList[index].field[i][j]) >> 8) * 10 + (0x00ff & game.playerList[index].field[i][j]);
@@ -1004,9 +1004,9 @@ Game.addField = function (game, index) {
                     )
                 ) {
                     if (index === 0) {
-                        y = 197 - j * 44;
+                        y = 197 - j * 30;
                     } else {
-                        y = j * 44 + 284;
+                        y = j * 30 + 284;
                     }
 
                     this.addSprite('view/card.png', 72, x, y, 65, 65, null, 0.7);
