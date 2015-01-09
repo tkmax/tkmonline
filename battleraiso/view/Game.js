@@ -865,8 +865,6 @@ Game.addflagList = function (game) {
                     (
                            game.phase === Phase.MAIN
                         || game.phase === Phase.COMMON
-                        || game.phase === Phase.FOG
-                        || game.phase === Phase.MUD
                         || game.phase === Phase.SCOUT1
                         || game.phase === Phase.REDEPLOY1
                         || game.phase === Phase.DESERTER
