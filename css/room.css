@@ -33,6 +33,10 @@ body {
     box-shadow: 10px 10px 10px rgba(0,0,0,0.25);
 }
 
+#header a {
+    color: white;
+}
+
 #title {
     float: left;
     width: 200px;
