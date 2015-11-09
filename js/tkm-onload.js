@@ -211,7 +211,7 @@ window.onload = function () {
 
     setInterval(
         function () {
-            ws.send(String.fromCharCode(200));
+            Tkm.ws.send(String.fromCharCode(200));
         }, 5000
     );
 }
