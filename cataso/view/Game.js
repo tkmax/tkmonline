@@ -316,7 +316,7 @@ Game.addReadyCommand = function (game) {
     }
 
     if (
-        game.playerList[0].uid !== ''
+           game.playerList[0].uid !== ''
         && game.playerList[1].uid !== ''
         && game.playerList[2].uid !== ''
     ) {

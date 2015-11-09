@@ -1,4 +1,4 @@
-﻿var Tkm = function () { };
+var Tkm = function () { };
 
 Tkm.Audio = function () { };
 Tkm.Audio.WEB_AUDIO_API = 0;
@@ -16,7 +16,7 @@ Tkm.Sound.PASS = 8;
 Tkm.Sound.ROBBER = 9;
 
 Tkm.view = null;
-Tkm.wsurl = 'ws://210.152.156.183:7911';
+Tkm.wsurl = 'ws://pure-dusk-5665.herokuapp.com';
 Tkm.ws = null;
 Tkm.roomIndex = null;
 Tkm.userList = [];

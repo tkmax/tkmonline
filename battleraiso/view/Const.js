@@ -14,24 +14,35 @@ State = function () { }
 State.READY = 0;
 State.PLAYING = 1;
 
+Value = function () { }
+Value.NONE = -1;
+
 Index = function () { }
 Index.NONE = -1;
 
 Phase = function () { }
 Phase.NONE = -1;
-Phase.MAIN = 0;
-Phase.COMMON = 1;
-Phase.FOG = 2;
-Phase.MUD = 3;
-Phase.SCOUT1 = 4;
-Phase.SCOUT2 = 5;
-Phase.SCOUT3 = 6;
-Phase.REDEPLOY1 = 7;
-Phase.REDEPLOY2 = 8;
-Phase.DESERTER = 9;
-Phase.TRAITOR1 = 10;
-Phase.TRAITOR2 = 11;
-Phase.DRAW = 12;
+Phase.STARTUP = 0;
+Phase.TROOP = 1;
+Phase.ALEXANDER = 2;
+Phase.DARIUS = 3;
+Phase.COMPANION = 4;
+Phase.SHIELD = 5;
+Phase.FOG = 6;
+Phase.MUD = 7;
+Phase.SCOUT1 = 8;
+Phase.SCOUT2 = 9;
+Phase.SCOUT3 = 10;
+Phase.REDEPLOY1 = 11;
+Phase.REDEPLOY2 = 12;
+Phase.DESERTER = 13;
+Phase.TRAITOR1 = 14;
+Phase.TRAITOR2 = 15;
+Phase.DRAW = 16;
+
+Card = function () { }
+Card.TROOP = 0;
+Card.TACTICS = 1;
 
 Tactics = function () { }
 Tactics.ALEXANDER = 0x0600;
@@ -44,13 +55,3 @@ Tactics.SCOUT = 0x0606;
 Tactics.REDEPLOY = 0x0607;
 Tactics.DESERTER = 0x0608;
 Tactics.TRAITOR = 0x0609;
-
-FONT_COLOR = [
-      'yellow'
-    , 'lime'
-];
-
-COLOR_NAME = [
-      '黄'
-    , '緑'
-];
