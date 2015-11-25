@@ -130,6 +130,15 @@ body {
     border-bottom-right-radius: 10px;
 }
 
+.goipai-ready {
+    background-image: url(../png/goipai-ready.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
 .cataso-playing {
     background-image: url(../png/cataso-playing.png);
     height: 140px;
@@ -150,6 +159,15 @@ body {
 
 .battleraiso-playing {
     background-image: url(../png/battleraiso-playing.png);
+    width: 160px;
+    height: 140px;
+    clear: both;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.goipai-playing {
+    background-image: url(../png/goipai-playing.png);
     width: 160px;
     height: 140px;
     clear: both;

@@ -168,8 +168,8 @@
                 </a>
             </td>
             <td id="room19" class="room">
-                <a href="battleraiso/VI.html" target="_blank">
-                    <div class="room-title">バトルライソVI</div>
+                <a href="goipai/I.html" target="_blank">
+                    <div class="room-title">ごい牌I</div>
                     <div class="room-number"></div>
                     <div class="cataso-ready"></div>
                 </a>
@@ -233,6 +233,13 @@
                         roomDiv[2].className = 'cataso-playing';
                     } else {
                         roomDiv[2].className = 'cataso-ready';
+                    }
+                    break;
+                case 'g':
+                    if (args[i * 3 + 2] === 'p') {
+                        roomDiv[2].className = 'goipai-playing';
+                    } else {
+                        roomDiv[2].className = 'goipai-ready';
                     }
                     break;
             }
