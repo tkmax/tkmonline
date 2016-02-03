@@ -364,7 +364,7 @@ Game.addBurstCommand = function (game) {
                                 Game.send('k' + _i + ' ' + _j);
                             };
                         }
-                    }());
+                    } ());
                 }
             } else {
                 this.addLabel('バースト中 あと' + game.playerList[i].burst + '枚廃棄', 517, i * 51 + 350, '24px');

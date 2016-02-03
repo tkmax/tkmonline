@@ -255,13 +255,13 @@ Game.addReadyCommand = function (game) {
 }
 
 Game.addPassCommand = function (game) {
-    var activePlayer = game.playerList[game.active];
+    var player = game.playerList[game.active];
     var hasTroop = false;
 
     var i;
-    var len1 = activePlayer.hand.length;
+    var len1 = player.hand.length;
     for (i = 0; !hasTroop && i < len1; i++) {
-        if((activePlayer.hand[i] & 0xff00) !== 0x0600) {
+        if((player.hand[i] & 0xff00) !== 0x0600) {
             hasTroop = true;
         }
     }

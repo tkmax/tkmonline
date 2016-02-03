@@ -7,52 +7,52 @@ Game.canSend = true;
 Game.core = null;
 
 Game.colorPosition = [
-      { x : 132, y : 446 }
-    , { x : 392, y : 446 }
-    , { x : 392, y : 71 }
-    , { x : 132, y : 71 }
+      { x : 132, y : 451 }
+    , { x : 392, y : 451 }
+    , { x : 392, y : 76 }
+    , { x : 132, y : 76 }
 ];
 
 Game.activePosition = [
-      { x : 135, y : 449 }
-    , { x : 395, y : 449 }
-    , { x : 395, y : 74 }
-    , { x : 135, y : 74 }
+      { x : 135, y : 454 }
+    , { x : 395, y : 454 }
+    , { x : 395, y : 79 }
+    , { x : 135, y : 79 }
 ];
 
 Game.priorityPosition = [
-      { x : 156, y : 446 }
-    , { x : 416, y : 446 }
-    , { x : 416, y : 71 }
-    , { x : 156, y : 71 }
+      { x : 156, y : 451 }
+    , { x : 416, y : 451 }
+    , { x : 416, y : 76 }
+    , { x : 156, y : 76 }
 ];
 
 Game.uidPosition = [
-      { x : 158, y : 448 }
-    , { x : 418, y : 448 }
-    , { x : 418, y : 73 }
-    , { x : 158, y : 73 }
+      { x : 158, y : 453 }
+    , { x : 418, y : 453 }
+    , { x : 418, y : 78 }
+    , { x : 158, y : 78 }
 ];
 
 Game.handPosition = [
-      { x : 153, y : 480, xm : 45, ym : 0, rotation : 0 }
-    , { x : 550, y : 402, xm : 0, ym : -45, rotation : 270 }
-    , { x : 468, y : 8, xm : -45, ym : 0, rotation : 180 }
-    , { x : 70, y : 86, xm : 0, ym : 45, rotation : 90 }
+      { x : 172, y : 485, xm : 40, ym : 0, rotation : 0 }
+    , { x : 550, y : 389, xm : 0, ym : -40, rotation : 270 }
+    , { x : 454, y : 13, xm : -40, ym : 0, rotation : 180 }
+    , { x : 70, y : 110, xm : 0, ym : 40, rotation : 90 }
 ];
 
 Game.defensePosition = [
-      { x : 245, y : 333, xm : 43, ym : 0, rotation : 0 }
-    , { x : 425, y : 310, xm : 0, ym : -43, rotation : 270 }
-    , { x : 376, y : 155, xm : -43, ym : 0, rotation : 180 }
-    , { x : 195, y : 178, xm : 0, ym : 43, rotation : 90 }
+      { x : 251, y : 343, xm : 40, ym : 0, rotation : 0 }
+    , { x : 430, y : 311, xm : 0, ym : -40, rotation : 270 }
+    , { x : 370, y : 155, xm : -40, ym : 0, rotation : 180 }
+    , { x : 190, y : 187, xm : 0, ym : 40, rotation : 90 }
 ];
 
 Game.offensePosition = [
-      { x : 245, y : 388, xm : 43, ym : 0, rotation : 0 }
-    , { x : 480, y : 310, xm : 0, ym : -43, rotation : 270 }
-    , { x : 376, y : 100, xm : -43, ym : 0, rotation : 180 }
-    , { x : 140, y : 178, xm : 0, ym : 43, rotation : 90 }
+      { x : 251, y : 393, xm : 40, ym : 0, rotation : 0 }
+    , { x : 480, y : 311, xm : 0, ym : -40, rotation : 270 }
+    , { x : 370, y : 105, xm : -40, ym : 0, rotation : 180 }
+    , { x : 140, y : 187, xm : 0, ym : 40, rotation : 90 }
 ];
 
 Game.send = function (message) {
