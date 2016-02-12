@@ -499,8 +499,19 @@ Game.addDefense = function (game, relative, absolute) {
 
 Game.addOffense = function (game, relative, absolute) {
     var offense = game.playerList[relative].offense;
-    var len1 = offense.length;
-    for (i = 0; i < len1; i++) {
+
+    var i;
+    for (i = 0; i < offense.length; i++) {
         this.addSprite('view/pai.png', offense[i], i * this.offensePosition[absolute].xm + this.offensePosition[absolute].x, i * this.offensePosition[absolute].ym + this.offensePosition[absolute].y, 40, 50, null, 1, this.offensePosition[absolute].rotation);
+    }
+
+    if (
+           game.phase === Phase.CATCH
+        && game.active === relative
+        && offense.length > 0
+    ) {
+        i = offense.length - 1;
+
+        this.addSprite('view/pai.png', 10, i * this.offensePosition[absolute].xm + this.offensePosition[absolute].x, i * this.offensePosition[absolute].ym + this.offensePosition[absolute].y, 40, 50, null, 1, this.offensePosition[absolute].rotation);
     }
 }
